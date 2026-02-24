@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -12,6 +13,11 @@ export default function Footer() {
         </a>
         .
       </p>
+      <div className="mt-4 text-xs text-gray-400">
+        <Link href="/mesh" className="hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+          Agent Mesh Simulation
+        </Link>
+      </div>
     </footer>
   );
 }
