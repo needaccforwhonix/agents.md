@@ -45,6 +45,13 @@ export default function Hero() {
           >
             Explore Examples
           </a>
+          {/* Tertiary CTA — Agent Mesh Simulation */}
+          <a
+            href="/mesh"
+            className="inline-block px-5 py-3 rounded-full bg-blue-600 text-white dark:bg-blue-500 text-sm font-medium text-center hover:opacity-80"
+          >
+            Launch Agent Mesh
+          </a>
           {/* Secondary CTA — view on GitHub */}
           <a
             href="https://github.com/agentsmd/agents.md"
