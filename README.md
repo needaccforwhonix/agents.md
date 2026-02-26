@@ -47,3 +47,22 @@ that explains the project’s goals in a simple way, and featuring some examples
    pnpm run dev
    ```
 3. Open your browser and go to http://localhost:3000
+
+## Agent Mesh Simulation
+
+This project includes an experimental "Agent Mesh" simulation, visualizing autonomous agent interactions, evolution (AlphaEvolve), and context engineering (ACE).
+
+### Features
+- **Agent2Agent Interaction:** Agents communicate and share knowledge.
+- **Rule-Based Brain:** Simulation logic with keyword-based responses and probability factors.
+- **Agentic Context Engineering (ACE):** Simulated context window management, token counting, and summarization.
+- **AST Analysis:** Agents can analyze code snippets using the TypeScript compiler API.
+- **E2E Testing:** Playwright tests ensure the simulation runs correctly.
+
+### Running the Simulation
+1. Start the app: `pnpm run dev`
+2. Navigate to: `http://localhost:3000/mesh`
+
+### Testing
+- Run Unit Tests: `pnpm test`
+- Run E2E Tests: `pnpm test:e2e`
