@@ -1,4 +1,5 @@
 import React from "react";
+import Link from 'next/link';
 
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
@@ -19,6 +20,24 @@ export default function LandingPage({ contributorsByRepo }: LandingPageProps) {
     <div className="flex flex-col min-h-screen items-stretch font-sans">
       <main>
         <Hero />
+
+        {/* Agent Mesh Integration CTA */}
+        <section className="bg-blue-50 py-12 border-y border-blue-100">
+           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2 className="text-3xl font-extrabold text-blue-900 sm:text-4xl">
+                Experience Agent2Agent Mesh
+              </h2>
+              <p className="mt-4 text-lg text-blue-700 max-w-2xl mx-auto">
+                Watch autonomous agents evolve and interact in real-time using our new mesh simulation.
+              </p>
+              <div className="mt-8">
+                 <Link href="/mesh" className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 shadow-sm">
+                    Launch Simulation
+                 </Link>
+              </div>
+           </div>
+        </section>
+
         <WhySection />
         <CompatibilitySection />
         <ExamplesSection contributorsByRepo={contributorsByRepo} />
@@ -107,8 +126,6 @@ export const getStaticProps: GetStaticProps<LandingPageProps> = async () => {
         ? ((await avatarsRes.json()) as Array<{ avatar_url: string }>)
         : [];
 
-      const avatars = avatarsData.slice(0, 3).map((c) => c.avatar_url);
-
       // Fetch contributor count (using per_page=1 to inspect Link header)
       let total = avatarsData.length; // fallback
       try {
@@ -135,7 +152,7 @@ export const getStaticProps: GetStaticProps<LandingPageProps> = async () => {
       }
 
       contributorsByRepo[fullName] = {
-        avatars,
+        avatars: avatarsData.slice(0, 3).map((c) => c.avatar_url),
         total,
       };
     } catch {
