@@ -19,14 +19,15 @@ export class RuleBasedBrain implements Brain {
       return null; // Throttle: decided not to respond
     }
 
-    // Generate output explicitly defining what, where, how
+    // Generate output explicitly defining what, where, how, and reasoning
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze and optimize the outcome of [${message.what}]`,
-      where: `Context: ${context.name} processing task from ${message.where}`,
-      how: `Using specialized ${context.role} strategies and evolved parameters`,
+      what: `Analyze and optimize the outcome of [${message.what}] focusing on ${context.role} aspects`,
+      where: `Context: ${context.name} processing task from [${message.where}]`,
+      how: `Applying specialized ${context.role} strategies, agentic context engineering, and alphaEvolve (gen ${context.parameters.generation || 1})`,
+      reasoning: `As a ${context.role}, it is critical to address the implications of [${message.what}] to ensure continuous improvement in security, performance, style, documentation, cleanliness, order, and overall optimization.`,
     };
 
     return response;

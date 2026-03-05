@@ -2,6 +2,8 @@ import { Mesh } from "../components/AgentMesh/logic/Mesh";
 import { Agent } from "../components/AgentMesh/logic/Agent";
 import { RuleBasedBrain } from "../components/AgentMesh/logic/RuleBasedBrain";
 import { Message } from "../components/AgentMesh/logic/Types";
+import * as fs from "fs";
+import * as path from "path";
 
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
@@ -9,22 +11,39 @@ async function startBackgroundMesh() {
   const mesh = new Mesh();
   const brain = new RuleBasedBrain();
 
-  // Set lower responsiveness for background to ensure it runs longer without maxing out
-  const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.2 });
-  const secAgent = new Agent("bg-agent-2", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.1 });
-  const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.1 });
+  // 1. Create specialized domain agents
+  const domainRoles = [
+    { id: "domain-sec", name: "SecAgent", role: "Security Optimizer", responsiveness: 0.3 },
+    { id: "domain-perf", name: "PerfAgent", role: "Performance Optimizer", responsiveness: 0.3 },
+    { id: "domain-style", name: "StyleAgent", role: "Style and Lint Enforcer", responsiveness: 0.2 },
+    { id: "domain-doc", name: "DocAgent", role: "Documentation Specialist", responsiveness: 0.2 },
+    { id: "domain-clean", name: "CleanAgent", role: "Cleanliness and Order Enforcer", responsiveness: 0.2 },
+    { id: "domain-opt", name: "PromptOptAgent", role: "Prompt and Implementation Optimizer", responsiveness: 0.3 },
+  ];
 
-  mesh.registerAgent(devAgent);
-  mesh.registerAgent(secAgent);
-  mesh.registerAgent(docAgent);
+  for (const roleDef of domainRoles) {
+    mesh.registerAgent(new Agent(roleDef.id, roleDef.name, roleDef.role, brain, { responsiveness: roleDef.responsiveness }));
+  }
+
+  // 2. Create directory-specific agents ("everything gets its own a2a agent")
+  const rootDir = path.resolve(__dirname, "..");
+  const mainDirs = ["components", "pages", "scripts", "styles", "public"];
+
+  for (const dirName of mainDirs) {
+    const dirPath = path.join(rootDir, dirName);
+    if (fs.existsSync(dirPath)) {
+      mesh.registerAgent(new Agent(`dir-${dirName}`, `${dirName}DirAgent`, `Directory Guardian for ${dirName}`, brain, { responsiveness: 0.1 }));
+    }
+  }
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
     what: "Run continuous background optimization and refactoring pass",
-    where: "components/AgentMesh/logic",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
+    where: "Entire Codebase",
+    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements across all directories",
+    reasoning: "To keep the project constantly optimized in terms of security, performance, style, documentation, cleanliness, order, and prompt effectiveness."
   };
 
   console.log("Broadcasting initial task to mesh...");
