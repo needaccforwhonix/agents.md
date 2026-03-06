@@ -10,13 +10,31 @@ async function startBackgroundMesh() {
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
-  const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.2 });
-  const secAgent = new Agent("bg-agent-2", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.1 });
-  const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.1 });
+  // Domains
+  const securityAgent = new Agent("bg-agent-sec", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.1 });
+  const performanceAgent = new Agent("bg-agent-perf", "SysPerfBot", "System Performance Analyst", brain, { responsiveness: 0.1 });
+  const styleAgent = new Agent("bg-agent-style", "SysStyleBot", "System Style Analyst", brain, { responsiveness: 0.1 });
+  const docAgent = new Agent("bg-agent-doc", "SysDocBot", "System Documenter", brain, { responsiveness: 0.1 });
+  const cleanAgent = new Agent("bg-agent-clean", "SysCleanBot", "System Cleanliness Analyst", brain, { responsiveness: 0.1 });
+  const orderAgent = new Agent("bg-agent-order", "SysOrderBot", "System Order Analyst", brain, { responsiveness: 0.1 });
+  const optAgent = new Agent("bg-agent-opt", "SysOptBot", "System Optimization Analyst", brain, { responsiveness: 0.1 });
 
-  mesh.registerAgent(devAgent);
-  mesh.registerAgent(secAgent);
+  // Directories
+  const componentsAgent = new Agent("bg-agent-dir-components", "SysComponentsBot", "Components Directory Analyst", brain, { responsiveness: 0.1 });
+  const pagesAgent = new Agent("bg-agent-dir-pages", "SysPagesBot", "Pages Directory Analyst", brain, { responsiveness: 0.1 });
+  const scriptsAgent = new Agent("bg-agent-dir-scripts", "SysScriptsBot", "Scripts Directory Analyst", brain, { responsiveness: 0.1 });
+
+  mesh.registerAgent(securityAgent);
+  mesh.registerAgent(performanceAgent);
+  mesh.registerAgent(styleAgent);
   mesh.registerAgent(docAgent);
+  mesh.registerAgent(cleanAgent);
+  mesh.registerAgent(orderAgent);
+  mesh.registerAgent(optAgent);
+
+  mesh.registerAgent(componentsAgent);
+  mesh.registerAgent(pagesAgent);
+  mesh.registerAgent(scriptsAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
@@ -25,6 +43,7 @@ async function startBackgroundMesh() {
     what: "Run continuous background optimization and refactoring pass",
     where: "components/AgentMesh/logic",
     how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
+    reasoning: "To keep the codebase up-to-date with security, performance, and best practices."
   };
 
   console.log("Broadcasting initial task to mesh...");

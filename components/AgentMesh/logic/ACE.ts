@@ -18,7 +18,7 @@ export function boundHistory(history: Message[], maxTokens: number = 2000): Mess
   // Iterate backwards to keep the most recent messages
   for (let i = history.length - 1; i >= 0; i--) {
     const msg = history[i];
-    const msgString = `${msg.what} ${msg.where} ${msg.how}`;
+    const msgString = `${msg.what} ${msg.where} ${msg.how} ${msg.reasoning}`;
     const tokens = countTokens(msgString);
 
     if (currentTokens + tokens <= maxTokens) {
