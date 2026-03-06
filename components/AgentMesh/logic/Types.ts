@@ -8,6 +8,8 @@ export interface Message {
   where: string;
   // Action: how is it desired
   how: string;
+  // Reasoning: why is it desired
+  reasoning: string;
 }
 
 export interface AgentContext {
