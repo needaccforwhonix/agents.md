@@ -12,16 +12,24 @@ export const MeshVisualizer: React.FC = () => {
     // 1. Initialize Mesh instance
     const mesh = new Mesh();
 
-    // 2. Create decoupled autonomous agents
+    // 2. Create decoupled autonomous agents for distinct domains
     const brain = new RuleBasedBrain();
-    const developerAgent = new Agent("agent-1", "DevBot", "Developer", brain, { responsiveness: 0.1 });
+    const developerAgent = new Agent("agent-1", "DevBot", "Logic Developer", brain, { responsiveness: 0.1 });
     const securityAgent = new Agent("agent-2", "SecBot", "Security Analyst", brain, { responsiveness: 0.05 });
-    const qaAgent = new Agent("agent-3", "QABot", "Quality Assurance", brain, { responsiveness: 0.05 });
+    const performanceAgent = new Agent("agent-3", "PerfBot", "Performance Engineer", brain, { responsiveness: 0.05 });
+    const styleAgent = new Agent("agent-4", "StyleBot", "Style & UI Designer", brain, { responsiveness: 0.05 });
+    const docAgent = new Agent("agent-5", "DocBot", "Documentation Specialist", brain, { responsiveness: 0.05 });
+    const cleanAgent = new Agent("agent-6", "CleanBot", "Cleanliness & Order Inspector", brain, { responsiveness: 0.05 });
+    const optAgent = new Agent("agent-7", "OptBot", "Prompt Optimization Engineer", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
     mesh.registerAgent(developerAgent);
     mesh.registerAgent(securityAgent);
-    mesh.registerAgent(qaAgent);
+    mesh.registerAgent(performanceAgent);
+    mesh.registerAgent(styleAgent);
+    mesh.registerAgent(docAgent);
+    mesh.registerAgent(cleanAgent);
+    mesh.registerAgent(optAgent);
 
     setAgents(mesh.getAgents());
 
@@ -34,6 +42,7 @@ export const MeshVisualizer: React.FC = () => {
         what: "Implement AST analyzer component for dynamic context testing",
         where: "components/AgentMesh/logic/AST.ts",
         how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
+        why: "To ensure that agent-generated code structures are valid, secure, and properly bounded within the system architecture.",
       };
 
       await mesh.broadcast(startMessage);
@@ -62,10 +71,11 @@ export const MeshVisualizer: React.FC = () => {
                   <span className="font-bold text-sm text-indigo-400">Sender: {msg.senderId}</span>
                   <span className="text-xs text-slate-500">{new Date(msg.timestamp).toLocaleTimeString()}</span>
                 </div>
-                <div className="space-y-2 mt-2">
+                <div className="space-y-2 mt-2 text-sm">
                   <p><strong className="text-teal-300">What:</strong> {msg.what}</p>
                   <p><strong className="text-pink-300">Where:</strong> {msg.where}</p>
                   <p><strong className="text-amber-300">How:</strong> {msg.how}</p>
+                  <p><strong className="text-purple-300">Why:</strong> {msg.why}</p>
                 </div>
               </div>
             ))}
