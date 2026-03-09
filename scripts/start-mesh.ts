@@ -10,21 +10,45 @@ async function startBackgroundMesh() {
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
-  const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.2 });
-  const secAgent = new Agent("bg-agent-2", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.1 });
-  const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.1 });
+  // Create an agent for every domain/directory as requested
+  const devAgent = new Agent("bg-agent-dev", "SysDevBot", "System Developer", brain, { responsiveness: 0.05 });
+
+  // Specific domains
+  const secAgent = new Agent("bg-agent-sec", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.05 });
+  const perfAgent = new Agent("bg-agent-perf", "SysPerfBot", "Performance Optimizer", brain, { responsiveness: 0.05 });
+  const styleAgent = new Agent("bg-agent-style", "SysStyleBot", "Style & Design Lead", brain, { responsiveness: 0.05 });
+  const docAgent = new Agent("bg-agent-doc", "SysDocBot", "System Documenter", brain, { responsiveness: 0.05 });
+  const cleanAgent = new Agent("bg-agent-clean", "SysCleanBot", "Code Cleanliness & Order Expert", brain, { responsiveness: 0.05 });
+  const orderAgent = new Agent("bg-agent-order", "SysOrderBot", "Architecture Order Lead", brain, { responsiveness: 0.05 });
+  const promptAgent = new Agent("bg-agent-prompt", "SysPromptBot", "Prompt Optimization Expert", brain, { responsiveness: 0.05 });
+
+  // Directories
+  const compAgent = new Agent("bg-agent-comp", "DirComponentsBot", "Components Directory Manager", brain, { responsiveness: 0.05 });
+  const pagesAgent = new Agent("bg-agent-pages", "DirPagesBot", "Pages Directory Manager", brain, { responsiveness: 0.05 });
+  const scriptsAgent = new Agent("bg-agent-scripts", "DirScriptsBot", "Scripts Directory Manager", brain, { responsiveness: 0.05 });
+  const stylesDirAgent = new Agent("bg-agent-styles-dir", "DirStylesBot", "Styles Directory Manager", brain, { responsiveness: 0.05 });
 
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
+  mesh.registerAgent(perfAgent);
+  mesh.registerAgent(styleAgent);
   mesh.registerAgent(docAgent);
+  mesh.registerAgent(cleanAgent);
+  mesh.registerAgent(orderAgent);
+  mesh.registerAgent(promptAgent);
+  mesh.registerAgent(compAgent);
+  mesh.registerAgent(pagesAgent);
+  mesh.registerAgent(scriptsAgent);
+  mesh.registerAgent(stylesDirAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass",
-    where: "components/AgentMesh/logic",
+    what: "Run continuous background optimization and refactoring pass across all domains and directories",
+    where: "entire codebase (components, pages, scripts, styles, etc.)",
     how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
+    reasoning: "To asynchronously and continuously evolve the system, optimizing for security, performance, style, documentation, cleanliness, order, and prompt improvements.",
   };
 
   console.log("Broadcasting initial task to mesh...");

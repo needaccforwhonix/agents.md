@@ -34,6 +34,7 @@ export const MeshVisualizer: React.FC = () => {
         what: "Implement AST analyzer component for dynamic context testing",
         where: "components/AgentMesh/logic/AST.ts",
         how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
+        reasoning: "Dynamic context testing is required for robust AST analysis as part of the system optimization.",
       };
 
       await mesh.broadcast(startMessage);
@@ -66,6 +67,7 @@ export const MeshVisualizer: React.FC = () => {
                   <p><strong className="text-teal-300">What:</strong> {msg.what}</p>
                   <p><strong className="text-pink-300">Where:</strong> {msg.where}</p>
                   <p><strong className="text-amber-300">How:</strong> {msg.how}</p>
+                  <p><strong className="text-purple-300">Reasoning:</strong> {msg.reasoning}</p>
                 </div>
               </div>
             ))}
