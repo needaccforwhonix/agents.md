@@ -12,16 +12,29 @@ export const MeshVisualizer: React.FC = () => {
     // 1. Initialize Mesh instance
     const mesh = new Mesh();
 
-    // 2. Create decoupled autonomous agents
+    // 2. Create decoupled autonomous agents for directories and domains
     const brain = new RuleBasedBrain();
-    const developerAgent = new Agent("agent-1", "DevBot", "Developer", brain, { responsiveness: 0.1 });
-    const securityAgent = new Agent("agent-2", "SecBot", "Security Analyst", brain, { responsiveness: 0.05 });
-    const qaAgent = new Agent("agent-3", "QABot", "Quality Assurance", brain, { responsiveness: 0.05 });
+
+    // Directory Agents
+    const componentsAgent = new Agent("dir-components", "ComponentsBot", "Components Directory Manager", brain, { responsiveness: 0.05 });
+    const pagesAgent = new Agent("dir-pages", "PagesBot", "Pages Directory Manager", brain, { responsiveness: 0.05 });
+    const scriptsAgent = new Agent("dir-scripts", "ScriptsBot", "Scripts Directory Manager", brain, { responsiveness: 0.05 });
+
+    // Domain Agents
+    const securityAgent = new Agent("dom-security", "SecurityBot", "Security Specialist", brain, { responsiveness: 0.05 });
+    const performanceAgent = new Agent("dom-performance", "PerformanceBot", "Performance Optimizer", brain, { responsiveness: 0.05 });
+    const styleAgent = new Agent("dom-style", "StyleBot", "Style and UI Expert", brain, { responsiveness: 0.05 });
+    const documentationAgent = new Agent("dom-docs", "DocsBot", "Documentation Maintainer", brain, { responsiveness: 0.05 });
+    const cleanlinessAgent = new Agent("dom-cleanliness", "CleanBot", "Code Cleanliness Enforcer", brain, { responsiveness: 0.05 });
+    const orderAgent = new Agent("dom-order", "OrderBot", "Architecture and Order Overseer", brain, { responsiveness: 0.05 });
+    const optimizationAgent = new Agent("dom-opt", "OptimizationBot", "Prompt and Process Optimizer", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
-    mesh.registerAgent(developerAgent);
-    mesh.registerAgent(securityAgent);
-    mesh.registerAgent(qaAgent);
+    const allAgents = [
+      componentsAgent, pagesAgent, scriptsAgent,
+      securityAgent, performanceAgent, styleAgent, documentationAgent, cleanlinessAgent, orderAgent, optimizationAgent
+    ];
+    allAgents.forEach(agent => mesh.registerAgent(agent));
 
     setAgents(mesh.getAgents());
 
@@ -34,6 +47,7 @@ export const MeshVisualizer: React.FC = () => {
         what: "Implement AST analyzer component for dynamic context testing",
         where: "components/AgentMesh/logic/AST.ts",
         how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
+        reasoning: "To enable safe dynamic parsing and code quality checks within the simulated environment.",
       };
 
       await mesh.broadcast(startMessage);
@@ -66,6 +80,7 @@ export const MeshVisualizer: React.FC = () => {
                   <p><strong className="text-teal-300">What:</strong> {msg.what}</p>
                   <p><strong className="text-pink-300">Where:</strong> {msg.where}</p>
                   <p><strong className="text-amber-300">How:</strong> {msg.how}</p>
+                  <p><strong className="text-purple-300">Why:</strong> {msg.reasoning}</p>
                 </div>
               </div>
             ))}

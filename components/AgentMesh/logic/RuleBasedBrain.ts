@@ -27,6 +27,7 @@ export class RuleBasedBrain implements Brain {
       what: `Analyze and optimize the outcome of [${message.what}]`,
       where: `Context: ${context.name} processing task from ${message.where}`,
       how: `Using specialized ${context.role} strategies and evolved parameters`,
+      reasoning: `To ensure continuous optimization and alignment with the ${context.role} domain objectives`,
     };
 
     return response;
