@@ -12,16 +12,36 @@ export const MeshVisualizer: React.FC = () => {
     // 1. Initialize Mesh instance
     const mesh = new Mesh();
 
-    // 2. Create decoupled autonomous agents
+    // 2. Create decoupled autonomous agents for directories and domains
     const brain = new RuleBasedBrain();
-    const developerAgent = new Agent("agent-1", "DevBot", "Developer", brain, { responsiveness: 0.1 });
-    const securityAgent = new Agent("agent-2", "SecBot", "Security Analyst", brain, { responsiveness: 0.05 });
-    const qaAgent = new Agent("agent-3", "QABot", "Quality Assurance", brain, { responsiveness: 0.05 });
+
+    // Directory Agents
+    const componentsAgent = new Agent("dir-components", "ComponentsDirBot", "Components Directory Manager", brain, { responsiveness: 0.05 });
+    const pagesAgent = new Agent("dir-pages", "PagesDirBot", "Pages Directory Manager", brain, { responsiveness: 0.05 });
+    const scriptsAgent = new Agent("dir-scripts", "ScriptsDirBot", "Scripts Directory Manager", brain, { responsiveness: 0.05 });
+
+    // Domain Agents
+    const securityAgent = new Agent("dom-security", "SecBot", "Security Specialist", brain, { responsiveness: 0.05 });
+    const performanceAgent = new Agent("dom-perf", "PerfBot", "Performance Optimizer", brain, { responsiveness: 0.05 });
+    const styleAgent = new Agent("dom-style", "StyleBot", "Style & UI/UX Expert", brain, { responsiveness: 0.05 });
+    const documentationAgent = new Agent("dom-docs", "DocBot", "Documentation Manager", brain, { responsiveness: 0.05 });
+    const cleanlinessAgent = new Agent("dom-clean", "CleanBot", "Code Cleanliness Specialist", brain, { responsiveness: 0.05 });
+    const orderAgent = new Agent("dom-order", "OrderBot", "Architecture & Order Specialist", brain, { responsiveness: 0.05 });
+    const optimizationAgent = new Agent("dom-opt", "OptBot", "General Optimization Specialist", brain, { responsiveness: 0.05 });
+    const promptAgent = new Agent("dom-prompt", "PromptBot", "Prompt Engineer & Improver", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
-    mesh.registerAgent(developerAgent);
+    mesh.registerAgent(componentsAgent);
+    mesh.registerAgent(pagesAgent);
+    mesh.registerAgent(scriptsAgent);
     mesh.registerAgent(securityAgent);
-    mesh.registerAgent(qaAgent);
+    mesh.registerAgent(performanceAgent);
+    mesh.registerAgent(styleAgent);
+    mesh.registerAgent(documentationAgent);
+    mesh.registerAgent(cleanlinessAgent);
+    mesh.registerAgent(orderAgent);
+    mesh.registerAgent(optimizationAgent);
+    mesh.registerAgent(promptAgent);
 
     setAgents(mesh.getAgents());
 
@@ -31,9 +51,10 @@ export const MeshVisualizer: React.FC = () => {
         id: crypto.randomUUID(),
         senderId: "user-init",
         timestamp: Date.now(),
-        what: "Implement AST analyzer component for dynamic context testing",
-        where: "components/AgentMesh/logic/AST.ts",
-        how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
+        what: "Analyze current codebase structure, optimize prompts, and identify areas for improvement",
+        where: "Project-wide (components, pages, scripts, etc.)",
+        how: "Collaborate asynchronously utilizing AlphaEvolve and ACE to propose parallel improvements",
+        reasoning: "To continuously ensure security, performance, style, documentation, cleanliness, order, and overall prompt optimization.",
       };
 
       await mesh.broadcast(startMessage);
@@ -66,6 +87,7 @@ export const MeshVisualizer: React.FC = () => {
                   <p><strong className="text-teal-300">What:</strong> {msg.what}</p>
                   <p><strong className="text-pink-300">Where:</strong> {msg.where}</p>
                   <p><strong className="text-amber-300">How:</strong> {msg.how}</p>
+                  <p><strong className="text-purple-300">Reasoning:</strong> {msg.reasoning}</p>
                 </div>
               </div>
             ))}
