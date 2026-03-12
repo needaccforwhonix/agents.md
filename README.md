@@ -47,3 +47,21 @@ that explains the project’s goals in a simple way, and featuring some examples
    pnpm run dev
    ```
 3. Open your browser and go to http://localhost:3000
+
+## Agent2Agent Mesh Architecture
+
+This project also features a parallel broadcast simulation of an Agent Mesh.
+All Agents utilize the explicit `Message` protocol which expects:
+* `what` (Intent)
+* `where` (Location)
+* `how` (Action)
+* `reasoning` (Why it is desired)
+
+Specialized domains include: Security, Performance, Style, Documentation,
+Cleanliness, Order, Optimization. And directories are managed separately
+(e.g., Components, Pages, Scripts).
+
+### Running the background simulation
+```bash
+npx tsx scripts/start-mesh.ts
+```

@@ -17,11 +17,25 @@ export const MeshVisualizer: React.FC = () => {
     const developerAgent = new Agent("agent-1", "DevBot", "Developer", brain, { responsiveness: 0.1 });
     const securityAgent = new Agent("agent-2", "SecBot", "Security Analyst", brain, { responsiveness: 0.05 });
     const qaAgent = new Agent("agent-3", "QABot", "Quality Assurance", brain, { responsiveness: 0.05 });
+    const performanceAgent = new Agent("agent-4", "PerfBot", "Performance Optimizer", brain, { responsiveness: 0.05 });
+    const styleAgent = new Agent("agent-5", "StyleBot", "Style Enforcer", brain, { responsiveness: 0.05 });
+    const cleanlinessAgent = new Agent("agent-6", "CleanBot", "Cleanliness & Order", brain, { responsiveness: 0.05 });
+    const optimizationAgent = new Agent("agent-7", "OptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.05 });
+    const componentsAgent = new Agent("agent-dir-1", "CompBot", "Components Manager", brain, { responsiveness: 0.05 });
+    const pagesAgent = new Agent("agent-dir-2", "PageBot", "Pages Manager", brain, { responsiveness: 0.05 });
+    const scriptsAgent = new Agent("agent-dir-3", "ScriptBot", "Scripts Manager", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
     mesh.registerAgent(developerAgent);
     mesh.registerAgent(securityAgent);
     mesh.registerAgent(qaAgent);
+    mesh.registerAgent(performanceAgent);
+    mesh.registerAgent(styleAgent);
+    mesh.registerAgent(cleanlinessAgent);
+    mesh.registerAgent(optimizationAgent);
+    mesh.registerAgent(componentsAgent);
+    mesh.registerAgent(pagesAgent);
+    mesh.registerAgent(scriptsAgent);
 
     setAgents(mesh.getAgents());
 
@@ -34,6 +48,7 @@ export const MeshVisualizer: React.FC = () => {
         what: "Implement AST analyzer component for dynamic context testing",
         where: "components/AgentMesh/logic/AST.ts",
         how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
+        reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
       };
 
       await mesh.broadcast(startMessage);
@@ -66,6 +81,7 @@ export const MeshVisualizer: React.FC = () => {
                   <p><strong className="text-teal-300">What:</strong> {msg.what}</p>
                   <p><strong className="text-pink-300">Where:</strong> {msg.where}</p>
                   <p><strong className="text-amber-300">How:</strong> {msg.how}</p>
+                  {msg.reasoning && <p><strong className="text-purple-300">Reasoning:</strong> {msg.reasoning}</p>}
                 </div>
               </div>
             ))}

@@ -24,6 +24,15 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
         errors.push("Security Warning: Usage of eval() is not allowed in agent outputs.");
       }
     }
+
+    // Demock validation: Ensure no hardcoded dummy data patterns exist
+    if (ts.isStringLiteral(node)) {
+      const text = node.getText(sourceFile);
+      if (text.includes("dummy") || text.includes("mock_")) {
+        errors.push("Cleanliness Warning: Dummy data or mock objects detected. Please use proper typing or context-driven state.");
+      }
+    }
+
     ts.forEachChild(node, visit);
   };
 
