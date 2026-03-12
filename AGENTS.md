@@ -33,10 +33,17 @@ If you add or update dependencies remember to:
 | ------------------ | -------------------------------------------------- |
 | `npm run dev`      | Start the Next.js dev server with HMR.             |
 | `npm run lint`     | Run ESLint checks.                                 |
-| `npm run test`     | Execute the test suite (if present).               |
+| `npm run test`     | Execute the test suite using vitest.               |
 | `npm run build`    | **Production build – _do not run during agent sessions_** |
 
 ---
+
+## Agent Mesh Directives
+
+When modifying the Agent2Agent mesh:
+* Always implement the `Message` protocol completely, providing explicit `what`, `where`, `how`, and `reasoning`.
+* Ensure domain specific bots (e.g. `SysSecBot`, `SysPerfBot`) are handled correctly.
+* Run `npx tsx scripts/start-mesh.ts` to test background processing changes.
 
 Following these practices ensures that the agent-assisted development workflow stays
 fast and dependable.  When in doubt, restart the dev server rather than running the

@@ -13,10 +13,24 @@ async function startBackgroundMesh() {
   const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.2 });
   const secAgent = new Agent("bg-agent-2", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.1 });
   const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.1 });
+  const perfAgent = new Agent("bg-agent-4", "SysPerfBot", "System Performance Optimizer", brain, { responsiveness: 0.1 });
+  const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.1 });
+  const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.1 });
+  const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.1 });
+  const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.1 });
+  const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.1 });
+  const scriptsAgent = new Agent("bg-agent-dir-3", "SysScriptBot", "Scripts Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
   mesh.registerAgent(docAgent);
+  mesh.registerAgent(perfAgent);
+  mesh.registerAgent(styleAgent);
+  mesh.registerAgent(cleanAgent);
+  mesh.registerAgent(optAgent);
+  mesh.registerAgent(componentsAgent);
+  mesh.registerAgent(pagesAgent);
+  mesh.registerAgent(scriptsAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
@@ -25,6 +39,7 @@ async function startBackgroundMesh() {
     what: "Run continuous background optimization and refactoring pass",
     where: "components/AgentMesh/logic",
     how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
+    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
   };
 
   console.log("Broadcasting initial task to mesh...");
