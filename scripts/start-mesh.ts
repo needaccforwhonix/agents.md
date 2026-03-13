@@ -6,7 +6,7 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh();
+  const mesh = new Mesh(500); // Higher message limit for a longer background simulation
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
@@ -15,7 +15,8 @@ async function startBackgroundMesh() {
   const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.1 });
   const perfAgent = new Agent("bg-agent-4", "SysPerfBot", "System Performance Optimizer", brain, { responsiveness: 0.1 });
   const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.1 });
-  const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.1 });
+  const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness", brain, { responsiveness: 0.1 });
+  const orderAgent = new Agent("bg-agent-6b", "SysOrderBot", "System Order", brain, { responsiveness: 0.1 });
   const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.1 });
   const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.1 });
   const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.1 });
@@ -27,6 +28,7 @@ async function startBackgroundMesh() {
   mesh.registerAgent(perfAgent);
   mesh.registerAgent(styleAgent);
   mesh.registerAgent(cleanAgent);
+  mesh.registerAgent(orderAgent);
   mesh.registerAgent(optAgent);
   mesh.registerAgent(componentsAgent);
   mesh.registerAgent(pagesAgent);
