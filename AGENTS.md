@@ -40,10 +40,13 @@ If you add or update dependencies remember to:
 
 ## Agent Mesh Directives
 
-When modifying the Agent2Agent mesh:
-* Always implement the `Message` protocol completely, providing explicit `what`, `where`, `how`, and `reasoning`.
-* Ensure domain specific bots (e.g. `SysSecBot`, `SysPerfBot`) are handled correctly.
-* Run `npx tsx scripts/start-mesh.ts` to test background processing changes.
+When modifying the Agent2Agent mesh, follow the core architecture:
+* **Everything gets its own A2A Agent**: Domains (Security, Performance, Style, Documentation, Cleanliness, Order, Optimization) and directories (Components, Pages, Scripts, Tests, Styles, Public) each have dedicated agents.
+* **All Outputs as Inputs**: Every A2A agent receives every output as input and can independently decide how to react.
+* **Agentic Context Engineering & AlphaEvolve**: Agents use reasoning, full context, and continuous parameter mutation to evolve asynchronously.
+* Always implement the `Message` protocol completely. Input and Output must explicitly describe `what` (Intent), `where` (Location), `how` (Action), and `reasoning` (Why).
+* Aim for asynchronous, parallel development ensuring everything is continuously evolved and kept up-to-date.
+* Run `npx tsx scripts/start-mesh.ts` to test background processing changes and start at least one complete A2A Agent mesh per session.
 
 Following these practices ensures that the agent-assisted development workflow stays
 fast and dependable.  When in doubt, restart the dev server rather than running the

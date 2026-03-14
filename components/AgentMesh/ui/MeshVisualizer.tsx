@@ -10,9 +10,9 @@ export const MeshVisualizer: React.FC = () => {
 
   useEffect(() => {
     // 1. Initialize Mesh instance
-    const mesh = new Mesh();
+    const mesh = new Mesh(500); // Extended limit for deeper UI visualization
 
-    // 2. Create decoupled autonomous agents
+    // 2. Create decoupled autonomous agents ("everything gets its own a2a agent")
     const brain = new RuleBasedBrain();
     const developerAgent = new Agent("agent-1", "DevBot", "Developer", brain, { responsiveness: 0.1 });
     const securityAgent = new Agent("agent-2", "SecBot", "Security Analyst", brain, { responsiveness: 0.05 });
@@ -21,9 +21,15 @@ export const MeshVisualizer: React.FC = () => {
     const styleAgent = new Agent("agent-5", "StyleBot", "Style Enforcer", brain, { responsiveness: 0.05 });
     const cleanlinessAgent = new Agent("agent-6", "CleanBot", "Cleanliness & Order", brain, { responsiveness: 0.05 });
     const optimizationAgent = new Agent("agent-7", "OptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.05 });
+
+    // Directory Agents
     const componentsAgent = new Agent("agent-dir-1", "CompBot", "Components Manager", brain, { responsiveness: 0.05 });
     const pagesAgent = new Agent("agent-dir-2", "PageBot", "Pages Manager", brain, { responsiveness: 0.05 });
     const scriptsAgent = new Agent("agent-dir-3", "ScriptBot", "Scripts Manager", brain, { responsiveness: 0.05 });
+    const testAgent = new Agent("agent-dir-4", "TestBot", "Tests Manager", brain, { responsiveness: 0.05 });
+    const stylesAgent = new Agent("agent-dir-5", "StylesDirBot", "Styles Manager", brain, { responsiveness: 0.05 });
+    const publicAgent = new Agent("agent-dir-6", "PublicBot", "Public Assets Manager", brain, { responsiveness: 0.05 });
+    const rootAgent = new Agent("agent-dir-7", "RootBot", "Root Files Manager", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
     mesh.registerAgent(developerAgent);
@@ -36,6 +42,10 @@ export const MeshVisualizer: React.FC = () => {
     mesh.registerAgent(componentsAgent);
     mesh.registerAgent(pagesAgent);
     mesh.registerAgent(scriptsAgent);
+    mesh.registerAgent(testAgent);
+    mesh.registerAgent(stylesAgent);
+    mesh.registerAgent(publicAgent);
+    mesh.registerAgent(rootAgent);
 
     setAgents(mesh.getAgents());
 
@@ -45,10 +55,10 @@ export const MeshVisualizer: React.FC = () => {
         id: crypto.randomUUID(),
         senderId: "user-init",
         timestamp: Date.now(),
-        what: "Implement AST analyzer component for dynamic context testing",
-        where: "components/AgentMesh/logic/AST.ts",
-        how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
-        reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
+        what: "Initiate full A2A Agent mesh asynchronous parallel evolution",
+        where: "All Repository Domains and Directories",
+        how: "Every agent receives every output as input. Respond using explicit protocol, full context, and AlphaEvolve.",
+        reasoning: "To keep everything continuously evolving safely and staying up-to-date with explicit reasoning.",
       };
 
       await mesh.broadcast(startMessage);

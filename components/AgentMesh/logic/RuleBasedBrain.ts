@@ -19,15 +19,19 @@ export class RuleBasedBrain implements Brain {
       return null; // Throttle: decided not to respond
     }
 
-    // Generate output explicitly defining what, where, how, reasoning
+    // Ensure all Outputs as Inputs are explicitly and dynamically defining what, where, how, reasoning
+    const evolvedParamsStr = Object.keys(context.parameters).length > 0
+      ? `evolved parameters (gen: ${context.parameters.generation?.toFixed(2) || 1})`
+      : `strategies`;
+
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze and optimize the outcome of [${message.what}]`,
-      where: `Context: ${context.name} processing task from ${message.where}`,
-      how: `Using specialized ${context.role} strategies and evolved parameters`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order.`,
+      what: `Continuously evolve and optimize the outcome of: [${message.what}]`,
+      where: `Agent2Agent Context: ${context.name} applying domain rules to [${message.where}]`,
+      how: `Utilizing Agentic Context Engineering, AlphaEvolve, and ${context.role} ${evolvedParamsStr} asynchronously`,
+      reasoning: `As an autonomous ${context.role} A2A agent, I received this output as input. I must react to ensure continuous parallel development, focusing strictly on optimization, security, performance, style, documentation, cleanliness, and order.`,
     };
 
     return response;

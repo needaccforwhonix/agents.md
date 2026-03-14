@@ -50,18 +50,16 @@ that explains the project’s goals in a simple way, and featuring some examples
 
 ## Agent2Agent Mesh Architecture
 
-This project also features a parallel broadcast simulation of an Agent Mesh.
-All Agents utilize the explicit `Message` protocol which expects:
-* `what` (Intent)
-* `where` (Location)
-* `how` (Action)
-* `reasoning` (Why it is desired)
+This project features a parallel broadcast simulation of an Agent Mesh, operating on an asynchronous agent2agent (A2A) structure.
 
-Specialized domains include: Security, Performance, Style, Documentation,
-Cleanliness, Order, Optimization. And directories are managed separately
-(e.g., Components, Pages, Scripts).
+### Core Concepts:
+- **Everything gets its own A2A agent**: Directories (Components, Pages, Scripts, Tests, etc.) and Domains (Security, Performance, Style, Documentation, Cleanliness, Order, Optimization) each have dedicated agents to ensure asynchronous, parallel evolution and updating.
+- **All Outputs as Inputs**: Every A2A agent receives every output as input and independently decides how to react using full context.
+- **Agentic Context Engineering & AlphaEvolve**: Agents utilize the explicit `Message` protocol bounded by ACE and adapt over time using the AlphaEvolve algorithm with reasoning.
+- **Explicit Protocol**: Input and Output messages must unambiguously describe `what` (Intent), `where` (Location), `how` (Action), and `reasoning` (Why it is desired).
 
 ### Running the background simulation
+Start at least one complete A2A Agent mesh per session to ensure code continues to evolve asynchronously.
 ```bash
 npx tsx scripts/start-mesh.ts
 ```
