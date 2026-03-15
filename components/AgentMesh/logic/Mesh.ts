@@ -11,7 +11,11 @@ export class Mesh {
   private messages: Message[] = [];
 
   // Throttle limit to prevent out of control infinite broadcast chains
-  private messageLimit: number = 100;
+  private messageLimit: number;
+
+  constructor(messageLimit: number = 100) {
+    this.messageLimit = messageLimit;
+  }
 
   public registerAgent(agent: Agent) {
     this.agents.set(agent.context.id, agent);

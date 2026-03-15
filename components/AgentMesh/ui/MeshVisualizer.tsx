@@ -10,7 +10,7 @@ export const MeshVisualizer: React.FC = () => {
 
   useEffect(() => {
     // 1. Initialize Mesh instance
-    const mesh = new Mesh();
+    const mesh = new Mesh(500);
 
     // 2. Create decoupled autonomous agents
     const brain = new RuleBasedBrain();
@@ -24,6 +24,9 @@ export const MeshVisualizer: React.FC = () => {
     const componentsAgent = new Agent("agent-dir-1", "CompBot", "Components Manager", brain, { responsiveness: 0.05 });
     const pagesAgent = new Agent("agent-dir-2", "PageBot", "Pages Manager", brain, { responsiveness: 0.05 });
     const scriptsAgent = new Agent("agent-dir-3", "ScriptBot", "Scripts Manager", brain, { responsiveness: 0.05 });
+    const stylesDirAgent = new Agent("agent-dir-4", "StylesBot", "Styles Manager", brain, { responsiveness: 0.05 });
+    const publicAgent = new Agent("agent-dir-5", "PublicBot", "Public Manager", brain, { responsiveness: 0.05 });
+    const testAgent = new Agent("agent-dir-6", "TestBot", "Test Manager", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
     mesh.registerAgent(developerAgent);
@@ -36,6 +39,9 @@ export const MeshVisualizer: React.FC = () => {
     mesh.registerAgent(componentsAgent);
     mesh.registerAgent(pagesAgent);
     mesh.registerAgent(scriptsAgent);
+    mesh.registerAgent(stylesDirAgent);
+    mesh.registerAgent(publicAgent);
+    mesh.registerAgent(testAgent);
 
     setAgents(mesh.getAgents());
 
@@ -45,9 +51,9 @@ export const MeshVisualizer: React.FC = () => {
         id: crypto.randomUUID(),
         senderId: "user-init",
         timestamp: Date.now(),
-        what: "Implement AST analyzer component for dynamic context testing",
-        where: "components/AgentMesh/logic/AST.ts",
-        how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
+        what: "Implement AST analyzer and dynamically optimize logic and prompts",
+        where: "All directories and agent context",
+        how: "Utilize TypeScript Compiler API for parsing and Agentic Context Engineering to optimize prompts and their implementations in parallel",
         reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
       };
 
