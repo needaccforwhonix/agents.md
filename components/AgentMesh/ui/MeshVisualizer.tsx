@@ -10,13 +10,13 @@ export const MeshVisualizer: React.FC = () => {
 
   useEffect(() => {
     // 1. Initialize Mesh instance
-    const mesh = new Mesh();
+    const mesh = new Mesh(500);
 
     // 2. Create decoupled autonomous agents
     const brain = new RuleBasedBrain();
     const developerAgent = new Agent("agent-1", "DevBot", "Developer", brain, { responsiveness: 0.1 });
     const securityAgent = new Agent("agent-2", "SecBot", "Security Analyst", brain, { responsiveness: 0.05 });
-    const qaAgent = new Agent("agent-3", "QABot", "Quality Assurance", brain, { responsiveness: 0.05 });
+    const docAgent = new Agent("agent-3", "DocBot", "Documentation Manager", brain, { responsiveness: 0.05 });
     const performanceAgent = new Agent("agent-4", "PerfBot", "Performance Optimizer", brain, { responsiveness: 0.05 });
     const styleAgent = new Agent("agent-5", "StyleBot", "Style Enforcer", brain, { responsiveness: 0.05 });
     const cleanlinessAgent = new Agent("agent-6", "CleanBot", "Cleanliness & Order", brain, { responsiveness: 0.05 });
@@ -24,11 +24,14 @@ export const MeshVisualizer: React.FC = () => {
     const componentsAgent = new Agent("agent-dir-1", "CompBot", "Components Manager", brain, { responsiveness: 0.05 });
     const pagesAgent = new Agent("agent-dir-2", "PageBot", "Pages Manager", brain, { responsiveness: 0.05 });
     const scriptsAgent = new Agent("agent-dir-3", "ScriptBot", "Scripts Manager", brain, { responsiveness: 0.05 });
+    const testAgent = new Agent("agent-dir-4", "TestBot", "Test Directory Manager", brain, { responsiveness: 0.05 });
+    const stylesDirAgent = new Agent("agent-dir-5", "StylesBot", "Styles Directory Manager", brain, { responsiveness: 0.05 });
+    const publicAgent = new Agent("agent-dir-6", "PublicBot", "Public Directory Manager", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
     mesh.registerAgent(developerAgent);
     mesh.registerAgent(securityAgent);
-    mesh.registerAgent(qaAgent);
+    mesh.registerAgent(docAgent);
     mesh.registerAgent(performanceAgent);
     mesh.registerAgent(styleAgent);
     mesh.registerAgent(cleanlinessAgent);
@@ -36,6 +39,9 @@ export const MeshVisualizer: React.FC = () => {
     mesh.registerAgent(componentsAgent);
     mesh.registerAgent(pagesAgent);
     mesh.registerAgent(scriptsAgent);
+    mesh.registerAgent(testAgent);
+    mesh.registerAgent(stylesDirAgent);
+    mesh.registerAgent(publicAgent);
 
     setAgents(mesh.getAgents());
 
