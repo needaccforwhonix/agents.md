@@ -6,7 +6,7 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh();
+  const mesh = new Mesh(500);
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
@@ -17,9 +17,16 @@ async function startBackgroundMesh() {
   const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.1 });
   const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.1 });
   const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.1 });
+
+  // Directory specific agents
   const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.1 });
   const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.1 });
   const scriptsAgent = new Agent("bg-agent-dir-3", "SysScriptBot", "Scripts Manager", brain, { responsiveness: 0.1 });
+  const testAgent = new Agent("bg-agent-dir-4", "SysTestDirBot", "Test Manager", brain, { responsiveness: 0.1 });
+  const stylesAgent = new Agent("bg-agent-dir-5", "SysStyleDirBot", "Styles Manager", brain, { responsiveness: 0.1 });
+  const publicAgent = new Agent("bg-agent-dir-6", "SysPublicDirBot", "Public Manager", brain, { responsiveness: 0.1 });
+  const githubAgent = new Agent("bg-agent-dir-7", "SysGithubDirBot", "Github Config Manager", brain, { responsiveness: 0.1 });
+  const rootAgent = new Agent("bg-agent-dir-8", "SysRootDirBot", "Root Files Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
@@ -28,18 +35,24 @@ async function startBackgroundMesh() {
   mesh.registerAgent(styleAgent);
   mesh.registerAgent(cleanAgent);
   mesh.registerAgent(optAgent);
+
   mesh.registerAgent(componentsAgent);
   mesh.registerAgent(pagesAgent);
   mesh.registerAgent(scriptsAgent);
+  mesh.registerAgent(testAgent);
+  mesh.registerAgent(stylesAgent);
+  mesh.registerAgent(publicAgent);
+  mesh.registerAgent(githubAgent);
+  mesh.registerAgent(rootAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass",
-    where: "components/AgentMesh/logic",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
-    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
+    what: "Run a deep, continuous asynchronous parallel optimization pass across all components, directories, and agents.",
+    where: "entire codebase including root, test, styles, public, and .github directories.",
+    how: "Use full context Agentic Context Engineering and AlphaEvolve to analyze and propose non-destructive additive refactorings and prompt/logic implementation optimization.",
+    reasoning: "To ensure everything continuously evolves and stays perfectly up to date in regards to security, performance, style, documentation, cleanliness, order, and prompt optimization.",
   };
 
   console.log("Broadcasting initial task to mesh...");
