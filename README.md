@@ -61,7 +61,17 @@ Specialized domains include: Security, Performance, Style, Documentation,
 Cleanliness, Order, Optimization. And directories are managed separately
 (e.g., Components, Pages, Scripts).
 
+The system integrates features such as:
+- **Agentic Context Engineering (ACE):** Token bounding logic to keep large message histories memory-safe.
+- **Demock AST validation:** TypeScript parsing to strictly disallow mocked variables, empty functions, or fake data.
+- **AlphaEvolve Algorithm:** Generation-based parameter mutation decay (simulated annealing) applied asynchronously.
+- **Role-based Logic:** Brain nodes that strictly respond depending on contextual agent responsibilities.
+
 ### Running the background simulation
 ```bash
+# Start background simulation directly
 npx tsx scripts/start-mesh.ts
+
+# Or via package.json E2E check
+pnpm run test:mesh
 ```

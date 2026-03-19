@@ -26,3 +26,4 @@ jobs:
     - run: pnpm run lint
     - run: pnpm exec tsc --noEmit
     - run: pnpm test
+    - run: pnpm run test:mesh

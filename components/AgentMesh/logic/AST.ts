@@ -25,11 +25,35 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       }
     }
 
-    // Demock validation: Ensure no hardcoded dummy data patterns exist
+    // Demock validation: Ensure no hardcoded dummy data patterns exist in strings
     if (ts.isStringLiteral(node)) {
       const text = node.getText(sourceFile);
       if (text.includes("dummy") || text.includes("mock_")) {
-        errors.push("Cleanliness Warning: Dummy data or mock objects detected. Please use proper typing or context-driven state.");
+        errors.push("Cleanliness Warning: Dummy data or mock string detected. Please use proper typing or context-driven state.");
+      }
+    }
+
+    // Demock validation: Check identifiers (variable names, function names) for mock/dummy patterns
+    if (ts.isIdentifier(node)) {
+      const text = node.getText(sourceFile).toLowerCase();
+      if (text.includes("dummy") || text.includes("mock_")) {
+        errors.push(`Cleanliness Warning: Dummy/Mock identifier '${node.getText(sourceFile)}' detected. Avoid hardcoded mock states.`);
+      }
+    }
+
+    // Code Quality validation: Check for empty function bodies
+    if (ts.isBlock(node) && node.parent) {
+      if (
+        ts.isFunctionDeclaration(node.parent) ||
+        ts.isMethodDeclaration(node.parent) ||
+        ts.isArrowFunction(node.parent) ||
+        ts.isFunctionExpression(node.parent)
+      ) {
+        // Filter out trivia like comments to see if it's truly empty
+        const isActuallyEmpty = node.statements.length === 0;
+        if (isActuallyEmpty) {
+          errors.push("Code Quality Warning: Empty function body detected. All functions should have implementation or be removed.");
+        }
       }
     }
 
