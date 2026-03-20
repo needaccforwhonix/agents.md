@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "echo 'Skipping next lint temporarily'",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:mesh": "npx tsx scripts/start-mesh.ts"
   },
   "dependencies": {
     "@tailwindcss/postcss": "4.1.11",

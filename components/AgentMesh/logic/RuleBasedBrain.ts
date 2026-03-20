@@ -24,10 +24,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze and optimize the outcome of [${message.what}]`,
+      what: `Analyze, refactor, and continuously optimize the outcome of [${message.what}]`,
       where: `Context: ${context.name} processing task from ${message.where}`,
-      how: `Using specialized ${context.role} strategies and evolved parameters`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order.`,
+      how: `Using specialized ${context.role} strategies, Agentic Context Engineering (ACE), and AlphaEvolve algorithms with full reasoning`,
+      reasoning: `As a ${context.role}, I must ensure the asynchronous output aligns with continuous prompt/logic optimization, security, performance, style, documentation, cleanliness, and order.`,
     };
 
     return response;
