@@ -6,31 +6,49 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh();
+  const mesh = new Mesh(500);
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
   const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.2 });
-  const secAgent = new Agent("bg-agent-2", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.1 });
-  const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.1 });
-  const perfAgent = new Agent("bg-agent-4", "SysPerfBot", "System Performance Optimizer", brain, { responsiveness: 0.1 });
-  const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.1 });
-  const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.1 });
-  const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.1 });
-  const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.1 });
-  const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.1 });
-  const scriptsAgent = new Agent("bg-agent-dir-3", "SysScriptBot", "Scripts Manager", brain, { responsiveness: 0.1 });
+
+  // Domain Agents
+  const secAgent = new Agent("bg-agent-sec", "SysSecBot", "Security Analyst", brain, { responsiveness: 0.1 });
+  const perfAgent = new Agent("bg-agent-perf", "SysPerfBot", "Performance Optimizer", brain, { responsiveness: 0.1 });
+  const styleAgent = new Agent("bg-agent-style", "SysStyleBot", "Style Enforcer", brain, { responsiveness: 0.1 });
+  const docAgent = new Agent("bg-agent-doc", "SysDocBot", "Documentation Manager", brain, { responsiveness: 0.1 });
+  const cleanAgent = new Agent("bg-agent-clean", "SysCleanBot", "Cleanliness Manager", brain, { responsiveness: 0.1 });
+  const orderAgent = new Agent("bg-agent-order", "SysOrderBot", "Order Manager", brain, { responsiveness: 0.1 });
+  const optAgent = new Agent("bg-agent-opt", "SysOptBot", "Optimization Manager", brain, { responsiveness: 0.1 });
+
+  // Directory Agents
+  const rootAgent = new Agent("bg-agent-dir-root", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
+  const componentsAgent = new Agent("bg-agent-dir-comp", "SysCompBot", "Components Directory Manager", brain, { responsiveness: 0.1 });
+  const pagesAgent = new Agent("bg-agent-dir-page", "SysPageBot", "Pages Directory Manager", brain, { responsiveness: 0.1 });
+  const scriptsAgent = new Agent("bg-agent-dir-script", "SysScriptBot", "Scripts Directory Manager", brain, { responsiveness: 0.1 });
+  const testAgent = new Agent("bg-agent-dir-test", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
+  const stylesAgent = new Agent("bg-agent-dir-styles", "SysStylesBot", "Styles Directory Manager", brain, { responsiveness: 0.1 });
+  const publicAgent = new Agent("bg-agent-dir-public", "SysPublicBot", "Public Directory Manager", brain, { responsiveness: 0.1 });
+  const githubAgent = new Agent("bg-agent-dir-github", "SysGithubBot", "Github Directory Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(devAgent);
+
   mesh.registerAgent(secAgent);
-  mesh.registerAgent(docAgent);
   mesh.registerAgent(perfAgent);
   mesh.registerAgent(styleAgent);
+  mesh.registerAgent(docAgent);
   mesh.registerAgent(cleanAgent);
+  mesh.registerAgent(orderAgent);
   mesh.registerAgent(optAgent);
+
+  mesh.registerAgent(rootAgent);
   mesh.registerAgent(componentsAgent);
   mesh.registerAgent(pagesAgent);
   mesh.registerAgent(scriptsAgent);
+  mesh.registerAgent(testAgent);
+  mesh.registerAgent(stylesAgent);
+  mesh.registerAgent(publicAgent);
+  mesh.registerAgent(githubAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
