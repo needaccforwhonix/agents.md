@@ -9,9 +9,11 @@ import { Message } from "./Types";
 export class Mesh {
   private agents: Map<string, Agent> = new Map();
   private messages: Message[] = [];
+  private messageLimit: number;
 
-  // Throttle limit to prevent out of control infinite broadcast chains
-  private messageLimit: number = 100;
+  constructor(messageLimit: number = 100) {
+    this.messageLimit = messageLimit;
+  }
 
   public registerAgent(agent: Agent) {
     this.agents.set(agent.context.id, agent);
