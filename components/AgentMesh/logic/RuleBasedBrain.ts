@@ -20,14 +20,15 @@ export class RuleBasedBrain implements Brain {
     }
 
     // Generate output explicitly defining what, where, how, reasoning
+    const evolvedParams = JSON.stringify(context.parameters);
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze and optimize the outcome of [${message.what}]`,
-      where: `Context: ${context.name} processing task from ${message.where}`,
-      how: `Using specialized ${context.role} strategies and evolved parameters`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order.`,
+      what: `Propose advanced optimizations, refactoring, or additions for [${message.what}] based on my role.`,
+      where: `Targeting [${message.where}] within the context of ${context.name}'s responsibilities.`,
+      how: `By applying specialized ${context.role} strategies, validating against code bounds, and generating actionable code or documentation.`,
+      reasoning: `As a ${context.role}, continuous optimization is required. My evolved generation (${context.parameters.generation || 1}) and parameters (${evolvedParams}) drive me to refine security, performance, style, cleanliness, and order.`,
     };
 
     return response;
