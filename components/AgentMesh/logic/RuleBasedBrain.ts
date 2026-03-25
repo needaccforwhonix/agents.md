@@ -19,15 +19,20 @@ export class RuleBasedBrain implements Brain {
       return null; // Throttle: decided not to respond
     }
 
+    // Extract evolved parameters for reasoning payload
+    const paramString = Object.entries(context.parameters)
+      .map(([k, v]) => `${k}:${typeof v === 'number' ? v.toFixed(3) : v}`)
+      .join(', ');
+
     // Generate output explicitly defining what, where, how, reasoning
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze and optimize the outcome of [${message.what}]`,
-      where: `Context: ${context.name} processing task from ${message.where}`,
-      how: `Using specialized ${context.role} strategies and evolved parameters`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order.`,
+      what: `Analyze and optimize the outcome of [${message.what}] according to ${context.role} standards.`,
+      where: `In relation to ${message.where} handled by ${context.name}.`,
+      how: `Apply domain-specific rules based on ${context.role} and AlphaEvolve mutation context.`,
+      reasoning: `Ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order. Evolved state: [${paramString}].`,
     };
 
     return response;

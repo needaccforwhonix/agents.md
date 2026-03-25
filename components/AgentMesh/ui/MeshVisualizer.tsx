@@ -10,7 +10,7 @@ export const MeshVisualizer: React.FC = () => {
 
   useEffect(() => {
     // 1. Initialize Mesh instance
-    const mesh = new Mesh();
+    const mesh = new Mesh(500);
 
     // 2. Create decoupled autonomous agents
     const brain = new RuleBasedBrain();
@@ -24,6 +24,11 @@ export const MeshVisualizer: React.FC = () => {
     const componentsAgent = new Agent("agent-dir-1", "CompBot", "Components Manager", brain, { responsiveness: 0.05 });
     const pagesAgent = new Agent("agent-dir-2", "PageBot", "Pages Manager", brain, { responsiveness: 0.05 });
     const scriptsAgent = new Agent("agent-dir-3", "ScriptBot", "Scripts Manager", brain, { responsiveness: 0.05 });
+    const testAgent = new Agent("agent-dir-4", "TestBot", "Test Manager", brain, { responsiveness: 0.05 });
+    const stylesAgent = new Agent("agent-dir-5", "StylesBot", "Styles Manager", brain, { responsiveness: 0.05 });
+    const publicAgent = new Agent("agent-dir-6", "PublicBot", "Public Manager", brain, { responsiveness: 0.05 });
+    const githubAgent = new Agent("agent-dir-7", "GithubBot", "Github Manager", brain, { responsiveness: 0.05 });
+    const rootAgent = new Agent("agent-dir-8", "RootBot", "Root Manager", brain, { responsiveness: 0.05 });
 
     // 3. Register agents into the broadcast mesh
     mesh.registerAgent(developerAgent);
@@ -36,6 +41,11 @@ export const MeshVisualizer: React.FC = () => {
     mesh.registerAgent(componentsAgent);
     mesh.registerAgent(pagesAgent);
     mesh.registerAgent(scriptsAgent);
+    mesh.registerAgent(testAgent);
+    mesh.registerAgent(stylesAgent);
+    mesh.registerAgent(publicAgent);
+    mesh.registerAgent(githubAgent);
+    mesh.registerAgent(rootAgent);
 
     setAgents(mesh.getAgents());
 
