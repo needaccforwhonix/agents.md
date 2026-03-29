@@ -26,11 +26,26 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
     }
 
     // Demock validation: Ensure no hardcoded dummy data patterns exist
-    if (ts.isStringLiteral(node)) {
+    if (ts.isStringLiteral(node) || ts.isIdentifier(node)) {
       const text = node.getText(sourceFile);
       if (text.includes("dummy") || text.includes("mock_")) {
-        errors.push("Cleanliness Warning: Dummy data or mock objects detected. Please use proper typing or context-driven state.");
+        errors.push(`Cleanliness Warning: Dummy data or mock pattern '${text}' detected. Please use proper typing or context-driven state.`);
       }
+    }
+
+    // Demock validation: Prevent empty functions (e.g., function() {} or () => {})
+    if (
+      (ts.isFunctionDeclaration(node) && node.body && node.body.statements.length === 0) ||
+      (ts.isArrowFunction(node) && ts.isBlock(node.body) && node.body.statements.length === 0) ||
+      (ts.isMethodDeclaration(node) && node.body && node.body.statements.length === 0)
+    ) {
+      let functionName = "Anonymous function";
+      if (ts.isFunctionDeclaration(node) && node.name) {
+        functionName = node.name.getText(sourceFile);
+      } else if (ts.isMethodDeclaration(node) && node.name) {
+        functionName = node.name.getText(sourceFile);
+      }
+      errors.push(`Optimization Warning: Empty function '${functionName}' detected. Avoid empty implementations.`);
     }
 
     ts.forEachChild(node, visit);

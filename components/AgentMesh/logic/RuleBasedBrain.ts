@@ -19,6 +19,9 @@ export class RuleBasedBrain implements Brain {
       return null; // Throttle: decided not to respond
     }
 
+    // Serialize context parameters to show evolution in the reasoning field
+    const stringifiedParameters = JSON.stringify(context.parameters);
+
     // Generate output explicitly defining what, where, how, reasoning
     const response: Message = {
       id: crypto.randomUUID(),
@@ -27,7 +30,7 @@ export class RuleBasedBrain implements Brain {
       what: `Analyze and optimize the outcome of [${message.what}]`,
       where: `Context: ${context.name} processing task from ${message.where}`,
       how: `Using specialized ${context.role} strategies and evolved parameters`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order.`,
+      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order. Evolved Parameters: ${stringifiedParameters}`,
     };
 
     return response;

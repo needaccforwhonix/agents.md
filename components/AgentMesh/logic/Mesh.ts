@@ -6,12 +6,29 @@ import { Message } from "./Types";
  * Manages continuous parallel processing. Everything gets its own a2a agent,
  * and all agents receive every output as input.
  */
+import { countTokens } from "./ACE";
+
+/**
+ * Validates individual message fields against token limits.
+ */
+function validateMessageBounds(message: Message, limit: number = 2000): boolean {
+  if (countTokens(message.what) > limit) return false;
+  if (countTokens(message.where) > limit) return false;
+  if (countTokens(message.how) > limit) return false;
+  if (countTokens(message.reasoning || "") > limit) return false;
+  return true;
+}
+
 export class Mesh {
   private agents: Map<string, Agent> = new Map();
   private messages: Message[] = [];
 
   // Throttle limit to prevent out of control infinite broadcast chains
-  private messageLimit: number = 100;
+  private messageLimit: number;
+
+  constructor(messageLimit: number = 100) {
+    this.messageLimit = messageLimit;
+  }
 
   public registerAgent(agent: Agent) {
     this.agents.set(agent.context.id, agent);
@@ -28,6 +45,11 @@ export class Mesh {
     }
 
     this.messages.push(message);
+
+    if (!validateMessageBounds(message)) {
+      console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
+      return;
+    }
 
     // All agents receive every output as input asynchronously
     const responsePromises = Array.from(this.agents.values()).map(async (agent) => {
