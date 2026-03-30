@@ -7,15 +7,29 @@ import { Message } from "./Types";
  * and all agents receive every output as input.
  */
 import { countTokens } from "./ACE";
+import { analyzeCodeBlock, extractCodeBlocks } from "./AST";
 
 /**
- * Validates individual message fields against token limits.
+ * Validates individual message fields against token limits and AST structural purity.
  */
 function validateMessageBounds(message: Message, limit: number = 2000): boolean {
   if (countTokens(message.what) > limit) return false;
   if (countTokens(message.where) > limit) return false;
   if (countTokens(message.how) > limit) return false;
   if (countTokens(message.reasoning || "") > limit) return false;
+
+  // Demock Validation: extract any typescript codeblocks and validate them
+  const allText = `${message.what} ${message.where} ${message.how} ${message.reasoning || ""}`;
+  const blocks = extractCodeBlocks(allText);
+
+  for (const code of blocks) {
+    const analysis = analyzeCodeBlock(code);
+    if (!analysis.isValid) {
+      console.warn(`Message rejected by Demock AST check: ${analysis.errors.join(", ")}`);
+      return false;
+    }
+  }
+
   return true;
 }
 

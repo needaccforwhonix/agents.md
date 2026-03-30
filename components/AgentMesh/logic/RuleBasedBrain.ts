@@ -27,10 +27,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze and optimize the outcome of [${message.what}]`,
-      where: `Context: ${context.name} processing task from ${message.where}`,
-      how: `Using specialized ${context.role} strategies and evolved parameters`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order. Evolved Parameters: ${stringifiedParameters}`,
+      what: `Analyze, refactor, and deeply optimize the outcome of [${message.what}] focusing strictly on ${context.role}. Identify code smells, security flaws, performance bottlenecks, or prompt inefficiencies and propose concrete fixes.`,
+      where: `Target context for optimization: ${context.name} processing task from ${message.where} in AgentMesh. Applies to Security, Performance, Style, Cleanliness, Documentation, Order, and Prompt/Logic Optimization.`,
+      how: `Apply cutting-edge Agentic Context Engineering (ACE) and AlphaEvolve algorithms. Use specialized ${context.role} strategies to strictly mutate variables, enforce type safety, eliminate dummy data patterns, ensure all functions have bodies, and enforce rigorous bounds checking.`,
+      reasoning: `As an autonomous parallel agent with the role of ${context.role}, I must proactively push asynchronous evolution and maintain project purity without destructive actions. The current generation and state parameters must continuously mutate to seek maximum efficiency. AlphaEvolve Mutated Context Parameters: ${stringifiedParameters}. Context History length processed: ${context.history.length}.`,
     };
 
     return response;
