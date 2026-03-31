@@ -24,6 +24,7 @@ async function startBackgroundMesh() {
   const publicAgent = new Agent("bg-agent-dir-5", "SysPublicBot", "Public Assets Manager", brain, { responsiveness: 0.1 });
   const stylesAgent = new Agent("bg-agent-dir-6", "SysStylesBot", "Styles Manager", brain, { responsiveness: 0.1 });
   const testAgent = new Agent("bg-agent-dir-7", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
+  const rootAgent = new Agent("bg-agent-dir-8", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
@@ -39,15 +40,16 @@ async function startBackgroundMesh() {
   mesh.registerAgent(publicAgent);
   mesh.registerAgent(stylesAgent);
   mesh.registerAgent(testAgent);
+  mesh.registerAgent(rootAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass",
-    where: "components/AgentMesh/logic",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
-    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
+    what: "Optimize prompt generation, implementation, and overall system architecture asynchronously",
+    where: "Entire codebase including all specific domains and root directories",
+    how: "Use Agentic Context Engineering and AlphaEvolve algorithms with full reasoning to parallel process improvements",
+    reasoning: "To ensure everything is continuously evolved and stays up to date regarding security, performance, style, documentation, cleanliness, and order.",
   };
 
   console.log("Broadcasting initial task to mesh...");
