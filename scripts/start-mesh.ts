@@ -6,7 +6,7 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(500); // Higher message limit for longer simulation
+  const mesh = new Mesh(1000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
@@ -24,6 +24,7 @@ async function startBackgroundMesh() {
   const publicAgent = new Agent("bg-agent-dir-5", "SysPublicBot", "Public Assets Manager", brain, { responsiveness: 0.1 });
   const stylesAgent = new Agent("bg-agent-dir-6", "SysStylesBot", "Styles Manager", brain, { responsiveness: 0.1 });
   const testAgent = new Agent("bg-agent-dir-7", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
+  const rootAgent = new Agent("bg-agent-dir-8", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
@@ -39,15 +40,16 @@ async function startBackgroundMesh() {
   mesh.registerAgent(publicAgent);
   mesh.registerAgent(stylesAgent);
   mesh.registerAgent(testAgent);
+  mesh.registerAgent(rootAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass",
-    where: "components/AgentMesh/logic",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
-    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
+    what: "Initialize a continuous asynchronous parallel Agent2Agent simulation where every agent receives every output as input to process recursively across all domains including Security, Performance, Style, Documentation, Cleanliness, Order, and Optimization",
+    where: "Across the entire Agent2Agent mesh and all its domains (Security, Performance, etc) and directories (components, pages, scripts, etc, including root)",
+    how: "Use Agentic Context Engineering (ACE) and AlphaEvolve algorithms to develop continuously. Explicitly detail what, where, and how in every input and output while providing help dynamically.",
+    reasoning: "To ensure everything continues to evolve asynchronously and in parallel, staying up-to-date with security, performance, style, documentation, cleanliness, order, and prompt/logic implementation optimization over an extended run.",
   };
 
   console.log("Broadcasting initial task to mesh...");
