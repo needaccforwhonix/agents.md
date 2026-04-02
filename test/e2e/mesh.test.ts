@@ -11,9 +11,13 @@ describe('AgentMesh E2E Simulation', () => {
     // Create test agents
     const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
     const secAgent = new Agent('test-sec', 'TestSec', 'Sec', brain, { responsiveness: 1.0 });
+    const rootAgent = new Agent('test-root', 'TestRoot', 'Root', brain, { responsiveness: 1.0 });
+    const cicdAgent = new Agent('test-cicd', 'TestCiCd', 'CiCd', brain, { responsiveness: 1.0 });
 
     mesh.registerAgent(devAgent);
     mesh.registerAgent(secAgent);
+    mesh.registerAgent(rootAgent);
+    mesh.registerAgent(cicdAgent);
 
     const initialMessage = {
       id: 'test-msg-1',

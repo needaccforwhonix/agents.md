@@ -59,7 +59,8 @@ All Agents utilize the explicit `Message` protocol which expects:
 
 Specialized domains include: Security, Performance, Style, Documentation,
 Cleanliness, Order, Optimization. And directories are managed separately
-(e.g., Components, Pages, Scripts).
+(e.g., Components, Pages, Scripts, Root, .github CI/CD).
+All optimizations must be strictly additive and never delete existing features or ideas.
 
 ### Running the background simulation
 ```bash

@@ -44,7 +44,8 @@ When modifying the Agent2Agent mesh:
 * Always implement the `Message` protocol completely, providing explicit `what`, `where`, `how`, and `reasoning`. Ensure the `reasoning` field encapsulates evolved context parameter states whenever applicable.
 * Token bounds are strictly enforced (via `validateMessageBounds`). Do not output large binary strings or context dumps inside properties.
 * Ensure code generated adheres to strictly "democked" AST evaluations. Do not create placeholder variables like `"dummy_data"` or leave `function myFunc() {}` empty. Always attempt to provide real, typing-centric structures.
-* Ensure domain specific bots (e.g. `SysSecBot`, `SysPerfBot`) and directory specific bots (`SysGithubBot`, `SysPublicBot`) are handled correctly.
+* Ensure domain specific bots (e.g. `SysSecBot`, `SysPerfBot`) and directory specific bots (`SysGithubBot`, `SysPublicBot`, `SysRootBot`, `SysCiCdBot`) are handled correctly.
+* **Strict Additive Policy:** Never delete existing features, ideas, or functions. Ensure all updates are strictly additive and non-destructive.
 * Run `npx tsx scripts/start-mesh.ts` to test background processing changes.
 
 Following these practices ensures that the agent-assisted development workflow stays

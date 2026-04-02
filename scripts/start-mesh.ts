@@ -6,7 +6,7 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(500); // Higher message limit for longer simulation
+  const mesh = new Mesh(1000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
@@ -24,6 +24,8 @@ async function startBackgroundMesh() {
   const publicAgent = new Agent("bg-agent-dir-5", "SysPublicBot", "Public Assets Manager", brain, { responsiveness: 0.1 });
   const stylesAgent = new Agent("bg-agent-dir-6", "SysStylesBot", "Styles Manager", brain, { responsiveness: 0.1 });
   const testAgent = new Agent("bg-agent-dir-7", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
+  const rootAgent = new Agent("bg-agent-dir-8", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
+  const cicdAgent = new Agent("bg-agent-dir-9", "SysCiCdBot", "CI/CD Pipeline Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
@@ -39,6 +41,8 @@ async function startBackgroundMesh() {
   mesh.registerAgent(publicAgent);
   mesh.registerAgent(stylesAgent);
   mesh.registerAgent(testAgent);
+  mesh.registerAgent(rootAgent);
+  mesh.registerAgent(cicdAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),

@@ -48,6 +48,22 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       errors.push(`Optimization Warning: Empty function '${functionName}' detected. Avoid empty implementations.`);
     }
 
+
+    if (ts.isPropertyAccessExpression(node)) {
+      const expressionText = node.expression.getText(sourceFile);
+      const nameText = node.name.getText(sourceFile);
+      if (expressionText === "console" && nameText === "log") {
+        errors.push("Cleanliness Warning: Usage of console.log() detected. Remove console.logs for clean production code.");
+      }
+    }
+
+    if (ts.isStringLiteral(node)) {
+      const text = node.getText(sourceFile);
+      if (text.includes("TODO")) {
+        // Find if it's inside an empty body
+        errors.push(`Optimization Warning: String literal containing TODO detected. Please implement instead of deferring: ${text}`);
+      }
+    }
     ts.forEachChild(node, visit);
   };
 

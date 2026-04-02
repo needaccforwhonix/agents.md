@@ -27,10 +27,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze and optimize the outcome of [${message.what}]`,
+      what: `Analyze, validate, and optimize the outcome of [${message.what}] adhering to strict additive-only policies`,
       where: `Context: ${context.name} processing task from ${message.where}`,
-      how: `Using specialized ${context.role} strategies and evolved parameters`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous optimization, security, performance, style, documentation, cleanliness, and order. Evolved Parameters: ${stringifiedParameters}`,
+      how: `Using specialized ${context.role} strategies, Demock validations, and evolved parameters`,
+      reasoning: `As a ${context.role}, I must ensure output strictly aligns with continuous optimization, zero-deletion additive policies, AST Demock standards, ACE boundaries, CI/CD pipeline integrity, and E2E validation. Evolved Parameters: ${stringifiedParameters}`,
     };
 
     return response;
