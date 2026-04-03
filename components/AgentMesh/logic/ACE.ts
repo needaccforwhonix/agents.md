@@ -21,7 +21,7 @@ export class ACE {
   ): string {
     const systemPrompt = `You are ${identity}, a(n) ${role}. Your current goal is: "${goal}".`;
     const contextWindow = this.formatMemory(memory);
-    const inputPrompt = `[INPUT from ${newInput.from}]: ${newInput.content}`;
+    const inputPrompt = `[INPUT from ${newInput.from}]:\nWhat: ${newInput.what}\nWhere: ${newInput.where}\nHow: ${newInput.how}\nReasoning: ${newInput.reasoning}`;
 
     return `${systemPrompt}\n\nRunning Log:\n${contextWindow}\n\n${inputPrompt}\n\nRESPONSE:`;
   }
@@ -32,7 +32,7 @@ export class ACE {
   private static formatMemory(memory: Message[]): string {
     return memory
       .slice(-this.MAX_SHORT_TERM_MEMORY)
-      .map((m) => `[${m.type}][${m.from}]: ${m.content}`)
+      .map((m) => `[${m.type}][${m.from}]: What: ${m.what} | Where: ${m.where} | How: ${m.how} | Reasoning: ${m.reasoning}`)
       .join('\n');
   }
 
@@ -57,10 +57,11 @@ export class ACE {
       }
     }
 
+    const totalText = `${newMessage.what}${newMessage.where}${newMessage.how}${newMessage.reasoning}`;
     return {
       ...currentContext,
       shortTermMemory: updatedShortTerm,
-      tokenCount: currentContext.tokenCount + this.countTokens(newMessage.content),
+      tokenCount: currentContext.tokenCount + this.countTokens(totalText),
     };
   }
 }

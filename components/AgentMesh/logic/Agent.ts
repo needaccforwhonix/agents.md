@@ -77,10 +77,15 @@ export class Agent {
 
     // Evolution Step (AlphaEvolve)
     // Every N actions or age, evolve.
-    if (this.state.age % 10 === 0) {
+    if (this.state.age > 0 && this.state.age % 10 === 0) {
       this.state.status = 'Evolving';
       this.state.genes = this.brain.evolve(this.state.genes);
       this.state.generation += 1;
+
+      // Inject evolution event into context
+      if (output) {
+          output.reasoning += ` [AlphaEvolve: Mutated genes to generation ${this.state.generation}]`;
+      }
     }
 
     this.state.age++;

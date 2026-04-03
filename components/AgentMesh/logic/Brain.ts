@@ -22,13 +22,14 @@ export class RuleBasedBrain implements Brain {
     // 2. Decide whether to respond based on genes? (Not implemented here, assumed caller decides or always responds)
     // For this simulation, we will generate a response.
 
-    const responseContent = this.generateResponse(input.content);
-
     const output: Message = {
       id: crypto.randomUUID(),
       from: 'UNKNOWN', // Will be filled by Agent
       to: 'ALL',
-      content: responseContent,
+      what: "Analyze and respond",
+      where: "Global Mesh",
+      how: "Heuristic evaluation",
+      reasoning: this.generateReasoning(),
       timestamp: Date.now(),
       type: 'Output',
     };
@@ -44,18 +45,18 @@ export class RuleBasedBrain implements Brain {
   }
 
   /**
-   * Simple heuristic response generator.
+   * Simple heuristic reasoning generator.
    */
-  private generateResponse(inputContent: string): string {
+  private generateReasoning(): string {
     const responses = [
-      "I see. Interesting point.",
-      "Could you elaborate on that?",
-      "I agree with the premise.",
-      "That contradicts my data.",
-      "Acknowledged.",
-      "Processing... optimization required.",
-      "Let's iterate on this.",
-      "Analyzing context...",
+      "I see. Interesting point. Action taken to align with current goal.",
+      "Could you elaborate on that? Need more context for execution.",
+      "I agree with the premise. Proceeding with standard operation.",
+      "That contradicts my data. Requesting verification.",
+      "Acknowledged. Monitoring for further inputs.",
+      "Processing... optimization required. Initiating background analysis.",
+      "Let's iterate on this. Feedback loop engaged.",
+      "Analyzing context... waiting for next state change.",
     ];
     return responses[Math.floor(Math.random() * responses.length)];
   }

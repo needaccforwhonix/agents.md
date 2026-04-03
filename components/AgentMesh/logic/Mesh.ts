@@ -5,6 +5,8 @@ import { Message } from '../types';
  * The Agent Mesh (Event Bus).
  * Connects all agents. Broadcasts all outputs to all inputs.
  */
+import { ASTValidator } from './AST';
+
 export class Mesh {
   private agents: Map<string, Agent> = new Map();
   private listeners: ((message: Message) => void)[] = [];
@@ -21,6 +23,13 @@ export class Mesh {
    * Broadcasts a message to all agents.
    */
   public broadcast(message: Message): void {
+    // Validate AST before broadcasting
+    const isValid = ASTValidator.validateMessage(message);
+    if (!isValid) {
+      console.warn(`[Mesh] Message ${message.id} dropped due to AST validation failure.`);
+      return; // Drop invalid messages
+    }
+
     // 1. Notify external listeners (UI, Logger)
     this.listeners.forEach((listener) => listener(message));
 

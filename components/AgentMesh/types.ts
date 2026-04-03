@@ -25,7 +25,13 @@ export interface Message {
   id: string;
   from: string;
   to: string | 'ALL'; // Broadcast or Direct
-  content: string;
+
+  // Strict Message Structure Requirements
+  what: string;      // Intent
+  where: string;     // Location
+  how: string;       // Action
+  reasoning: string; // Why it is desired (must include mutation logic if applicable)
+
   timestamp: number;
   type: 'Input' | 'Output' | 'System';
   meta?: Record<string, any>;

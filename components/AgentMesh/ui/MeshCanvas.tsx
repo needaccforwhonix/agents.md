@@ -76,7 +76,10 @@ export const MeshCanvas: React.FC<MeshCanvasProps> = ({ isRunning }) => {
                     id: crypto.randomUUID(),
                     from: 'SYSTEM',
                     to: 'ALL',
-                    content: "System Event: Optimize current process.",
+                    what: "System Event: Optimize current process.",
+                    where: "System",
+                    how: "Broadcast",
+                    reasoning: "To stimulate agent interaction and evolution.",
                     timestamp: Date.now(),
                     type: 'System'
                 };

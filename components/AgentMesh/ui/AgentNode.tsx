@@ -46,9 +46,12 @@ export const AgentNode: React.FC<AgentNodeProps> = ({ state, lastMessage }) => {
       </div>
 
       {lastMessage && (
-        <div className="mt-2 text-xs bg-blue-50 p-2 rounded border border-blue-100">
-          <strong className="block text-blue-800 mb-1">Last Action:</strong>
-          <p className="line-clamp-3 italic text-gray-700">"{lastMessage.content}"</p>
+        <div className="mt-2 text-xs bg-blue-50 p-2 rounded border border-blue-100 flex flex-col gap-1">
+          <strong className="block text-blue-800 border-b border-blue-200 pb-1">Last Action:</strong>
+          <div className="line-clamp-1"><span className="font-semibold">What:</span> {lastMessage.what}</div>
+          <div className="line-clamp-1"><span className="font-semibold">Where:</span> {lastMessage.where}</div>
+          <div className="line-clamp-1"><span className="font-semibold">How:</span> {lastMessage.how}</div>
+          <div className="line-clamp-2 italic text-gray-700 mt-1">"{lastMessage.reasoning}"</div>
         </div>
       )}
     </div>
