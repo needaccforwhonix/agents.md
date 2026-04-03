@@ -20,6 +20,7 @@ const initialMessage: Message = {
   what: 'Optimize system architecture and ensure security',
   where: 'Global',
   how: 'analyze and optimize',
+  reasoning: 'System triggered initial simulation run.',
 };
 
 console.log(`[System] Broadcasting initial message:`, initialMessage);

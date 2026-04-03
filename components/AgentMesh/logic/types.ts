@@ -5,6 +5,7 @@ export interface Message {
   what: string;   // Intent/Content
   where: string;  // Location/Target
   how: string;    // Action/Method
+  reasoning: string; // Explains parameter mutations or decision logic
 }
 
 export interface AgentConfig {

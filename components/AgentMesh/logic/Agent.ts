@@ -44,18 +44,22 @@ export class Agent {
     this.state.memoryUsage = boundedContext.tokenCount;
 
     // Mutate parameters using AlphaEvolve
+    const oldConfig = { ...this.config };
     this.config = AlphaEvolve.evolve(this.config);
+    const reasoningString = `AlphaEvolve: Temp ${oldConfig.temperature.toFixed(3)}->${this.config.temperature.toFixed(3)}, MutRate ${oldConfig.mutationRate.toFixed(3)}->${this.config.mutationRate.toFixed(3)}. Token count: ${this.state.memoryUsage}.`;
 
     // Let the Brain decide how to react
     const response = this.brain.process(message, boundedContext, this.config);
 
     if (response) {
-      // Analyze any code we are returning
+      response.reasoning = response.reasoning ? `${response.reasoning} | ${reasoningString}` : reasoningString;
+
+      // Analyze any code we are returning asynchronously (but don't block here)
       if (ASTAnalyzer.hasCodeBlocks(response.what)) {
         const blocks = ASTAnalyzer.extractCodeBlocks(response.what);
-        blocks.forEach((code) => {
-          const analysis = ASTAnalyzer.analyzeCode(code);
-          console.log(`[${this.id}] AST Analyzed Output Block: ${analysis.functions} functions, ${analysis.nodes} nodes`);
+        blocks.forEach(async (code) => {
+          const analysis = await ASTAnalyzer.analyzeCode(code);
+          console.log(`[${this.id}] AST Analyzed Output Block: ${analysis.functions} functions, ${analysis.nodes} nodes. Valid: ${analysis.isValid}`);
         });
       }
     }

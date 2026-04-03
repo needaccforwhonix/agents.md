@@ -38,7 +38,8 @@ export class RuleBasedBrain implements Brain {
       timestamp: Date.now(),
       what: newWhat,
       where: newWhere,
-      how: newHow
+      how: newHow,
+      reasoning: "RuleBasedBrain determined message is relevant based on keyword matching."
     };
   }
 }

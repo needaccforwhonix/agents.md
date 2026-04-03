@@ -12,7 +12,8 @@ class MockBrain implements Brain {
       timestamp: Date.now(),
       what: 'Mock response',
       where: 'test',
-      how: 'test-response'
+      how: 'test-response',
+      reasoning: 'mock reasoning'
     };
   }
 }
@@ -42,7 +43,8 @@ describe('AgentMesh Logic', () => {
       timestamp: Date.now(),
       what: 'Test broadcast',
       where: 'test',
-      how: 'test-no-response' // stops infinite recursion
+      how: 'test-no-response', // stops infinite recursion
+      reasoning: 'test init'
     };
 
     mesh.broadcast(initialMsg);

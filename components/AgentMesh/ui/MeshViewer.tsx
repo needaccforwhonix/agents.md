@@ -47,6 +47,7 @@ export const MeshViewer: React.FC = () => {
       what: inputWhat,
       where: inputWhere,
       how: inputHow,
+      reasoning: 'User broadcast',
     };
 
     mesh.broadcast(initialMessage, 0);
@@ -133,6 +134,9 @@ export const MeshViewer: React.FC = () => {
                   <p><span className="font-semibold text-gray-700">What:</span> {msg.what}</p>
                   <p><span className="font-semibold text-gray-700">Where:</span> {msg.where}</p>
                   <p><span className="font-semibold text-gray-700">How:</span> {msg.how}</p>
+                  {msg.reasoning && (
+                    <p><span className="font-semibold text-gray-700">Reasoning:</span> <span className="italic text-gray-600">{msg.reasoning}</span></p>
+                  )}
                 </div>
               </div>
             ))
