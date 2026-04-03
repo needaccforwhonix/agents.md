@@ -5,6 +5,7 @@ export interface AgentMessage {
   what: string; // Intent
   where: string; // Location
   how: string; // Action
+  reasoning: string; // Context about AlphaEvolve changes
   rawContent: string;
   tokenCount?: number;
 }

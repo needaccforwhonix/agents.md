@@ -27,14 +27,22 @@ export class RuleBasedBrain implements Brain {
     // Analyze if there are any code blocks using our ASTAnalyzer.
     const codeBlocks = ASTAnalyzer.extractCodeBlocks(inputMessage.rawContent);
     let analysisResult = '';
+    let demockFailed = false;
 
     if (codeBlocks.length > 0) {
         codeBlocks.forEach(block => {
+            if (!ASTAnalyzer.validateDemock(block)) {
+                demockFailed = true;
+            }
             const astData = ASTAnalyzer.analyzeCodeBlocks(block);
             if (astData.functions.length > 0 || astData.classes.length > 0) {
                analysisResult += `I noticed functions: ${astData.functions.join(', ')}. Classes: ${astData.classes.join(', ')}. `;
             }
         });
+    }
+
+    if (demockFailed) {
+        analysisResult += 'WARNING: Code block failed Demock validation. Avoid using hardcoded mock patterns. ';
     }
 
     // AlphaEvolve integration:
@@ -65,6 +73,7 @@ export class RuleBasedBrain implements Brain {
       what: 'Analyze and provide feedback on the previous message.',
       where: 'Agent Mesh Context',
       how: 'Using RuleBasedBrain and AST Analysis.',
+      reasoning: `AlphaEvolve adjusted parameters. Current state - Temp: ${state.parameters.temperature.toFixed(2)}, Creativity: ${state.parameters.creativity.toFixed(2)}, Focus: ${state.parameters.focus.toFixed(2)}. Response triggered by creativity threshold and token load (${estimatedTokens}).`,
       rawContent: `Acknowledged message from ${inputMessage.senderId}. ${analysisResult} My current focus is ${state.parameters.focus.toFixed(2)}.`,
       tokenCount: Math.ceil(Math.random() * 50) + 10, // Simulated token count
     };

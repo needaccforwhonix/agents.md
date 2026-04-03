@@ -42,6 +42,28 @@ export class ASTAnalyzer {
   }
 
   /**
+   * Validates if the given code block passes the 'Demock' criteria.
+   * Rejects empty functions or specific mock identifiers.
+   */
+  public static validateDemock(sourceCode: string): boolean {
+      const ast = this.analyzeCodeBlocks(sourceCode);
+      if (ast.functions.length === 0 && ast.classes.length === 0) return true; // No code, technically valid
+
+      const mockKeywords = ['mock', 'dummy', 'test', 'fake'];
+      for (const fnName of ast.functions) {
+          if (mockKeywords.some(keyword => fnName.toLowerCase().includes(keyword))) {
+              return false; // Found a mock function
+          }
+      }
+      for (const className of ast.classes) {
+          if (mockKeywords.some(keyword => className.toLowerCase().includes(keyword))) {
+              return false; // Found a mock class
+          }
+      }
+      return true;
+  }
+
+  /**
    * Helper function to extract code blocks from markdown-like text
    */
   public static extractCodeBlocks(text: string): string[] {

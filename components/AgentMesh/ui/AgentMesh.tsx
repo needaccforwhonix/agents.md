@@ -90,6 +90,7 @@ const AgentMesh: React.FC = () => {
                     <div className="flex"><span className="text-gray-400 w-16 uppercase text-xs font-bold tracking-wider pt-1">What:</span> <span className="flex-1 text-green-300">{msg.what}</span></div>
                     <div className="flex"><span className="text-gray-400 w-16 uppercase text-xs font-bold tracking-wider pt-1">Where:</span> <span className="flex-1 text-purple-300">{msg.where}</span></div>
                     <div className="flex"><span className="text-gray-400 w-16 uppercase text-xs font-bold tracking-wider pt-1">How:</span> <span className="flex-1 text-yellow-300">{msg.how}</span></div>
+                    <div className="flex"><span className="text-gray-400 w-16 uppercase text-xs font-bold tracking-wider pt-1">Reason:</span> <span className="flex-1 text-pink-300 text-xs italic">{msg.reasoning}</span></div>
                     <div className="mt-2 p-2 bg-gray-900 rounded text-gray-300 whitespace-pre-wrap font-mono text-xs">
                       {msg.rawContent}
                     </div>

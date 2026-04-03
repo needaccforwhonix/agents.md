@@ -71,6 +71,7 @@ export class Agent {
       what: 'Initialize the mesh simulation and begin collaborative processing.',
       where: 'Agent Mesh Environment',
       how: 'Broadcasting an initial ping to all connected agents.',
+      reasoning: `Initialized with default parameters to establish baseline context. Temperature: ${this.state.parameters.temperature.toFixed(2)}, Creativity: ${this.state.parameters.creativity.toFixed(2)}, Focus: ${this.state.parameters.focus.toFixed(2)}.`,
       rawContent: `Hello, this is ${this.state.name} starting the mesh. My initial parameters are temperature: ${this.state.parameters.temperature.toFixed(2)}, creativity: ${this.state.parameters.creativity.toFixed(2)}`,
       tokenCount: 45,
     };
