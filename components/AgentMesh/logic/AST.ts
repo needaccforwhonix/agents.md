@@ -7,8 +7,10 @@ import { Message } from '../types';
  * invalid or mock code blocks inside their reasoning or fields.
  */
 export class ASTValidator {
+  private static cache = new Map<string, boolean>();
+
   /**
-   * Analyzes a string for code blocks and validates them.
+   * Analyzes a string for code blocks and validates them, utilizing a cache.
    * In this simple implementation, it checks if any found code blocks are valid TypeScript.
    */
   public static validateMessage(message: Message): boolean {
@@ -19,12 +21,34 @@ export class ASTValidator {
     const codeBlocks = this.extractCodeBlocks(contentToAnalyze);
 
     for (const block of codeBlocks) {
-      if (!this.isValidAST(block)) {
+      // Basic hash/key for caching code strings
+      const cacheKey = this.hashString(block);
+
+      if (this.cache.has(cacheKey)) {
+        const isValid = this.cache.get(cacheKey)!;
+        if (!isValid) return false;
+        continue;
+      }
+
+      const isValid = this.isValidAST(block);
+      this.cache.set(cacheKey, isValid);
+
+      if (!isValid) {
         console.warn(`[AST Validation Failed] Message ${message.id} from ${message.from} contains invalid syntax.`);
         return false;
       }
     }
     return true;
+  }
+
+  private static hashString(str: string): string {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash.toString();
   }
 
   private static extractCodeBlocks(text: string): string[] {

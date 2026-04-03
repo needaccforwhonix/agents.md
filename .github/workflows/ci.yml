@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 9
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Lint
+      run: pnpm run lint
+
+    - name: Build
+      run: pnpm run build
+
+  architecture-checks:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Verify Message Interface Structure
+      run: |
+        echo "Verifying Agent Message structure..."
+        if ! grep -q "what: string;" components/AgentMesh/types.ts || \
+           ! grep -q "where: string;" components/AgentMesh/types.ts || \
+           ! grep -q "how: string;" components/AgentMesh/types.ts || \
+           ! grep -q "reasoning: string;" components/AgentMesh/types.ts; then
+          echo "ERROR: Message interface is missing required structural fields (what, where, how, reasoning)."
+          exit 1
+        fi
+        echo "Message structure check passed."
