@@ -6,7 +6,7 @@ export function alphaEvolve(parameters: Record<string, any>, mutationRate: numbe
   const evolved = { ...parameters };
 
   for (const key in evolved) {
-    if (typeof evolved[key] === 'number') {
+    if (typeof evolved[key] === 'number' && key !== 'generation') {
       // Apply slight random mutation based on mutationRate
       const variation = evolved[key] * mutationRate * (Math.random() * 2 - 1);
       evolved[key] = Math.max(0, evolved[key] + variation); // Clamp to non-negative

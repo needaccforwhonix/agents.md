@@ -64,6 +64,20 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
         errors.push(`Optimization Warning: String literal containing TODO detected. Please implement instead of deferring: ${text}`);
       }
     }
+
+    // Prevent unbounded while(true) or recursion conceptually by warning on unbounded arrays
+    if (ts.isArrayLiteralExpression(node)) {
+        if (node.elements.length > 1000) {
+            errors.push("Optimization Warning: Excessively large hardcoded array detected. Consider bounds or dynamic generation.");
+        }
+    }
+
+    // Warn about missing absolute caps conceptually for recursive loops if possible (simple heuristic)
+    if (ts.isWhileStatement(node)) {
+        if (node.expression.getText(sourceFile) === "true") {
+             errors.push("Security Warning: while(true) loop detected. Ensure absolute escape condition exists.");
+        }
+    }
     ts.forEachChild(node, visit);
   };
 

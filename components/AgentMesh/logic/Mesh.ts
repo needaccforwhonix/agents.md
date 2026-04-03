@@ -39,12 +39,16 @@ export class Mesh {
    * If an agent produces a response, that response is then broadcast.
    */
   public async broadcast(message: Message, depth: number = 0): Promise<void> {
-    if (depth > this.messageLimit) {
+    if (this.messages.length >= this.messageLimit || depth > this.messageLimit) {
       console.warn(`Mesh broadcast limit reached. Terminating branch.`);
       return;
     }
 
     this.messages.push(message);
+    // Global ACE bounding to prevent memory leaks
+    if (this.messages.length > this.messageLimit * 2) {
+      this.messages = this.messages.slice(-this.messageLimit * 2);
+    }
 
     if (!validateMessageBounds(message)) {
       console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
@@ -54,7 +58,18 @@ export class Mesh {
     // All agents receive every output as input asynchronously
     const responsePromises = Array.from(this.agents.values()).map(async (agent) => {
       try {
+        // Simulated Annealing: decay responsiveness as depth increases
+        const originalResponsiveness = agent.context.parameters.responsiveness;
+        if (originalResponsiveness) {
+          agent.context.parameters.responsiveness = originalResponsiveness * Math.pow(0.9, depth);
+        }
+
         const response = await agent.receiveMessage(message);
+
+        // Restore original responsiveness for future independent branches
+        if (originalResponsiveness) {
+          agent.context.parameters.responsiveness = originalResponsiveness;
+        }
         if (response) {
           // If agent decides to react, broadcast their output recursively as a new input
           await this.broadcast(response, depth + 1);
