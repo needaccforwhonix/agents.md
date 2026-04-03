@@ -6,9 +6,12 @@
 - Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.
 - Develop custom Web Worker architecture to run simulations completely decoupled from the main thread.
 - Explore integration with actual Language Models (LLMs) utilizing generated JSON definitions.
+- Monitor the mesh simulation with an expanded set of agents
 
 ## Done
 
+- Implement root agent for the root directory
+- Enhance RuleBasedBrain prompt generation
 - Implement complex dynamic Demock testing patterns within AST.ts analysis.
 - Connect individual directory agents to the mesh simulation script for wider testing.
 - Introduce Message parameter bound validations using simulated token counts.
