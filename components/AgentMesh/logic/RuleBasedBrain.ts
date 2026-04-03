@@ -45,6 +45,11 @@ export class RuleBasedBrain implements Brain {
     const outputTokens = Math.ceil((newWhat.length + newWhere.length + newHow.length) * state.params.beta);
     state.tokenCount += outputTokens;
 
+    // Hard cap token count to prevent integer overflow or bloat during long simulations
+    if (state.tokenCount > 1_000_000) {
+      state.tokenCount = 1_000_000;
+    }
+
     return {
       id: crypto.randomUUID(),
       senderId: state.id,

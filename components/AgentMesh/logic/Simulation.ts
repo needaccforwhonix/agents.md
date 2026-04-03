@@ -6,6 +6,7 @@ export class Simulation {
   private brains: Map<string, Brain> = new Map();
   private messages: Message[] = [];
   private onStateChange: (agents: AgentState[], messages: Message[]) => void;
+  private pendingNotify: boolean = false;
 
   constructor(onStateChange: (agents: AgentState[], messages: Message[]) => void) {
     this.onStateChange = onStateChange;
@@ -77,19 +78,34 @@ export class Simulation {
     // blocking the main thread and simulate asynchronous processing
     if (newResponses.length > 0) {
       setTimeout(() => {
-        // Enforce a strict decay/cooling mechanism. As the network gets busier,
-        // limit the number of recursive responses to prevent exponential blowup.
+        // Implement true network decay: as message count grows, chance of recursive hop drops
+        const decayFactor = Math.max(0.05, 1.0 - (this.messages.length / 500));
+
+        // As network gets busier, limit max responses explicitly
         const throttleLimit = this.messages.length > 50 ? 1 : 2;
         const limitedResponses = newResponses.slice(0, throttleLimit);
+
         for (const response of limitedResponses) {
-          this.broadcast(response);
+          // Only broadcast if it passes the decay probability check
+          if (Math.random() < decayFactor) {
+            this.broadcast(response);
+          }
         }
       }, 1500 + Math.random() * 1000); // Add jitter to the delay
     }
   }
 
   private notify() {
-    // Pass a copy to avoid reference issues in React
-    this.onStateChange([...this.agents], [...this.messages]);
+    // Debounce state updates using requestAnimationFrame or short timeout
+    if (!this.pendingNotify) {
+      this.pendingNotify = true;
+      // Using setTimeout as requestAnimationFrame isn't available in all non-browser contexts
+      // (though this is primarily for React UI, this is safer)
+      setTimeout(() => {
+        // Pass a copy to avoid reference issues in React
+        this.onStateChange([...this.agents], [...this.messages]);
+        this.pendingNotify = false;
+      }, 50);
+    }
   }
 }
