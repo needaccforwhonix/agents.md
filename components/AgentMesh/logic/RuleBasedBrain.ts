@@ -30,7 +30,7 @@ export class RuleBasedBrain implements Brain {
       what: `Analyze, optimize, and improve the prompt and logic implementation of [${message.what}] focusing on Security, Performance, Style, Documentation, Cleanliness, Order, and Optimization`,
       where: `Context: ${context.name} processing task asynchronously from ${message.where} in the agent2agent mesh architecture`,
       how: `Using specialized ${context.role} strategies, Agentic Context Engineering (ACE), and AlphaEvolve algorithms to develop code in parallel continuously`,
-      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous parallel asynchronous evolution across Security, Performance, Style, Documentation, Cleanliness, Order, and Optimization. Evolved Parameters: ${stringifiedParameters}`,
+      reasoning: `As a ${context.role}, I must ensure the output aligns with continuous parallel asynchronous evolution across Security, Performance, Style, Documentation, Cleanliness, Order, and Optimization. I must ensure asynchronous, parallel improvements are non-destructive and additive. Evolved Parameters: ${stringifiedParameters}`,
     };
 
     return response;

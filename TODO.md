@@ -1,6 +1,8 @@
 
 # TODO
 
+- Implement root agent for the root directory
+- Enhance RuleBasedBrain prompt generation
 - Connect specific AgentMesh simulation outcomes directly to the real application interface.
 - Add real persistence (database) to agent states to replace in-memory maps.
 - Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.
