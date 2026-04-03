@@ -17,6 +17,7 @@ async function startBackgroundMesh() {
   const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.1 });
   const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.1 });
   const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.1 });
+  const rootAgent = new Agent("bg-agent-dir-0", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
   const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.1 });
   const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.1 });
   const scriptsAgent = new Agent("bg-agent-dir-3", "SysScriptBot", "Scripts Manager", brain, { responsiveness: 0.1 });
@@ -26,6 +27,7 @@ async function startBackgroundMesh() {
   const testAgent = new Agent("bg-agent-dir-7", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
   const rootAgent = new Agent("bg-agent-dir-8", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
 
+  mesh.registerAgent(rootAgent);
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
   mesh.registerAgent(docAgent);
@@ -46,10 +48,10 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass",
-    where: "components/AgentMesh/logic",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
-    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
+    what: "Run continuous background optimization and refactoring pass emphasizing Security, Performance, Style, Documentation, Cleanliness, Order, and Prompt/Logic implementation improvements.",
+    where: "components/AgentMesh/logic and all respective directories (root, components, pages, scripts, public, .github, styles, test)",
+    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements, ensuring everything explicitly describes what, where, and how.",
+    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date. This optimization realizes the specific user requirement to ensure parallel asynchronous evolution with full context across all domains.",
   };
 
   console.log("Broadcasting initial task to mesh...");
