@@ -6,7 +6,7 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(1000); // Higher message limit for longer simulation
+  const mesh = new Mesh(2000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
@@ -17,7 +17,7 @@ async function startBackgroundMesh() {
   const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.1 });
   const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.1 });
   const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.1 });
-  const rootAgent = new Agent("bg-agent-dir-0", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
+  const rootAgent = new Agent("bg-agent-dir-0", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.15 });
   const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.1 });
   const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.1 });
   const scriptsAgent = new Agent("bg-agent-dir-3", "SysScriptBot", "Scripts Manager", brain, { responsiveness: 0.1 });
@@ -25,7 +25,6 @@ async function startBackgroundMesh() {
   const publicAgent = new Agent("bg-agent-dir-5", "SysPublicBot", "Public Assets Manager", brain, { responsiveness: 0.1 });
   const stylesAgent = new Agent("bg-agent-dir-6", "SysStylesBot", "Styles Manager", brain, { responsiveness: 0.1 });
   const testAgent = new Agent("bg-agent-dir-7", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
-  const rootAgent = new Agent("bg-agent-dir-8", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(rootAgent);
   mesh.registerAgent(devAgent);
@@ -42,7 +41,6 @@ async function startBackgroundMesh() {
   mesh.registerAgent(publicAgent);
   mesh.registerAgent(stylesAgent);
   mesh.registerAgent(testAgent);
-  mesh.registerAgent(rootAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
