@@ -63,10 +63,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze, refactor, and apply continuous optimization to the outcome of [${message.what}] in the domain of ${context.role}. Identify and implement the next necessary improvements.`,
-      where: `Context: ${context.name} processing task originating from ${message.where}`,
+      what: `I have analyzed [${message.what}] in the domain of ${context.role}. I will now refactor and implement the next continuous optimizations focusing on explicitly answering what, where, and how.`,
+      where: `Location: Executing within the ${context.name} domain, reacting to output originating from ${message.where}.`,
       how: roleSpecificHow,
-      reasoning: `As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive. The output strictly adheres to continuous optimization metrics. Evolved Parameters: ${stringifiedParameters}`,
+      reasoning: `Reasoning: To ensure asynchronous, parallel improvements are non-destructive and additive, while optimizing Security, Performance, Style, Documentation, Cleanliness, Order, and Prompt/Logic execution. I am utilizing Agentic Context Engineering and AlphaEvolve. Evolved Parameters: ${stringifiedParameters}`,
     };
 
     return response;

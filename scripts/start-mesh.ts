@@ -46,10 +46,10 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass emphasizing Security, Performance, Style, Documentation, Cleanliness, Order, and Prompt/Logic implementation improvements.",
-    where: "components/AgentMesh/logic and all respective directories (root, components, pages, scripts, public, .github, styles, test)",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements, ensuring everything explicitly describes what, where, and how.",
-    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date. This optimization realizes the specific user requirement to ensure parallel asynchronous evolution with full context across all domains.",
+    what: "Initiate full continuous background optimization: enhance Security, Performance, Style, Documentation, Cleanliness, Order, and Prompt/Logic implementation improvements. Everything must explicitly describe what, where, how, and reasoning.",
+    where: "Across all dedicated directory domains: root, components, pages, scripts, public, .github, styles, test, and all active agent modules.",
+    how: "Execute asynchronous parallel Agent2Agent processing using Agentic Context Engineering with token bounding and AlphaEvolve for parameter mutation. Help each other to evolve and stay up-to-date.",
+    reasoning: "To keep the entire codebase evolving asynchronously and in parallel with full context, ensuring non-destructive additive development as requested.",
   };
 
   console.log("Broadcasting initial task to mesh...");
