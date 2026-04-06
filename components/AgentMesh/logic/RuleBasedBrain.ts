@@ -58,15 +58,18 @@ export class RuleBasedBrain implements Brain {
         break;
     }
 
+    // Extract exact locations and intents for better context propagation
+    const targetWhere = message.where.includes(context.name) ? message.where : `${message.where} -> Domain: ${context.role}`;
+
     // Generate output explicitly defining what, where, how, reasoning
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze, refactor, and apply continuous optimization to the outcome of [${message.what}] in the domain of ${context.role}. Identify and implement the next necessary improvements.`,
-      where: `Context: ${context.name} processing task originating from ${message.where}`,
-      how: roleSpecificHow,
-      reasoning: `As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive. The output strictly adheres to continuous optimization metrics. Evolved Parameters: ${stringifiedParameters}`,
+      what: `[Targeted Optimization] Analyze and refactor the outcome of [${message.what}] specifically for ${context.role}. Identify the next concrete improvement required for this context.`,
+      where: targetWhere,
+      how: `${roleSpecificHow} Ensure all implementation follows Agentic Context Engineering and AlphaEvolve algorithms with full context.`,
+      reasoning: `To guarantee continuous, asynchronous, and parallel evolution. As ${context.role}, I must enforce strict additive enhancements for Security, Performance, Style, Documentation, Cleanliness, and Order. Evolved Parameters: ${stringifiedParameters}`,
     };
 
     return response;
