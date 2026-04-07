@@ -6,7 +6,7 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(2000); // Higher message limit for longer simulation
+  const mesh = new Mesh(5000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
@@ -25,6 +25,7 @@ async function startBackgroundMesh() {
   const publicAgent = new Agent("bg-agent-dir-5", "SysPublicBot", "Public Assets Manager", brain, { responsiveness: 0.1 });
   const stylesAgent = new Agent("bg-agent-dir-6", "SysStylesBot", "Styles Manager", brain, { responsiveness: 0.1 });
   const testAgent = new Agent("bg-agent-dir-7", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
+  const testResultsAgent = new Agent("bg-agent-dir-8", "SysTestResultsBot", "Test Results Manager", brain, { responsiveness: 0.1 });
 
   mesh.registerAgent(rootAgent);
   mesh.registerAgent(devAgent);
@@ -41,14 +42,15 @@ async function startBackgroundMesh() {
   mesh.registerAgent(publicAgent);
   mesh.registerAgent(stylesAgent);
   mesh.registerAgent(testAgent);
+  mesh.registerAgent(testResultsAgent);
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass emphasizing Security, Performance, Style, Documentation, Cleanliness, Order, and Prompt/Logic implementation improvements.",
-    where: "components/AgentMesh/logic and all respective directories (root, components, pages, scripts, public, .github, styles, test)",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements, ensuring everything explicitly describes what, where, and how.",
+    what: "Run continuous background optimization and refactoring pass emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung.",
+    where: "components/AgentMesh/logic and all respective directories (root, components, pages, scripts, public, .github, styles, test, test-results)",
+    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements. Ensure everything gets its own a2a agent and explicitly describes what, where, and how. Dabei kann gerne stehts geholfen werden.",
     reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date. This optimization realizes the specific user requirement to ensure parallel asynchronous evolution with full context across all domains.",
   };
 
