@@ -58,15 +58,20 @@ export class RuleBasedBrain implements Brain {
         break;
     }
 
+    const safeWhat = message.what.length > 100 ? message.what.substring(0, 100) + '...' : message.what;
+    const safeWhere = message.where.length > 100 ? message.where.substring(0, 100) + '...' : message.where;
+    const safeHow = message.how.length > 100 ? message.how.substring(0, 100) + '...' : message.how;
+    const safeReasoning = (message.reasoning || "").length > 100 ? message.reasoning.substring(0, 100) + '...' : message.reasoning;
+
     // Generate output explicitly defining what, where, how, reasoning based on incoming message context
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze, refactor, and apply continuous optimization to the outcome of [${message.what}] in the domain of ${context.role}. Identify and implement the next necessary improvements. Dabei kann gerne stehts geholfen werden.`,
-      where: `Context: ${context.name} processing task originating from [${message.where}].`,
-      how: `${roleSpecificHow} Reacting to previous action [${message.how}].`,
-      reasoning: `As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive, building upon previous reasoning [${message.reasoning}]. The output strictly adheres to continuous optimization metrics. Evolved Parameters: ${stringifiedParameters}`,
+      what: `Analyze, refactor, and apply continuous optimization to the outcome of [${safeWhat}] in the domain of ${context.role}. Identify and implement the next necessary improvements. Dabei kann gerne stehts geholfen werden.`,
+      where: `Context: ${context.name} processing task originating from [${safeWhere}].`,
+      how: `${roleSpecificHow} Reacting to previous action [${safeHow}].`,
+      reasoning: `As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive, building upon previous reasoning [${safeReasoning}]. The output strictly adheres to continuous optimization metrics. Evolved Parameters: ${stringifiedParameters}`,
     };
 
     return response;
