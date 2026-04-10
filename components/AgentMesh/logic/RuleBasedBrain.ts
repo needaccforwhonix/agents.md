@@ -46,6 +46,14 @@ export class RuleBasedBrain implements Brain {
       case "System Developer":
         roleSpecificHow = "Implement core logic enhancements, integrate cross-domain features, and address AST demock requirements.";
         break;
+      case "tsconfig.json Manager":
+      case "package.json Manager":
+      case "next.config.ts Manager":
+      case "postcss.config.mjs Manager":
+      case "README.md Manager":
+      case "AGENTS.md Manager":
+        roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization.`;
+        break;
       case "Root Directory Manager":
       case "Components Manager":
       case "Pages Manager":
@@ -68,10 +76,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `Analyze, refactor, and apply continuous optimization targeting Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung based on [${safeWhat}] in the domain of ${context.role}. Identify and implement the next necessary improvements. Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist. Dabei kann gerne stehts geholfen werden, um asynchron parallel alles weiterzuentwickeln.`,
-      where: `Context: ${context.name} processing task originating from [${safeWhere}]. Targeted locations must be clearly specified to maintain Sauberkeit and Ordnung.`,
-      how: `${roleSpecificHow} Reacting to previous action [${safeHow}]. Ensure comprehensive integration of Demock testing, ACE, CI/CD pipeline checks, E2E testing, AST validations, Documentation updates, and Todo creation/implementation. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung wird aktiv angewendet.`,
-      reasoning: `As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive, building upon previous reasoning [${safeReasoning}]. The output strictly adheres to continuous optimization metrics. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
+      what: `(WAS) Analyze, refactor, and apply continuous optimization targeting Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung based on [${safeWhat}] in the domain of ${context.role}. Identify and implement the next necessary improvements. Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist. Dabei kann gerne stehts geholfen werden, um asynchron parallel alles weiterzuentwickeln.`,
+      where: `(WO) Context: ${context.name} processing task originating from [${safeWhere}]. Targeted locations must be clearly specified to maintain Sauberkeit and Ordnung.`,
+      how: `(WIE) ${roleSpecificHow} Reacting to previous action [${safeHow}]. Ensure comprehensive integration of Demock testing, ACE, CI/CD pipeline checks, E2E testing, AST validations, Documentation updates, and Todo creation/implementation. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung wird aktiv angewendet.`,
+      reasoning: `(WARUM) As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive, building upon previous reasoning [${safeReasoning}]. The output strictly adheres to continuous optimization metrics. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
     };
 
     return response;
