@@ -6,7 +6,8 @@ import { Message } from "../components/AgentMesh/logic/Types";
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(1000); // Higher message limit for longer simulation
+
+  const mesh = new Mesh(10000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Set lower responsiveness for background to ensure it runs longer without maxing out
@@ -17,6 +18,7 @@ async function startBackgroundMesh() {
   const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.1 });
   const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.1 });
   const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.1 });
+  const rootAgent = new Agent("bg-agent-dir-0", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
   const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.1 });
   const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.1 });
   const scriptsAgent = new Agent("bg-agent-dir-3", "SysScriptBot", "Scripts Manager", brain, { responsiveness: 0.1 });
@@ -24,9 +26,21 @@ async function startBackgroundMesh() {
   const publicAgent = new Agent("bg-agent-dir-5", "SysPublicBot", "Public Assets Manager", brain, { responsiveness: 0.1 });
   const stylesAgent = new Agent("bg-agent-dir-6", "SysStylesBot", "Styles Manager", brain, { responsiveness: 0.1 });
   const testAgent = new Agent("bg-agent-dir-7", "SysTestBot", "Test Directory Manager", brain, { responsiveness: 0.1 });
-  const rootAgent = new Agent("bg-agent-dir-8", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.1 });
-  const cicdAgent = new Agent("bg-agent-dir-9", "SysCiCdBot", "CI/CD Pipeline Manager", brain, { responsiveness: 0.1 });
+  const testResultsAgent = new Agent("bg-agent-dir-8", "SysTestResultsBot", "Test Results Manager", brain, { responsiveness: 0.1 });
+  const testE2EAgent = new Agent("bg-agent-dir-9", "SysTestE2EBot", "Test E2E Directory Manager", brain, { responsiveness: 0.1 });
+  const testUnitAgent = new Agent("bg-agent-dir-10", "SysTestUnitBot", "Test Unit Directory Manager", brain, { responsiveness: 0.1 });
+  const configAgent = new Agent("bg-agent-dir-11", "SysConfigBot", "Root Config Manager", brain, { responsiveness: 0.1 });
+  const cicdAgent = new Agent("bg-agent-dir-12", "SysCiCdBot", "CI/CD Pipeline Manager", brain, { responsiveness: 0.1 });
 
+
+  const tsconfigAgent = new Agent("bg-agent-file-1", "SysTsConfigBot", "tsconfig.json Manager", brain, { responsiveness: 0.6 });
+  const packagejsonAgent = new Agent("bg-agent-file-2", "SysPackageJsonBot", "package.json Manager", brain, { responsiveness: 0.6 });
+  const nextconfigAgent = new Agent("bg-agent-file-3", "SysNextConfigBot", "next.config.ts Manager", brain, { responsiveness: 0.6 });
+  const postcssconfigAgent = new Agent("bg-agent-file-4", "SysPostCssConfigBot", "postcss.config.mjs Manager", brain, { responsiveness: 0.6 });
+  const readmeAgent = new Agent("bg-agent-file-5", "SysReadmeBot", "README.md Manager", brain, { responsiveness: 0.6 });
+  const agentsmdAgent = new Agent("bg-agent-file-6", "SysAgentsMdBot", "AGENTS.md Manager", brain, { responsiveness: 0.6 });
+
+  mesh.registerAgent(rootAgent);
   mesh.registerAgent(devAgent);
   mesh.registerAgent(secAgent);
   mesh.registerAgent(docAgent);
@@ -41,17 +55,28 @@ async function startBackgroundMesh() {
   mesh.registerAgent(publicAgent);
   mesh.registerAgent(stylesAgent);
   mesh.registerAgent(testAgent);
-  mesh.registerAgent(rootAgent);
+
+  mesh.registerAgent(testResultsAgent);
+  mesh.registerAgent(testE2EAgent);
+  mesh.registerAgent(testUnitAgent);
+  mesh.registerAgent(configAgent);
+  mesh.registerAgent(tsconfigAgent);
+  mesh.registerAgent(packagejsonAgent);
+  mesh.registerAgent(nextconfigAgent);
+  mesh.registerAgent(postcssconfigAgent);
+  mesh.registerAgent(readmeAgent);
+  mesh.registerAgent(agentsmdAgent);
   mesh.registerAgent(cicdAgent);
+
 
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass",
-    where: "components/AgentMesh/logic",
-    how: "Use AlphaEvolve and Agentic Context Engineering to propose long-term logic improvements",
-    reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
+    what: "Run continuous background optimization and refactoring pass. Actively propose improvements and implement robust structural changes emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Execute optimizations of logic, prompts, and implementations across the entire codebase.",
+    where: "components/AgentMesh/logic, root, components, pages, scripts, public, .github, styles, test, test/e2e, test/unit, and test-results.",
+    how: "Use AlphaEvolve and Agentic Context Engineering. Each agent must use its domain context to react to the incoming broadcast, ensuring explicit output defining what, where, and how improvements should be made. Integrate Demock testing, E2E/Unit testing, and AST validation. Dabei kann gerne stehts geholfen werden.",
+    reasoning: "To establish a robust agent2agent structure where everything has its own agent, allowing parallel asynchronous evolution with full context to stay continuously updated and optimized.",
   };
 
   console.log("Broadcasting initial task to mesh...");

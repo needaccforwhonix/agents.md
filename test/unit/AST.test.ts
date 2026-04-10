@@ -38,13 +38,13 @@ describe('AST Demock Validation', () => {
   });
 
   it('should invalidate code containing console.log', () => {
-    const code = `function logData() { console.log("data"); }`;
+    const code = `console.log("hello");`;
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(false);
-    expect(result.errors.some(err => err.includes("console.log()"))).toBe(true);
+    expect(result.errors.some(err => err.includes("Usage of console.log() detected"))).toBe(true);
   });
 
-  it('should invalidate code containing TODO in strings', () => {
+  it('should invalidate code containing TODO string', () => {
     const code = `const deferred = "TODO: implement this";`;
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(false);

@@ -28,8 +28,16 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
     // Demock validation: Ensure no hardcoded dummy data patterns exist
     if (ts.isStringLiteral(node) || ts.isIdentifier(node)) {
       const text = node.getText(sourceFile);
-      if (text.includes("dummy") || text.includes("mock_")) {
-        errors.push(`Cleanliness Warning: Dummy data or mock pattern '${text}' detected. Please use proper typing or context-driven state.`);
+      if (text.includes("dummy") || text.includes("mock_") || text.includes("TODO")) {
+        errors.push(`Cleanliness Warning: Dummy data, mock pattern, or TODO '${text}' detected. Please use proper typing or context-driven state.`);
+      }
+    }
+
+    if (ts.isPropertyAccessExpression(node)) {
+      const expressionText = node.expression.getText(sourceFile);
+      const nameText = node.name.getText(sourceFile);
+      if (expressionText === "console" && nameText === "log") {
+        errors.push("Optimization Warning: Usage of console.log() detected. Remove console.log calls in production code.");
       }
     }
 
