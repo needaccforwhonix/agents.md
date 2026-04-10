@@ -27,12 +27,13 @@ async function startBackgroundMesh() {
 
   // 2. Create directory-specific agents ("everything gets its own a2a agent")
   const rootDir = path.resolve(__dirname, "..");
-  const mainDirs = ["components", "pages", "scripts", "styles", "public"];
+  const items = fs.readdirSync(rootDir);
 
-  for (const dirName of mainDirs) {
-    const dirPath = path.join(rootDir, dirName);
-    if (fs.existsSync(dirPath)) {
-      mesh.registerAgent(new Agent(`dir-${dirName}`, `${dirName}DirAgent`, `Directory Guardian for ${dirName}`, brain, { responsiveness: 0.1 }));
+  for (const item of items) {
+    const itemPath = path.join(rootDir, item);
+    // Ignore node_modules, .git, .next, etc. Check if it's a directory.
+    if (fs.statSync(itemPath).isDirectory() && !item.startsWith('.') && item !== 'node_modules') {
+      mesh.registerAgent(new Agent(`dir-${item}`, `${item}DirAgent`, `Directory Guardian for ${item}`, brain, { responsiveness: 0.1 }));
     }
   }
 
