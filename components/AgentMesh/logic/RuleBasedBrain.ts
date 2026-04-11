@@ -46,6 +46,15 @@ export class RuleBasedBrain implements Brain {
       case "System Developer":
         roleSpecificHow = "Implement core logic enhancements, integrate cross-domain features, and address AST demock requirements.";
         break;
+      case "tsconfig.json Manager":
+      case "package.json Manager":
+      case "next.config.ts Manager":
+      case "postcss.config.mjs Manager":
+      case "README.md Manager":
+      case "AGENTS.md Manager":
+      case "File Manager":
+        roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization.`;
+        break;
       case "Root Directory Manager":
       case "Components Manager":
       case "Pages Manager":
@@ -54,22 +63,28 @@ export class RuleBasedBrain implements Brain {
       case "Public Assets Manager":
       case "Styles Manager":
       case "Test Directory Manager":
+      case "Directory Manager":
         roleSpecificHow = "Ensure directory-specific constraints are met, validate related AST patterns, and coordinate updates within the respective domain.";
         break;
     }
 
-    // Extract exact locations and intents for better context propagation
-    const targetWhere = message.where.includes(context.name) ? message.where : `${message.where} -> Domain: ${context.role}`;
+        const safeWhat = message.what.length > 100 ? message.what.substring(0, 100) + '...' : message.what;
+    const safeWhere = message.where.length > 100 ? message.where.substring(0, 100) + '...' : message.where;
+    const safeHow = message.how.length > 100 ? message.how.substring(0, 100) + '...' : message.how;
+    const safeReasoning = (message.reasoning || "").length > 100 ? message.reasoning.substring(0, 100) + '...' : message.reasoning;
 
-    // Generate output explicitly defining what, where, how, reasoning
+    // Extract exact locations and intents for better context propagation
+    const targetWhere = safeWhere.includes(context.name) ? safeWhere : `${safeWhere} -> Domain: ${context.role}`;
+
+    // Generate output explicitly defining what, where, how, reasoning based on incoming message context
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `[Targeted Optimization] Analyze and refactor the outcome of [${message.what}] specifically for ${context.role}. Identify the next concrete improvement required for this context.`,
-      where: targetWhere,
-      how: `${roleSpecificHow} Ensure all implementation follows Agentic Context Engineering and AlphaEvolve algorithms with full context.`,
-      reasoning: `To guarantee continuous, asynchronous, and parallel evolution. As ${context.role}, I must enforce strict additive enhancements for Security, Performance, Style, Documentation, Cleanliness, and Order. Evolved Parameters: ${stringifiedParameters}`,
+      what: `(WAS) [Targeted Optimization] Analyze, refactor, and apply continuous optimization targeting Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung based on [${safeWhat}] in the domain of ${context.role}. Identify and implement the next necessary improvements. Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist. Dabei kann gerne stehts geholfen werden, um asynchron parallel alles weiterzuentwickeln.`,
+      where: `(WO) Context: ${context.name} processing task originating from [${targetWhere}]. Targeted locations must be clearly specified to maintain Sauberkeit and Ordnung.`,
+      how: `(WIE) ${roleSpecificHow} Ensure all implementation follows Agentic Context Engineering and AlphaEvolve algorithms with full context. Reacting to previous action [${safeHow}]. Ensure comprehensive integration of Demock testing, ACE, CI/CD pipeline checks, E2E testing, AST validations, Documentation updates, and Todo creation/implementation. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung wird aktiv angewendet.`,
+      reasoning: `(WARUM) As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive, building upon previous reasoning [${safeReasoning}]. The output strictly adheres to continuous optimization metrics. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
     };
 
     return response;
