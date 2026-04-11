@@ -52,6 +52,7 @@ export class RuleBasedBrain implements Brain {
       case "postcss.config.mjs Manager":
       case "README.md Manager":
       case "AGENTS.md Manager":
+      case "File Manager":
         roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization.`;
         break;
       case "Root Directory Manager":
@@ -62,6 +63,7 @@ export class RuleBasedBrain implements Brain {
       case "Public Assets Manager":
       case "Styles Manager":
       case "Test Directory Manager":
+      case "Directory Manager":
         roleSpecificHow = "Ensure directory-specific constraints are met, validate related AST patterns, and coordinate updates within the respective domain.";
         break;
     }
