@@ -78,10 +78,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `(WAS) Analyze, refactor, and apply continuous optimization targeting Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung based on [${safeWhat}] in the domain of ${context.role}. Identify and implement the next necessary improvements. Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist. Dabei kann gerne stehts geholfen werden, um asynchron parallel alles weiterzuentwickeln.`,
-      where: `(WO) Context: ${context.name} processing task originating from [${safeWhere}]. Targeted locations must be clearly specified to maintain Sauberkeit and Ordnung.`,
-      how: `(WIE) ${roleSpecificHow} Reacting to previous action [${safeHow}]. Ensure comprehensive integration of Demock testing, ACE, CI/CD pipeline checks, E2E testing, AST validations, Documentation updates, and Todo creation/implementation. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung wird aktiv angewendet.`,
-      reasoning: `(WARUM) As a ${context.role}, I must ensure asynchronous, parallel improvements are non-destructive and additive, building upon previous reasoning [${safeReasoning}]. The output strictly adheres to continuous optimization metrics. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
+      what: `(WAS) Analysiere und setze kontinuierliche Optimierung um: Sicherheit, Performance, Style, documentation, Sauberkeit und Ordnung basierend auf [${safeWhat}] in der Domäne ${context.role}. Definiere eindeutig, was verbessert werden soll.`,
+      where: `(WO) Konkreter Ort der Anpassung: ${context.name} (ausgelöst durch [${safeWhere}]). Der Ort muss eindeutig beschrieben sein, um Sauberkeit und Ordnung zu wahren.`,
+      how: `(WIE) Setze Änderungen wie folgt um: ${roleSpecificHow} Reaktion auf [${safeHow}]. Integriere Demock Testing, ACE, CI/CD, E2E-Tests, AST-Validierung und aktualisiere Dokumentationen. Output-Format für Jules zwingend: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Dabei kann gerne stets geholfen werden, um asynchron parallel alles weiterzuentwickeln.`,
+      reasoning: `(WARUM) Als ${context.role} sichere ich ab, dass asynchrone Verbesserungen nicht-destruktiv und additiv sind, und baue auf vorherigem Reasoning auf: [${safeReasoning}]. Der Output folgt den kontinuierlichen Optimierungszielen. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
     };
 
     return response;
