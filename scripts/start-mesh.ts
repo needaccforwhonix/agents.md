@@ -93,9 +93,9 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass. Actively propose improvements and implement robust structural changes emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Execute optimizations of logic, prompts, and implementations across the entire codebase.",
+    what: "Run continuous background optimization and refactoring pass. Actively propose improvements and implement robust structural changes emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne steht's geholfen werden.",
     where: "All dynamically registered files and directories, ensuring every component of the system is actively optimized.",
-    how: "Use AlphaEvolve and Agentic Context Engineering. Each agent (system, file, and directory) must use its specific context to react to the incoming broadcast, ensuring explicit output defining what, where, and how improvements should be made. Integrate Demock testing, E2E/Unit testing, and AST validation. Dabei kann gerne stehts geholfen werden.",
+    how: "Use AlphaEvolve and Agentic Context Engineering. Each agent (system, file, and directory) must use its specific context to react to the incoming broadcast. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Optimierung dieser prompt und deren Umsetzung und Verbesserung.",
     reasoning: "To establish a robust agent2agent structure where literally everything has its own dedicated a2a agent, allowing massive parallel asynchronous evolution with full context to stay continuously updated and optimized.",
   };
 
