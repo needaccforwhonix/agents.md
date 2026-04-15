@@ -35,37 +35,46 @@ export class Mesh {
   }
 
   /**
-   * Broadcast a single message to all registered agents asynchronously.
-   * If an agent produces a response, that response is then broadcast.
+   * Broadcast a single message to all registered agents asynchronously using a queue.
+   * If an agent produces a response, that response is added to the queue to be broadcast.
    */
-  public async broadcast(message: Message, depth: number = 0): Promise<void> {
-    if (depth > this.messageLimit) {
-      console.warn(`Mesh broadcast limit reached. Terminating branch.`);
-      return;
-    }
+  public async broadcast(initialMessage: Message): Promise<void> {
+    const messageQueue: Message[] = [initialMessage];
+    let processedCount = 0;
 
-    this.messages.push(message);
-
-    if (!validateMessageBounds(message)) {
-      console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
-      return;
-    }
-
-    // All agents receive every output as input asynchronously
-    const responsePromises = Array.from(this.agents.values()).map(async (agent) => {
-      try {
-        const response = await agent.receiveMessage(message);
-        if (response) {
-          // If agent decides to react, broadcast their output recursively as a new input
-          await this.broadcast(response, depth + 1);
-        }
-      } catch (err) {
-        console.error(`Agent [${agent.context.name}] failed to process message.`, err);
+    while (messageQueue.length > 0) {
+      if (processedCount >= this.messageLimit) {
+        console.warn(`Mesh broadcast limit reached (${this.messageLimit} messages). Terminating branch.`);
+        break;
       }
-    });
 
-    // Await all parallel agent reactions
-    await Promise.allSettled(responsePromises);
+      const message = messageQueue.shift();
+      if (!message) continue;
+
+      this.messages.push(message);
+      processedCount++;
+
+      if (!validateMessageBounds(message)) {
+        console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
+        continue;
+      }
+
+      // All agents receive every output as input asynchronously
+      const responsePromises = Array.from(this.agents.values()).map(async (agent) => {
+        try {
+          const response = await agent.receiveMessage(message);
+          if (response) {
+            // If agent decides to react, queue their output recursively as a new input
+            messageQueue.push(response);
+          }
+        } catch (err) {
+          console.error(`Agent [${agent.context.name}] failed to process message.`, err);
+        }
+      });
+
+      // Await all parallel agent reactions for the current message
+      await Promise.allSettled(responsePromises);
+    }
   }
 
   public getAgents(): Agent[] {
