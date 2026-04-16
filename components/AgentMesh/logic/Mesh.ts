@@ -7,6 +7,7 @@ import { Message } from "./Types";
  * and all agents receive every output as input.
  */
 import { countTokens } from "./ACE";
+import { extractCodeBlocks, analyzeCodeBlock } from "./AST";
 
 /**
  * Validates individual message fields against token limits.
@@ -49,6 +50,17 @@ export class Mesh {
     if (!validateMessageBounds(message)) {
       console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
       return;
+    }
+
+    // AST Demock Validation against the full message content
+    const combinedContent = `${message.what} ${message.where} ${message.how} ${message.reasoning || ""}`;
+    const blocks = extractCodeBlocks(combinedContent);
+    for (const block of blocks) {
+      const analysis = analyzeCodeBlock(block);
+      if (!analysis.isValid) {
+        console.warn(`Message [${message.id}] rejected by Mesh due to AST Demock validation: ${analysis.errors.join(", ")}`);
+        return;
+      }
     }
 
     // All agents receive every output as input asynchronously
