@@ -38,46 +38,56 @@ export class Mesh {
   /**
    * Broadcast a single message to all registered agents asynchronously.
    * If an agent produces a response, that response is then broadcast.
+   * Uses a queue-based loop to prevent OOM errors.
    */
-  public async broadcast(message: Message, depth: number = 0): Promise<void> {
-    if (depth > this.messageLimit) {
-      console.warn(`Mesh broadcast limit reached. Terminating branch.`);
-      return;
-    }
+  public async broadcast(initialMessage: Message): Promise<void> {
+    const queue: Message[] = [initialMessage];
+    let processedCount = 0;
 
-    this.messages.push(message);
-
-    if (!validateMessageBounds(message)) {
-      console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
-      return;
-    }
-
-    // AST Demock Validation against the full message content
-    const combinedContent = `${message.what} ${message.where} ${message.how} ${message.reasoning || ""}`;
-    const blocks = extractCodeBlocks(combinedContent);
-    for (const block of blocks) {
-      const analysis = analyzeCodeBlock(block);
-      if (!analysis.isValid) {
-        console.warn(`Message [${message.id}] rejected by Mesh due to AST Demock validation: ${analysis.errors.join(", ")}`);
-        return;
+    while (queue.length > 0) {
+      if (processedCount >= this.messageLimit) {
+        console.warn(`Mesh broadcast total message limit reached (${this.messageLimit}). Terminating branch.`);
+        break;
       }
-    }
 
-    // All agents receive every output as input asynchronously
-    const responsePromises = Array.from(this.agents.values()).map(async (agent) => {
-      try {
-        const response = await agent.receiveMessage(message);
-        if (response) {
-          // If agent decides to react, broadcast their output recursively as a new input
-          await this.broadcast(response, depth + 1);
+      const message = queue.shift();
+      if (!message) continue;
+
+      this.messages.push(message);
+      processedCount++;
+
+      if (!validateMessageBounds(message)) {
+        console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
+        continue;
+      }
+
+      // AST Demock Validation against the full message content
+      const combinedContent = `${message.what} ${message.where} ${message.how} ${message.reasoning || ""}`;
+      const blocks = extractCodeBlocks(combinedContent);
+      for (const block of blocks) {
+        const analysis = analyzeCodeBlock(block);
+        if (!analysis.isValid) {
+          console.warn(`Message [${message.id}] rejected by Mesh due to AST Demock validation: ${analysis.errors.join(", ")}`);
+          continue; // Skip processing this message further
         }
-      } catch (err) {
-        console.error(`Agent [${agent.context.name}] failed to process message.`, err);
       }
-    });
 
-    // Await all parallel agent reactions
-    await Promise.allSettled(responsePromises);
+      // All agents receive every output as input asynchronously
+      const responsePromises = Array.from(this.agents.values()).map(async (agent) => {
+        try {
+          const response = await agent.receiveMessage(message);
+          if (response) {
+            // If agent decides to react, queue their output to be processed
+            queue.push(response);
+          }
+        } catch (err) {
+          console.error(`Agent [${agent.context.name}] failed to process message.`, err);
+        }
+      });
+
+      // Await all parallel agent reactions for the current message
+      await Promise.allSettled(responsePromises);
+    }
   }
 
   public getAgents(): Agent[] {
