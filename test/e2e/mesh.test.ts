@@ -73,4 +73,32 @@ describe('AgentMesh E2E Simulation', () => {
     const responses = messages.filter(m => m.senderId === 'test-dev');
     expect(responses.length).toBe(0);
   });
+
+  it('should reject messages with invalid Demock patterns', async () => {
+    const mesh = new Mesh();
+    const brain = new RuleBasedBrain();
+    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
+
+    mesh.registerAgent(devAgent);
+
+    const invalidMessage = {
+      id: 'demock-invalid-msg',
+      senderId: 'test-init',
+      timestamp: Date.now(),
+      what: 'Testing demock validation',
+      where: 'test-env',
+      how: '```typescript\nfunction dummy() {}\n```',
+      reasoning: 'should fail demock check due to "dummy" identifier and empty function'
+    };
+
+    await mesh.broadcast(invalidMessage);
+
+    const messages = mesh.getMessages();
+    // The message is tracked by Mesh but not fully processed
+    expect(messages.length).toBeGreaterThan(0);
+
+    // devAgent should not respond because the message is rejected
+    const responses = messages.filter(m => m.senderId === 'test-dev');
+    expect(responses.length).toBe(0);
+  });
 });
