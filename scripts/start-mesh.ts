@@ -93,10 +93,10 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass. Actively propose improvements and implement robust structural changes emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Execute optimizations of logic, prompts, and implementations across the entire codebase. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist.",
-    where: "All dynamically registered files and directories, ensuring every component of the system is actively optimized. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.",
-    how: "Use AlphaEvolve and Agentic Context Engineering. Each agent (system, file, and directory) must use its specific context to react to the incoming broadcast, ensuring explicit output defining what, where, and how improvements should be made. Integrate Demock testing, E2E/Unit testing, and AST validation. Dabei kann gerne steht's geholfen werden. Optimierung dieser prompt und deren Umsetzung und Verbesserung.",
-    reasoning: "To establish a robust agent2agent structure where literally everything has its own dedicated a2a agent, allowing massive parallel asynchronous evolution with full context to stay continuously updated and optimized. Sicherheit Performance Style documentation Sauberkeit Ordnung.",
+    what: "Run continuous background optimization and refactoring pass across the Agent2Agent structure where every domain, directory, and file gets its own dedicated agent. Actively propose improvements emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist.",
+    where: "All dynamically registered files, directories, and configuration nodes. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.",
+    how: "Every a2a agent uses Agentic Context Engineering and AlphaEvolve algorithm with reasoning and full context. Receive every output as input and explicitly decide how to react. Define exactly what, where, and how improvements should be made. Dabei kann gerne steht's geholfen werden. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Ensure all changes are additive and non-destructive.",
+    reasoning: "To empower a robust agent2agent structure allowing massive parallel asynchronous evolution to continuously stay updated, optimized, and cleanly organized. Sicherheit Performance Style documentation Sauberkeit Ordnung.",
   };
 
   console.log("Broadcasting initial task to mesh...");
