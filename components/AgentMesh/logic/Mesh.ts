@@ -64,13 +64,18 @@ export class Mesh {
       // AST Demock Validation against the full message content
       const combinedContent = `${message.what} ${message.where} ${message.how} ${message.reasoning || ""}`;
       const blocks = extractCodeBlocks(combinedContent);
+      let astValid = true;
       for (const block of blocks) {
         const analysis = analyzeCodeBlock(block);
         if (!analysis.isValid) {
-          console.warn(`Message [${message.id}] rejected by Mesh due to AST Demock validation: ${analysis.errors.join(", ")}`);
-          continue; // Skip processing this message further
+          const reasons = [...analysis.errors, ...analysis.warnings].join(", ");
+          console.warn(`Message [${message.id}] rejected by Mesh due to AST Demock validation: ${reasons}`);
+          astValid = false;
+          break; // Stop analyzing further blocks and mark invalid
         }
       }
+
+      if (!astValid) continue; // Skip processing this message further in the mesh
 
       // All agents receive every output as input asynchronously
       const responsePromises = Array.from(this.agents.values()).map(async (agent) => {

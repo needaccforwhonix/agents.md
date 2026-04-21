@@ -1,12 +1,24 @@
 import * as ts from "typescript";
 
+export interface ASTAnalysisResultV2 {
+  isValid: boolean;
+  errors: string[];
+  warnings: string[];
+  suggestions: string[];
+  summary: {
+    errors: number;
+    warnings: number;
+    suggestions: number;
+  };
+}
+
 /**
  * AST Parser
  * Dynamically parses and analyzes code blocks within agent messages
  * to enforce code quality, security, and structure.
  */
-export function analyzeCodeBlock(code: string): { isValid: boolean; errors: string[] } {
-  const errors: string[] = [];
+export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
+  const rawFindings: string[] = [];
 
   // Create a source file from the provided code string
   const sourceFile = ts.createSourceFile(
@@ -21,7 +33,7 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
     if (ts.isCallExpression(node)) {
       const expressionText = node.expression.getText(sourceFile);
       if (expressionText === "eval") {
-        errors.push("Security Warning: Usage of eval() is not allowed in agent outputs.");
+        rawFindings.push("Security Error: Usage of eval() is not allowed in agent outputs.");
       }
     }
 
@@ -29,7 +41,7 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
     if (ts.isStringLiteral(node) || ts.isIdentifier(node)) {
       const text = node.getText(sourceFile);
       if (text.includes("dummy") || text.includes("mock_") || text.includes("TODO")) {
-        errors.push(`Cleanliness Warning: Dummy data, mock pattern, or TODO '${text}' detected. Please use proper typing or context-driven state.`);
+        rawFindings.push(`Cleanliness Warning: Dummy data, mock pattern, or TODO '${text}' detected. Please use proper typing or context-driven state.`);
       }
     }
 
@@ -37,7 +49,7 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       const expressionText = node.expression.getText(sourceFile);
       const nameText = node.name.getText(sourceFile);
       if (expressionText === "console" && nameText === "log") {
-        errors.push("Optimization Warning: Usage of console.log() detected. Remove console.log calls in production code.");
+        rawFindings.push("Optimization Warning: Usage of console.log() detected. Remove console.log calls in production code.");
       }
     }
 
@@ -53,7 +65,7 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       } else if (ts.isMethodDeclaration(node) && node.name) {
         functionName = node.name.getText(sourceFile);
       }
-      errors.push(`Optimization Warning: Empty function '${functionName}' detected. Avoid empty implementations.`);
+      rawFindings.push(`Optimization Warning: Empty function '${functionName}' detected. Avoid empty implementations.`);
     }
 
     ts.forEachChild(node, visit);
@@ -61,10 +73,36 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
 
   visit(sourceFile);
 
-  return {
-    isValid: errors.length === 0,
-    errors,
+  const result: ASTAnalysisResultV2 = {
+    isValid: true,
+    errors: [],
+    warnings: [],
+    suggestions: [],
+    summary: {
+      errors: 0,
+      warnings: 0,
+      suggestions: 0,
+    }
   };
+
+  for (const finding of rawFindings) {
+    if (finding.startsWith("Security Error") || finding.startsWith("Security Warning")) {
+      result.errors.push(finding);
+    } else if (finding.startsWith("Cleanliness Warning") || finding.startsWith("Optimization Warning")) {
+      result.warnings.push(finding);
+    } else {
+      result.suggestions.push(finding);
+    }
+  }
+
+  result.summary.errors = result.errors.length;
+  result.summary.warnings = result.warnings.length;
+  result.summary.suggestions = result.suggestions.length;
+
+  // Strict demock checking - warnings and errors both invalidate it currently to prevent mesh broadcast of dummy data
+  result.isValid = result.errors.length === 0 && result.warnings.length === 0;
+
+  return result;
 }
 
 /**
