@@ -9,6 +9,10 @@
 
 ## Done
 
+- Implemented Schema v2 (`ASTAnalysisResultV2`) logic directly into `analyzeCodeBlock` to correctly support memory instruction sets for Warnings/Errors/Suggestions.
+- Adapted Demock Validation in the core `Mesh` loop to support `ASTAnalysisResultV2`.
+- Adapted tests to expect warnings instead of errors for Demock validations matching `console.log` and `TODO`.
+
 - Implement German-specific AgentMesh Prompt instructions ensuring explicit formatting around Optimizations, Demock Testing, ACE, E2E Testing, AST, Documentation updates, and full system modifications.
 - Enhance CI/CD pipeline tests to integrate automatic Demock checks continuously by embedding AST analysis into the active Mesh broadcast validation logic.
 - Implement root agent for the root directory
