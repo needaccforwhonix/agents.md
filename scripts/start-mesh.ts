@@ -29,7 +29,7 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(10000); // Higher message limit for longer simulation
+  const mesh = new Mesh(50000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Increased responsiveness for background to ensure a deeper, longer-running AgentMesh simulation
@@ -93,7 +93,7 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass across the Agent2Agent structure where every domain, directory, and file gets its own dedicated agent. Actively propose improvements emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist.",
+    what: "Use a agent2agent structure where everything gets ist own a2a agent. All agents receive every Output as Input and can decide how to react. Every a2a agent uses Agentic context engineering and alphaevolve Algorithmus with reasoning and full context. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist.",
     where: "All dynamically registered files, directories, and configuration nodes. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.",
     how: "Every a2a agent uses Agentic Context Engineering and AlphaEvolve algorithm with reasoning and full context. Receive every output as input and explicitly decide how to react. Define exactly what, where, and how improvements should be made. Dabei kann gerne steht's geholfen werden. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Ensure all changes are additive and non-destructive.",
     reasoning: "To empower a robust agent2agent structure allowing massive parallel asynchronous evolution to continuously stay updated, optimized, and cleanly organized. Sicherheit Performance Style documentation Sauberkeit Ordnung.",
