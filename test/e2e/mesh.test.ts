@@ -97,7 +97,7 @@ describe('AgentMesh E2E Simulation', () => {
     // The message is tracked by Mesh but not fully processed
     expect(messages.length).toBeGreaterThan(0);
 
-    // devAgent should not respond because the message is rejected
+    // devAgent should not respond because the message is rejected by AST demock validation in mesh before it can respond
     const responses = messages.filter(m => m.senderId === 'test-dev');
     expect(responses.length).toBe(0);
   });
