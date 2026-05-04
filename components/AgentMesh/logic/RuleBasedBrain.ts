@@ -52,8 +52,24 @@ export class RuleBasedBrain implements Brain {
       case "postcss.config.mjs Manager":
       case "README.md Manager":
       case "AGENTS.md Manager":
+      case "JSON Config Manager":
+      case "Markdown Document Manager":
       case "File Manager":
+      case "Generic File Manager":
         roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization.`;
+        break;
+      case "React Component Manager":
+        roleSpecificHow = `Optimize React Component ${context.name} for rendering performance, strict types, and clean UI architecture. Avoid memory leaks and enforce proper hooks usage.`;
+        break;
+      case "TypeScript File Manager":
+      case "JavaScript File Manager":
+        roleSpecificHow = `Refactor and optimize logic in ${context.name} for strict typing, execution speed, modularity, and explicit documentation.`;
+        break;
+      case "CSS Style Manager":
+        roleSpecificHow = `Optimize styling in ${context.name} for rendering speed, minimal footprint, and strict adherence to Tailwind or PostCSS conventions.`;
+        break;
+      case "Test File Manager":
+        roleSpecificHow = `Enforce rigorous E2E and Unit testing logic in ${context.name}, applying Demock strategies to ensure real data validation.`;
         break;
       case "Root Directory Manager":
       case "Components Manager":
@@ -64,7 +80,14 @@ export class RuleBasedBrain implements Brain {
       case "Styles Manager":
       case "Test Directory Manager":
       case "Directory Manager":
-        roleSpecificHow = "Ensure directory-specific constraints are met, validate related AST patterns, and coordinate updates within the respective domain.";
+      case "React Component Directory Manager":
+      case "NextJS Pages Directory Manager":
+      case "Mesh Logic Directory Manager":
+        if (context.role.endsWith('Directory Manager')) {
+          roleSpecificHow = `Manage the directory state of ${context.name}. Ensure directory-specific constraints are met, validate related AST patterns, and coordinate clean and orderly updates within the domain.`;
+        } else {
+          roleSpecificHow = "Ensure directory-specific constraints are met, validate related AST patterns, and coordinate updates within the respective domain.";
+        }
         break;
     }
 
@@ -78,10 +101,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an mit Fokus auf Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung basierend auf [${safeWhat}] im Bereich ${context.role}. Identifiziere und implementiere die nächsten nötigen Verbesserungen ohne Deletionen von Features, Ideen oder Funktionen. Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist. Dabei kann gerne stets geholfen werden, um asynchron parallel alles weiterzuentwickeln.`,
-      where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Zielorte müssen eindeutig spezifiziert werden inklusive Update aller Dateien inkl. Projektordner Cleanup, um Sauberkeit und Ordnung beizubehalten.`,
-      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung und Verbesserung.`,
-      reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
+      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an mit exklusivem Fokus auf Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung basierend auf [${safeWhat}] im Bereich ${context.role}. Identifiziere und implementiere die nächsten nötigen Verbesserungen proaktiv. Keine Deletionen von Features, Ideen oder Funktionen erlaubt. Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist.`,
+      where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Zielorte müssen eindeutig spezifiziert werden inklusive Update aller Dateien inkl. Projektordner Cleanup, um absolute Sauberkeit und Ordnung beizubehalten.`,
+      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo's Creation + Implementationen + Improvements. Format analysis exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieses Prompts und dessen Umsetzung.`,
+      reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken (Sicherheit, Performance, Style, Documentation, Sauberkeit, Ordnung). Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
     };
 
     return response;

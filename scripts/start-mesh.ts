@@ -5,6 +5,29 @@ import { Agent } from "../components/AgentMesh/logic/Agent";
 import { RuleBasedBrain } from "../components/AgentMesh/logic/RuleBasedBrain";
 import { Message } from "../components/AgentMesh/logic/Types";
 
+function determineAgentRole(fullPath: string, isDirectory: boolean): string {
+  if (isDirectory) {
+    const dirName = path.basename(fullPath);
+    if (dirName === 'components') return 'React Component Directory Manager';
+    if (dirName === 'pages') return 'NextJS Pages Directory Manager';
+    if (dirName === 'logic') return 'Mesh Logic Directory Manager';
+    return `${dirName} Directory Manager`;
+  }
+
+  const ext = path.extname(fullPath).toLowerCase();
+  const name = path.basename(fullPath);
+
+  if (name.endsWith('.test.ts') || name.endsWith('.test.tsx')) return 'Test File Manager';
+  if (ext === '.tsx') return 'React Component Manager';
+  if (ext === '.ts') return 'TypeScript File Manager';
+  if (ext === '.js' || ext === '.mjs') return 'JavaScript File Manager';
+  if (ext === '.css') return 'CSS Style Manager';
+  if (ext === '.json') return 'JSON Config Manager';
+  if (ext === '.md') return 'Markdown Document Manager';
+
+  return 'Generic File Manager';
+}
+
 function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
   const ignored = new Set(["node_modules", ".git", ".next", "test-results", "public", ".github", "pnpm-lock.yaml"]);
   const files = fs.readdirSync(dir);
@@ -14,13 +37,14 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
 
     const fullPath = path.join(dir, file);
     const stats = fs.statSync(fullPath);
+    const role = determineAgentRole(fullPath, stats.isDirectory());
 
     if (stats.isDirectory()) {
-      const agent = new Agent(`dir-${fullPath}`, fullPath, "Directory Manager", brain, { responsiveness: 0.05 });
+      const agent = new Agent(`dir-${fullPath}`, path.basename(fullPath), role, brain, { responsiveness: 0.03 });
       mesh.registerAgent(agent);
       registerDynamicAgents(fullPath, mesh, brain);
     } else {
-      const agent = new Agent(`file-${fullPath}`, fullPath, "File Manager", brain, { responsiveness: 0.05 });
+      const agent = new Agent(`file-${fullPath}`, path.basename(fullPath), role, brain, { responsiveness: 0.03 });
       mesh.registerAgent(agent);
     }
   }
@@ -29,17 +53,17 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(10000); // Higher message limit for longer simulation
+  const mesh = new Mesh(50000); // Significantly higher message limit for much longer simulation
   const brain = new RuleBasedBrain();
 
-  // Increased responsiveness for background to ensure a deeper, longer-running AgentMesh simulation
-  const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.05 });
-  const secAgent = new Agent("bg-agent-2", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.05 });
-  const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.05 });
-  const perfAgent = new Agent("bg-agent-4", "SysPerfBot", "System Performance Optimizer", brain, { responsiveness: 0.05 });
-  const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.05 });
-  const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.05 });
-  const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.05 });
+  // Base responsiveness for main system agents
+  const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.08 });
+  const secAgent = new Agent("bg-agent-2", "SysSecBot", "System Security Analyst", brain, { responsiveness: 0.08 });
+  const docAgent = new Agent("bg-agent-3", "SysDocBot", "System Documenter", brain, { responsiveness: 0.08 });
+  const perfAgent = new Agent("bg-agent-4", "SysPerfBot", "System Performance Optimizer", brain, { responsiveness: 0.08 });
+  const styleAgent = new Agent("bg-agent-5", "SysStyleBot", "System Style Enforcer", brain, { responsiveness: 0.08 });
+  const cleanAgent = new Agent("bg-agent-6", "SysCleanBot", "System Cleanliness & Order", brain, { responsiveness: 0.08 });
+  const optAgent = new Agent("bg-agent-7", "SysOptBot", "Prompt & Logic Optimizer", brain, { responsiveness: 0.08 });
   const rootAgent = new Agent("bg-agent-dir-0", "SysRootBot", "Root Directory Manager", brain, { responsiveness: 0.05 });
   const componentsAgent = new Agent("bg-agent-dir-1", "SysCompBot", "Components Manager", brain, { responsiveness: 0.05 });
   const pagesAgent = new Agent("bg-agent-dir-2", "SysPageBot", "Pages Manager", brain, { responsiveness: 0.05 });
