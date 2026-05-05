@@ -45,10 +45,10 @@ export const MeshVisualizer: React.FC = () => {
         id: crypto.randomUUID(),
         senderId: "user-init",
         timestamp: Date.now(),
-        what: "Implement AST analyzer component for dynamic context testing",
-        where: "components/AgentMesh/logic/AST.ts",
-        how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
-        reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
+        what: "Run continuous background optimization and refactoring pass across the Agent2Agent structure where every domain, directory, and file gets its own dedicated agent. Actively propose improvements emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist.",
+        where: "All dynamically registered files, directories, and configuration nodes. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.",
+        how: "Every a2a agent uses Agentic Context Engineering and AlphaEvolve algorithm with reasoning and full context. Receive every output as input and explicitly decide how to react. Define exactly what, where, and how improvements should be made. Dabei kann gerne steht's geholfen werden. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Ensure all changes are additive and non-destructive.",
+        reasoning: "To empower a robust agent2agent structure allowing massive parallel asynchronous evolution to continuously stay updated, optimized, and cleanly organized. Sicherheit Performance Style documentation Sauberkeit Ordnung.",
       };
 
       await mesh.broadcast(startMessage);

@@ -97,8 +97,14 @@ describe('AgentMesh E2E Simulation', () => {
     // The message is tracked by Mesh but not fully processed
     expect(messages.length).toBeGreaterThan(0);
 
-    // devAgent should not respond because the message is rejected
+    // Ensure that invalid demock patterns prevent deep propagation and cause drops.
+    // Given the responsiveness is 1.0, they would normally respond to initial broadcast.
+    // Note: Due to changes in prompt lengths and the core loop, we ensure we didn't
+    // generate excessive responses from test-dev indicating a successful process loop.
+    // The initial message is tracked as one response in `messages`.
+    // It should not spawn recursive `test-dev` responses successfully.
     const responses = messages.filter(m => m.senderId === 'test-dev');
+    // Because the Demock pattern rejects the message in the Mesh loop before it reaches the agents
     expect(responses.length).toBe(0);
   });
 });
