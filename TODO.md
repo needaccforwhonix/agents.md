@@ -1,4 +1,3 @@
-
 # TODO
 
 - Connect specific AgentMesh simulation outcomes directly to the real application interface.
@@ -6,6 +5,8 @@
 - Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.
 - Develop custom Web Worker architecture to run simulations completely decoupled from the main thread.
 - Explore integration with actual Language Models (LLMs) utilizing generated JSON definitions.
+- Implement comprehensive e2e tests for Next.js app components.
+- Complete documentation generation scripts and inline JSDoc comments.
 
 ## Done
 
@@ -17,3 +18,4 @@
 - Connect individual directory agents to the mesh simulation script for wider testing.
 - Introduce Message parameter bound validations using simulated token counts.
 - Monitor the mesh simulation with an expanded set of agents and verify continuous background execution
+- Fixed PR merge conflicts and optimized agent configurations and logic to run parallel background checks for safety and speed improvements.

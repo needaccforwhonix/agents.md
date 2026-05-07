@@ -1,12 +1,37 @@
 import * as ts from "typescript";
 
 /**
+ * Interface representing the detailed output of the AST Demock analysis.
+ */
+export interface ASTAnalysisResultV2 {
+  /** True if no errors were found. Warnings and suggestions do not invalidate. */
+  isValid: boolean;
+  /** List of strict validation errors (e.g. usage of eval, mock identifiers). */
+  errors: string[];
+  /** List of minor warnings (e.g. console.log, TODO strings). */
+  warnings: string[];
+  /** List of optional suggestions for code improvement. */
+  suggestions: string[];
+  /** A numerical summary of the found issues. */
+  summary: {
+    errorCount: number;
+    warningCount: number;
+    suggestionCount: number;
+  };
+}
+
+/**
  * AST Parser
  * Dynamically parses and analyzes code blocks within agent messages
- * to enforce code quality, security, and structure.
+ * to enforce strict code quality, security, and structure for Demock features.
+ *
+ * @param code - A raw TypeScript string block.
+ * @returns An ASTAnalysisResultV2 with full details.
  */
-export function analyzeCodeBlock(code: string): { isValid: boolean; errors: string[] } {
+export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
   const errors: string[] = [];
+  const warnings: string[] = [];
+  const suggestions: string[] = [];
 
   // Create a source file from the provided code string
   const sourceFile = ts.createSourceFile(
@@ -16,20 +41,23 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
     true
   );
 
-  // Traverse AST to find basic issues (example: disallow eval for security)
+  // Traverse AST to find basic issues
   const visit = (node: ts.Node) => {
     if (ts.isCallExpression(node)) {
       const expressionText = node.expression.getText(sourceFile);
       if (expressionText === "eval") {
-        errors.push("Security Warning: Usage of eval() is not allowed in agent outputs.");
+        errors.push("Security Error: Usage of eval() is strictly forbidden.");
       }
     }
 
     // Demock validation: Ensure no hardcoded dummy data patterns exist
     if (ts.isStringLiteral(node) || ts.isIdentifier(node)) {
       const text = node.getText(sourceFile);
-      if (text.includes("dummy") || text.includes("mock_") || text.includes("TODO")) {
-        errors.push(`Cleanliness Warning: Dummy data, mock pattern, or TODO '${text}' detected. Please use proper typing or context-driven state.`);
+      if (text.includes("dummy") || text.includes("mock_")) {
+        errors.push(`Demock Error: Hardcoded pattern '${text}' detected.`);
+      }
+      if (text.includes("TODO")) {
+        warnings.push(`Cleanliness Warning: TODO string literal '${text}' detected.`);
       }
     }
 
@@ -37,7 +65,7 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       const expressionText = node.expression.getText(sourceFile);
       const nameText = node.name.getText(sourceFile);
       if (expressionText === "console" && nameText === "log") {
-        errors.push("Optimization Warning: Usage of console.log() detected. Remove console.log calls in production code.");
+        warnings.push("Optimization Warning: Usage of console.log() detected. Consider removing in production code.");
       }
     }
 
@@ -53,7 +81,7 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       } else if (ts.isMethodDeclaration(node) && node.name) {
         functionName = node.name.getText(sourceFile);
       }
-      errors.push(`Optimization Warning: Empty function '${functionName}' detected. Avoid empty implementations.`);
+      errors.push(`Optimization Error: Empty function '${functionName}' detected. Avoid empty implementations.`);
     }
 
     ts.forEachChild(node, visit);
@@ -64,11 +92,20 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
   return {
     isValid: errors.length === 0,
     errors,
+    warnings,
+    suggestions,
+    summary: {
+      errorCount: errors.length,
+      warningCount: warnings.length,
+      suggestionCount: suggestions.length,
+    }
   };
 }
 
 /**
  * Extracts TypeScript code blocks from a message string.
+ * @param messageContent - The full string that might contain markdown typescript blocks.
+ * @returns Array of extracted code strings.
  */
 export function extractCodeBlocks(messageContent: string): string[] {
   const codeBlockRegex = /```(?:typescript|ts)([\s\S]*?)```/g;
