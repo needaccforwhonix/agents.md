@@ -29,7 +29,7 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(10000); // Higher message limit for longer simulation
+  const mesh = new Mesh(50000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Increased responsiveness for background to ensure a deeper, longer-running AgentMesh simulation
@@ -93,10 +93,10 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Run continuous background optimization and refactoring pass across the Agent2Agent structure where every domain, directory, and file gets its own dedicated agent. Actively propose improvements emphasizing Sicherheit, Performance, Style, documentation, Sauberkeit, and Ordnung. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist.",
-    where: "All dynamically registered files, directories, and configuration nodes. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.",
-    how: "Every a2a agent uses Agentic Context Engineering and AlphaEvolve algorithm with reasoning and full context. Receive every output as input and explicitly decide how to react. Define exactly what, where, and how improvements should be made. Dabei kann gerne steht's geholfen werden. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Ensure all changes are additive and non-destructive.",
-    reasoning: "To empower a robust agent2agent structure allowing massive parallel asynchronous evolution to continuously stay updated, optimized, and cleanly organized. Sicherheit Performance Style documentation Sauberkeit Ordnung.",
+    what: "Führe eine kontinuierliche Hintergrundoptimierung und ein Refactoring durch die gesamte Agent2Agent-Struktur durch, bei der jede Domäne, jedes Verzeichnis und jede Datei einen eigenen dedizierten Agenten erhält. Analysiere proaktiv Verbesserungen in den Bereichen Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung. Optimiere diesen Prompt selbst sowie dessen Umsetzung kontinuierlich weiter.",
+    where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten (A2A Mesh). So soll asynchron und parallel alles weiterentwickelt werden und stets aktuell bleiben.",
+    how: "Jeder a2a-Agent nutzt 'Agentic Context Engineering' und den 'AlphaEvolve'-Algorithmus mit Reasoning unter Einbezug des vollen Kontexts. Jeder Agent empfängt jeden Output als Input und entscheidet eigenständig, wie er darauf reagiert. Input und Output müssen eindeutig beschreiben, *was*, *wo* und *wie* gewollt ist. Dabei kann gerne stets geholfen werden. Alle Änderungen müssen streng additiv und nicht destruktiv (non-destructive) sein.",
+    reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive, parallele und asynchrone Evolution ermöglicht. Dadurch bleibt das System kontinuierlich aktualisiert, hochgradig optimiert und sauber strukturiert. Fokus liegt auf Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung.",
   };
 
   console.log("Broadcasting initial task to mesh...");
