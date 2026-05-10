@@ -68,10 +68,10 @@ export class RuleBasedBrain implements Brain {
         break;
     }
 
-    const safeWhat = message.what.length > 100 ? message.what.substring(0, 100) + '...' : message.what;
-    const safeWhere = message.where.length > 100 ? message.where.substring(0, 100) + '...' : message.where;
-    const safeHow = message.how.length > 100 ? message.how.substring(0, 100) + '...' : message.how;
-    const safeReasoning = (message.reasoning || "").length > 100 ? message.reasoning.substring(0, 100) + '...' : message.reasoning;
+    const safeWhat = message.what.length > 2000 ? message.what.substring(0, 2000) + '...' : message.what;
+    const safeWhere = message.where.length > 2000 ? message.where.substring(0, 2000) + '...' : message.where;
+    const safeHow = message.how.length > 2000 ? message.how.substring(0, 2000) + '...' : message.how;
+    const safeReasoning = (message.reasoning || "").length > 2000 ? message.reasoning.substring(0, 2000) + '...' : message.reasoning;
 
     // Generate output explicitly defining what, where, how, reasoning based on incoming message context
     const response: Message = {
