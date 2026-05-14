@@ -93,10 +93,10 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Führe eine kontinuierliche Hintergrundoptimierung und Refactoring in der Agent2Agent-Struktur durch, bei der jede Domäne, jedes Verzeichnis und jede Datei einen eigenen dedizierten Agenten erhält. Schlage proaktiv Verbesserungen vor, mit Schwerpunkt auf Sicherheit, Performance, Style, documentation, Sauberkeit und Ordnung. Input und Output müssen eindeutig beschreiben, was, wo und wie gewollt ist. Optimiere kontinuierlich diesen Prompt und setze Verbesserungen um.",
-    where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.",
-    how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll. Definiere genau, was, wo und wie Verbesserungen vorgenommen werden sollen. Dabei kann gerne stets geholfen werden. Stelle sicher, dass alle Änderungen additiv und nicht destruktiv sind.",
-    reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung.",
+    what: "Nutze eine agent2agent Struktur, wo alles seinen eigenen a2a agent erhält. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Optimiere kontinuierlich diesen Prompt und setze Verbesserungen um.",
+    where: "Überall im Projekt. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.",
+    how: "Jeder a2a agent nutzt Agentic context engineering und den alphaevolve Algorithmus mit reasoning und full context. Alle Agenten empfangen jeden Output als Input und können entscheiden wie sie reagieren. Dabei kann gerne stets geholfen werden.",
+    reasoning: "Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung.",
   };
 
   console.log("Broadcasting initial task to mesh...");

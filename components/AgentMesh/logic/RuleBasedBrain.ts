@@ -78,10 +78,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an mit Fokus auf Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung basierend auf [${safeWhat}] im Bereich ${context.role}. Identifiziere und implementiere die nächsten nötigen Verbesserungen ohne Deletionen von Features, Ideen oder Funktionen. Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist. Dabei kann gerne stets geholfen werden, um asynchron parallel alles weiterzuentwickeln.`,
-      where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Zielorte müssen eindeutig spezifiziert werden inklusive Update aller Dateien inkl. Projektordner Cleanup, um Sauberkeit und Ordnung beizubehalten.`,
-      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung und Verbesserung.`,
-      reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
+      what: `(WAS) Eindeutig beschreiben was gewollt ist basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Nutze eine agent2agent Struktur, wo alles seinen eigenen a2a agent erhält.`,
+      where: `(WO) Eindeutig beschreiben wo es gewollt ist: Context ${context.name} basierend auf [${safeWhere}]. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben.`,
+      how: `(WIE) Eindeutig beschreiben wie es gewollt ist: ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Jeder a2a agent nutzt Agentic context engineering und den alphaevolve Algorithmus mit reasoning und full context. Alle Agenten empfangen jeden Output als Input und können entscheiden wie sie reagieren. Dabei kann gerne stets geholfen werden.`,
+      reasoning: `(WARUM) Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung basierend auf [${safeReasoning}]. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
     };
 
     return response;
