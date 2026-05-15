@@ -37,18 +37,20 @@ describe('AST Demock Validation', () => {
     expect(result.errors.some(err => err.includes("Empty function 'myMethod'"))).toBe(true);
   });
 
-  it('should invalidate code containing console.log', () => {
+  it('should add warnings for code containing console.log but remain valid', () => {
     const code = `console.log("hello");`;
     const result = analyzeCodeBlock(code);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some(err => err.includes("Usage of console.log() detected"))).toBe(true);
+    expect(result.isValid).toBe(true);
+    expect(result.warnings.some(warn => warn.includes("Usage of console.log() detected"))).toBe(true);
+    expect(result.summary.warnings).toBe(1);
   });
 
-  it('should invalidate code containing TODO string', () => {
+  it('should add warnings for code containing TODO string but remain valid', () => {
     const code = `const note = "TODO: fix this";`;
     const result = analyzeCodeBlock(code);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some(err => err.includes("TODO"))).toBe(true);
+    expect(result.isValid).toBe(true);
+    expect(result.warnings.some(warn => warn.includes("TODO"))).toBe(true);
+    expect(result.summary.warnings).toBe(1);
   });
 
   it('should allow valid code', () => {
