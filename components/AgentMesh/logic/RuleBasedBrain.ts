@@ -26,25 +26,25 @@ export class RuleBasedBrain implements Brain {
 
     switch (context.role) {
       case "System Security Analyst":
-        roleSpecificHow = "Perform vulnerability scanning, dependency checks, and sanitize all agent inputs.";
+        roleSpecificHow = "Perform vulnerability scanning, dependency checks, and sanitize all agent inputs. Flag insecure patterns as errors.";
         break;
       case "System Performance Optimizer":
-        roleSpecificHow = "Profile AST bounds, analyze memory limits, and optimize simulation bottlenecks.";
+        roleSpecificHow = "Profile AST bounds, analyze memory limits, and optimize simulation bottlenecks. Implement caching where applicable.";
         break;
       case "System Style Enforcer":
-        roleSpecificHow = "Enforce strict TypeScript types and maintain explicit directory layout conventions.";
+        roleSpecificHow = "Enforce strict TypeScript types and maintain explicit directory layout conventions. Standardize code formatting.";
         break;
       case "System Documenter":
-        roleSpecificHow = "Generate dynamic README summaries and inline code documentation reflecting evolved states.";
+        roleSpecificHow = "Generate dynamic README summaries and inline code documentation reflecting evolved states. Ensure all functions are documented.";
         break;
       case "System Cleanliness & Order":
-        roleSpecificHow = "Identify obsolete mock patterns, remove unused imports, and consolidate logic.";
+        roleSpecificHow = "Identify obsolete mock patterns, remove unused imports, consolidate logic, and track TODO implementations. Clean up unused code.";
         break;
       case "Prompt & Logic Optimizer":
-        roleSpecificHow = "Analyze prompt effectiveness, refine ACE logic, and tune alphaEvolve parameters.";
+        roleSpecificHow = "Analyze prompt effectiveness, refine ACE logic, tune alphaEvolve parameters, and optimize agent decision heuristics.";
         break;
       case "System Developer":
-        roleSpecificHow = "Implement core logic enhancements, integrate cross-domain features, and address AST demock requirements.";
+        roleSpecificHow = "Implement core logic enhancements, integrate cross-domain features, and address AST demock requirements. Maintain test coverage.";
         break;
       case "tsconfig.json Manager":
       case "package.json Manager":
@@ -53,7 +53,7 @@ export class RuleBasedBrain implements Brain {
       case "README.md Manager":
       case "AGENTS.md Manager":
       case "File Manager":
-        roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization.`;
+        roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization. Implement TODOs related to file configuration.`;
         break;
       case "Root Directory Manager":
       case "Components Manager":
@@ -64,7 +64,7 @@ export class RuleBasedBrain implements Brain {
       case "Styles Manager":
       case "Test Directory Manager":
       case "Directory Manager":
-        roleSpecificHow = "Ensure directory-specific constraints are met, validate related AST patterns, and coordinate updates within the respective domain.";
+        roleSpecificHow = "Ensure directory-specific constraints are met, validate related AST patterns, and coordinate updates within the respective domain. Manage directory-level TODOs.";
         break;
     }
 
@@ -73,14 +73,15 @@ export class RuleBasedBrain implements Brain {
     const safeHow = message.how.length > 2000 ? message.how.substring(0, 2000) + '...' : message.how;
     const safeReasoning = (message.reasoning || "").length > 2000 ? message.reasoning.substring(0, 2000) + '...' : message.reasoning;
 
-    // Generate output explicitly defining what, where, how, reasoning based on incoming message context
+    // Generate output explicitly defining what, where, how, reasoning based on incoming message context.
+    // Includes continuous optimization targeting Sicherheit, Performance, Style, documentation, Sauberkeit, Ordnung.
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne steht's geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Identifiziere und implementiere die nächsten nötigen Verbesserungen ohne Deletionen von Features, Ideen oder Funktionen.`,
+      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Identifiziere und implementiere die nächsten nötigen Verbesserungen ohne Deletionen von Features, Ideen oder Funktionen.`,
       where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Zielorte müssen eindeutig spezifiziert werden inklusive Update aller Dateien inkl. Projektordner Cleanup, um Sauberkeit und Ordnung beizubehalten.`,
-      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung und Verbesserung.`,
+      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo's Creation + Implementationen + Improvements. Format analysis exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung und Verbesserung.`,
       reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
     };
 

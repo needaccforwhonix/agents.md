@@ -7,6 +7,7 @@ describe('AST Demock Validation', () => {
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(false);
     expect(result.errors.some(err => err.includes("dummy_user"))).toBe(true);
+    expect(result.summary.errors).toBe(1);
   });
 
   it('should invalidate code containing mock_ identifiers', () => {
@@ -14,6 +15,7 @@ describe('AST Demock Validation', () => {
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(false);
     expect(result.errors.some(err => err.includes("mock_user"))).toBe(true);
+    expect(result.summary.errors).toBe(1);
   });
 
   it('should invalidate empty function declarations', () => {
@@ -21,6 +23,7 @@ describe('AST Demock Validation', () => {
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(false);
     expect(result.errors.some(err => err.includes("Empty function 'doNothing'"))).toBe(true);
+    expect(result.summary.errors).toBe(1);
   });
 
   it('should invalidate empty arrow functions', () => {
@@ -28,6 +31,7 @@ describe('AST Demock Validation', () => {
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(false);
     expect(result.errors.some(err => err.includes("Empty function"))).toBe(true);
+    expect(result.summary.errors).toBe(1);
   });
 
   it('should invalidate empty methods in a class', () => {
@@ -35,23 +39,28 @@ describe('AST Demock Validation', () => {
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(false);
     expect(result.errors.some(err => err.includes("Empty function 'myMethod'"))).toBe(true);
+    expect(result.summary.errors).toBe(1);
   });
 
-  it('should invalidate code containing console.log', () => {
+  it('should NOT invalidate code containing console.log, but add a warning', () => {
     const code = `console.log("hello");`;
     const result = analyzeCodeBlock(code);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some(err => err.includes("Usage of console.log() detected"))).toBe(true);
+    expect(result.isValid).toBe(true);
+    expect(result.warnings.some(warn => warn.includes("Usage of console.log() detected"))).toBe(true);
+    expect(result.summary.warnings).toBe(1);
+    expect(result.summary.errors).toBe(0);
   });
 
-  it('should invalidate code containing TODO string', () => {
+  it('should NOT invalidate code containing TODO string, but add a warning', () => {
     const code = `const note = "TODO: fix this";`;
     const result = analyzeCodeBlock(code);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some(err => err.includes("TODO"))).toBe(true);
+    expect(result.isValid).toBe(true);
+    expect(result.warnings.some(warn => warn.includes("TODO"))).toBe(true);
+    expect(result.summary.warnings).toBe(1);
+    expect(result.summary.errors).toBe(0);
   });
 
-  it('should allow valid code', () => {
+  it('should allow valid code with 0 errors and warnings', () => {
     const code = `
       function add(a: number, b: number): number {
         return a + b;
@@ -67,5 +76,8 @@ describe('AST Demock Validation', () => {
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(true);
     expect(result.errors.length).toBe(0);
+    expect(result.warnings.length).toBe(0);
+    expect(result.summary.errors).toBe(0);
+    expect(result.summary.warnings).toBe(0);
   });
 });
