@@ -93,10 +93,10 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne steht's geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Führe eine kontinuierliche Hintergrundoptimierung und Refactoring in der Agent2Agent-Struktur durch, bei der jede Domäne, jedes Verzeichnis und jede Datei einen eigenen dedizierten Agenten erhält.",
-    where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
-    how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll. Definiere genau, was, wo und wie Verbesserungen vorgenommen werden sollen. Stelle sicher, dass alle Änderungen additiv und nicht destruktiv sind.",
-    reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben.",
+    what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne steht's geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung.",
+    where: "Im gesamten Agent2Agent-Mesh-Netzwerk, in dem alles seinen eigenen dedizierten A2A-Agenten erhält.",
+    how: "Jeder a2a agent nutzt Agentic context engineering und alphaevolve Algorithmus mit reasoning und full context. Alle Agenten empfangen jeden Output als Input und entscheiden, wie sie reagieren. Input und Output müssen eindeutig beschreiben, was wo wie gewollt ist.",
+    reasoning: "Die asynchrone parallele Entwicklung soll sicherstellen, dass das System aktuell bleibt und Sicherheit, Performance, Style, Dokumentation, Sauberkeit und Ordnung maximiert werden.",
   };
 
   console.log("Broadcasting initial task to mesh...");
