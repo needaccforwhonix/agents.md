@@ -2,14 +2,10 @@ export interface Message {
   id: string;
   senderId: string;
   timestamp: number;
-  // Intent: what is desired
   what: string;
-  // Location: where is it desired
   where: string;
-  // Action: how is it desired
   how: string;
-  // Reasoning: why is it desired
-  reasoning: string;
+  reasoning?: string;
 }
 
 export interface AgentContext {
@@ -22,4 +18,16 @@ export interface AgentContext {
 
 export interface Brain {
   decide(message: Message, context: AgentContext): Promise<Message | null>;
+}
+
+export interface ASTAnalysisResultV2 {
+  isValid: boolean;
+  errors: string[];
+  warnings: string[];
+  suggestions: string[];
+  summary: {
+    errors: number;
+    warnings: number;
+    suggestions: number;
+  };
 }

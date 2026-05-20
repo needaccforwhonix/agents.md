@@ -67,6 +67,12 @@ export class Mesh {
       let isMessageValid = true;
       for (const block of blocks) {
         const analysis = analyzeCodeBlock(block);
+
+        // Log warnings
+        if (analysis.warnings.length > 0) {
+          console.warn(`Message [${message.id}] generated AST Demock warnings: ${analysis.warnings.join(", ")}`);
+        }
+
         if (!analysis.isValid) {
           console.warn(`Message [${message.id}] rejected by Mesh due to AST Demock validation: ${analysis.errors.join(", ")}`);
           isMessageValid = false;
