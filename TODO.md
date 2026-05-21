@@ -6,9 +6,11 @@
 - Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.
 - Develop custom Web Worker architecture to run simulations completely decoupled from the main thread.
 - Explore integration with actual Language Models (LLMs) utilizing generated JSON definitions.
+- Explore mapping LLM prompt parameters dynamically based on `AlphaEvolve` generation state.
 
 ## Done
 
+- Abstract prompt generation logic into a unified `promptBuilder` utility within `AlphaEvolve.ts` to ensure consistent formatting, particularly for `@jules` directives.
 - Implement German-specific AgentMesh Prompt instructions ensuring explicit formatting around Optimizations, Demock Testing, ACE, E2E Testing, AST, Documentation updates, and full system modifications.
 - Enhance CI/CD pipeline tests to integrate automatic Demock checks continuously by embedding AST analysis into the active Mesh broadcast validation logic.
 - Implement root agent for the root directory

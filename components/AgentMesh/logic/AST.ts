@@ -56,6 +56,11 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       errors.push(`Optimization Warning: Empty function '${functionName}' detected. Avoid empty implementations.`);
     }
 
+    // Explicit ANY type validation
+    if (node.kind === ts.SyntaxKind.AnyKeyword) {
+      errors.push("Type Safety Warning: Usage of 'any' type detected. Please use specific, strongly-typed interfaces or primitives instead.");
+    }
+
     ts.forEachChild(node, visit);
   };
 
