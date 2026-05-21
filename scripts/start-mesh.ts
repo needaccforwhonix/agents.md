@@ -93,10 +93,10 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne steht's geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Führe eine kontinuierliche Hintergrundoptimierung und Refactoring in der Agent2Agent-Struktur durch, bei der jede Domäne, jedes Verzeichnis und jede Datei einen eigenen dedizierten Agenten erhält.",
-    where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
-    how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll. Definiere genau, was, wo und wie Verbesserungen vorgenommen werden sollen. Stelle sicher, dass alle Änderungen additiv und nicht destruktiv sind.",
-    reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben.",
+    what: "Input und Output müssen eindeutig beschreiben was, wo und wie gewollt ist. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Fokus auf: Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung. Optimiere kontinuierlich den Prompt, dessen Umsetzung und Verbesserung.",
+    where: "Überall im System. Alle dynamisch registrierten A2A-Agenten (Dateien, Verzeichnisse, Domänen, Konfigurationsknoten).",
+    how: "Jeder Agent nutzt Agentic Context Engineering (ACE) und AlphaEvolve Algorithmus mit Reasoning und full Context. Jeder Agent empfängt jeden Output als Input und entscheidet selbständig, wie er reagiert. Änderungen müssen rein additiv sein (niemals löschen). Input und Output müssen zwingend klar definieren: was (Intent), wo (Location) und wie (Action).",
+    reasoning: "Um ein asynchrones, parallel agierendes Agenten-Netzwerk aufrechtzuerhalten, das sich kontinuierlich selbst verbessert, sicher, performant und ordentlich bleibt, ohne Funktionalitäten zu verlieren.",
   };
 
   console.log("Broadcasting initial task to mesh...");
