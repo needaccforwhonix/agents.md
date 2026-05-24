@@ -29,7 +29,7 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
 async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
-  const mesh = new Mesh(50000); // Higher message limit for longer simulation
+  const mesh = new Mesh(100000); // Higher message limit for longer simulation
   const brain = new RuleBasedBrain();
 
   // Increased responsiveness for background to ensure a deeper, longer-running AgentMesh simulation
