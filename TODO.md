@@ -17,3 +17,4 @@
 - Connect individual directory agents to the mesh simulation script for wider testing.
 - Introduce Message parameter bound validations using simulated token counts.
 - Monitor the mesh simulation with an expanded set of agents and verify continuous background execution
+- Merge all open pull requests and ensure prompt integration and optimization constraints are fully applied to `RuleBasedBrain.ts` and `start-mesh.ts` without regressions.
