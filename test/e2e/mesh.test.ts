@@ -5,7 +5,7 @@ import { RuleBasedBrain } from '../../components/AgentMesh/logic/RuleBasedBrain'
 
 describe('AgentMesh E2E Simulation', () => {
   it('should initialize and run a bounded broadcast successfully', async () => {
-    const mesh = new Mesh();
+    const mesh = new Mesh(5); // Arbitrary small limit to terminate
     const brain = new RuleBasedBrain();
 
     // Create test agents
@@ -49,8 +49,8 @@ describe('AgentMesh E2E Simulation', () => {
     mesh.registerAgent(devAgent);
 
     // Create a message that is intentionally too large in one of its fields.
-    // Assuming 2000 max tokens which is roughly 8000 characters.
-    const massiveString = "a".repeat(10000);
+    // Assuming 4000 max tokens which is roughly 16000 characters.
+    const massiveString = "a".repeat(20000);
 
     const oversizedMessage = {
       id: 'oversized-msg',

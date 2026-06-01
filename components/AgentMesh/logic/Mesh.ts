@@ -12,7 +12,7 @@ import { extractCodeBlocks, analyzeCodeBlock } from "./AST";
 /**
  * Validates individual message fields against token limits.
  */
-function validateMessageBounds(message: Message, limit: number = 2000): boolean {
+function validateMessageBounds(message: Message, limit: number = 4000): boolean {
   if (countTokens(message.what) > limit) return false;
   if (countTokens(message.where) > limit) return false;
   if (countTokens(message.how) > limit) return false;

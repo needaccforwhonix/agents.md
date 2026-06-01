@@ -68,20 +68,20 @@ export class RuleBasedBrain implements Brain {
         break;
     }
 
-    const safeWhat = message.what.length > 2000 ? message.what.substring(0, 2000) + '...' : message.what;
-    const safeWhere = message.where.length > 2000 ? message.where.substring(0, 2000) + '...' : message.where;
-    const safeHow = message.how.length > 2000 ? message.how.substring(0, 2000) + '...' : message.how;
-    const safeReasoning = (message.reasoning || "").length > 2000 ? message.reasoning.substring(0, 2000) + '...' : message.reasoning;
+    const safeWhat = message.what.length > 4000 ? message.what.substring(0, 4000) + '...' : message.what;
+    const safeWhere = message.where.length > 4000 ? message.where.substring(0, 4000) + '...' : message.where;
+    const safeHow = message.how.length > 4000 ? message.how.substring(0, 4000) + '...' : message.how;
+    const safeReasoning = (message.reasoning || "").length > 4000 ? message.reasoning.substring(0, 4000) + '...' : message.reasoning;
 
     // Generate output explicitly defining what, where, how, reasoning based on incoming message context
     const response: Message = {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne steht's geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Identifiziere und implementiere die nächsten nötigen Verbesserungen ohne Deletionen von Features, Ideen oder Funktionen.`,
-      where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Zielorte müssen eindeutig spezifiziert werden inklusive Update aller Dateien inkl. Projektordner Cleanup, um Sauberkeit und Ordnung beizubehalten.`,
-      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Optimierung dieser Prompt und deren Umsetzung und Verbesserung.`,
-      reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
+      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung im Agent2Agent-Netzwerk an basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen zwingend präzise beschreiben was, wo und wie gewollt ist. Alle Agenten evaluieren asynchron und parallel, um die Codebasis stets aktuell zu halten. Maximiere Metriken für Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung. Optimiere zwingend diesen Prompt sowie seine Umsetzung. Identifiziere und implementiere erforderliche Verbesserungen.`,
+      where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Jeder dynamisch zugewiesene Agent spezifiziert Zielorte eindeutig. Berücksichtige vollständiges Update aller abhängigen Dateien inklusive Projektordner-Cleanup, um höchste Ordnung zu wahren.`,
+      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Nutze Agentic Context Engineering und AlphaEvolve für die autonome Mutierung der Parameter. Umsetzung erfordert zwingend: Testing + Validierung + Update aller Dateien ohne destruktive Eingriffe (keine Deletion von Features/Ideen). Implementiere Demock, Testing, ACE, CI/CD Pipeline, E2E, AST, Documentation, Todos. Formatiere Analyse exakt als: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements].`,
+      reasoning: `(WARUM) Als ${context.role} im A2A-Mesh muss sichergestellt werden, dass jede parallele Evolution strikt additiv erfolgt (ohne Datenverlust), um die Architektur zu stärken, aufbauend auf [${safeReasoning}]. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}`,
     };
 
     return response;
