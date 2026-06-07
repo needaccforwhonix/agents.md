@@ -21,7 +21,7 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
     if (ts.isCallExpression(node)) {
       const expressionText = node.expression.getText(sourceFile);
       if (expressionText === "eval") {
-        errors.push("Security Warning: Usage of eval() is not allowed in agent outputs.");
+        errors.push("Security Warning: Found hazardous command execution 'eval(' in file " + __filename);
       }
     }
 

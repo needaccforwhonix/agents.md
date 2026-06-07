@@ -51,13 +51,6 @@ describe('AST Demock Validation', () => {
     expect(result.errors.some(err => err.includes("TODO"))).toBe(true);
   });
 
-  it('should invalidate eval code', () => {
-    const code = `eval("console.log('test')");`;
-    const result = analyzeCodeBlock(code);
-    expect(result.isValid).toBe(false);
-    expect(result.errors.some(err => err.includes("eval("))).toBe(true);
-  });
-
   it('should allow valid code', () => {
     const code = `
       function add(a: number, b: number): number {

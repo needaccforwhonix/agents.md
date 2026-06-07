@@ -1,0 +1,14 @@
+--- test/unit/AST.test.ts
++++ test/unit/AST.test.ts
+@@ -58,4 +58,11 @@
+     expect(result.isValid).toBe(true);
+     expect(result.errors.length).toBe(0);
+   });
++
++  it('should invalidate code containing eval', () => {
++    const code = `eval("alert('hack');");`;
++    const result = analyzeCodeBlock(code);
++    expect(result.isValid).toBe(false);
++    expect(result.errors.some(err => err.includes("eval("))).toBe(true);
++  });
+ });
