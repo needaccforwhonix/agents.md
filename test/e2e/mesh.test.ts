@@ -50,7 +50,7 @@ describe('AgentMesh E2E Simulation', () => {
 
     // Create a message that is intentionally too large in one of its fields.
     // Assuming 2000 max tokens which is roughly 8000 characters.
-    const massiveString = "a".repeat(10000);
+    const massiveString = "a".repeat(20000);
 
     const oversizedMessage = {
       id: 'oversized-msg',

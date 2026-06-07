@@ -19,6 +19,8 @@ export class Agent {
       parameters: {
         responsiveness: 0.6,
         generation: 1,
+        analyticalDepth: 0.5,
+        contextRetention: 0.8,
         ...parameters,
       },
     };
