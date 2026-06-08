@@ -36,7 +36,7 @@ export class Agent {
     this.context.history.push(message);
 
     // 2. Bound history using Agentic Context Engineering to prevent memory leaks
-    this.context.history = boundHistory(this.context.history, 4000);
+    this.context.history = boundHistory(this.context.history, 10000);
 
     // 3. Evolve parameters slowly per message received
     this.context.parameters = alphaEvolve(this.context.parameters, 0.05);
@@ -47,7 +47,7 @@ export class Agent {
     if (response) {
       // Add own response to history before returning
       this.context.history.push(response);
-      this.context.history = boundHistory(this.context.history, 4000);
+      this.context.history = boundHistory(this.context.history, 10000);
     }
 
     return response;

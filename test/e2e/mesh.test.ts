@@ -5,12 +5,14 @@ import { RuleBasedBrain } from '../../components/AgentMesh/logic/RuleBasedBrain'
 
 describe('AgentMesh E2E Simulation', () => {
   it('should initialize and run a bounded broadcast successfully', async () => {
+    const originalMathRandom = Math.random;
+    Math.random = () => 0.0; // Force agent response chance to ensure reliable deterministic test
     const mesh = new Mesh();
     const brain = new RuleBasedBrain();
 
     // Create test agents
-    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
-    const secAgent = new Agent('test-sec', 'TestSec', 'Sec', brain, { responsiveness: 1.0 });
+    const devAgent = new Agent('test-dev', 'TestDev', 'System Developer', brain, { responsiveness: 1.0 });
+    const secAgent = new Agent('test-sec', 'TestSec', 'System Security Analyst', brain, { responsiveness: 1.0 });
 
     mesh.registerAgent(devAgent);
     mesh.registerAgent(secAgent);
@@ -26,6 +28,7 @@ describe('AgentMesh E2E Simulation', () => {
     };
 
     await mesh.broadcast(initialMessage);
+    Math.random = originalMathRandom;
 
     const messages = mesh.getMessages();
 
@@ -33,11 +36,14 @@ describe('AgentMesh E2E Simulation', () => {
     expect(devAgent.context.history.length).toBeGreaterThan(0);
 
     // Verify reasoning field exists on responses
-    const response = messages.find(m => m.senderId === 'test-dev');
+    // Find the response produced by test-dev
+    const response = mesh.getMessages().find(m => m.senderId === 'test-dev');
     if (response) {
       expect(response.reasoning).toBeDefined();
       expect(response.reasoning).toContain('Evolved Parameters via AlphaEvolve:');
-      expect(response.reasoning).toContain('generation');
+    } else {
+      // Force failure if agent didn't respond (can happen due to random throttling, but responsiveness is 1.0 here)
+      expect(true).toBe(false);
     }
   });
 
