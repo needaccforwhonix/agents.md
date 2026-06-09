@@ -5,7 +5,7 @@ import { RuleBasedBrain } from '../../components/AgentMesh/logic/RuleBasedBrain'
 
 describe('AgentMesh E2E Simulation', () => {
   it('should initialize and run a bounded broadcast successfully', async () => {
-    const mesh = new Mesh();
+    const mesh = new Mesh(5); // use small messageLimit to make test fast
     const brain = new RuleBasedBrain();
 
     // Create test agents
