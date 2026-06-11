@@ -1,8 +1,10 @@
+import { AgentParameters } from "./Types";
+
 /**
  * AlphaEvolve Algorithm
  * A simple mutation function to evolve agent parameters over time within a broadcast mesh.
  */
-export function alphaEvolve(parameters: Record<string, any>, mutationRate: number = 0.1): Record<string, any> {
+export function alphaEvolve(parameters: AgentParameters, mutationRate: number = 0.1): AgentParameters {
   const evolved = { ...parameters };
 
   for (const key in evolved) {

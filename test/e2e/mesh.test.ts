@@ -5,12 +5,12 @@ import { RuleBasedBrain } from '../../components/AgentMesh/logic/RuleBasedBrain'
 
 describe('AgentMesh E2E Simulation', () => {
   it('should initialize and run a bounded broadcast successfully', async () => {
-    const mesh = new Mesh();
+    const mesh = new Mesh(5); // use small messageLimit to make test fast
     const brain = new RuleBasedBrain();
 
     // Create test agents
-    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
-    const secAgent = new Agent('test-sec', 'TestSec', 'Sec', brain, { responsiveness: 1.0 });
+    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
+    const secAgent = new Agent('test-sec', 'TestSec', 'Sec', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
 
     mesh.registerAgent(devAgent);
     mesh.registerAgent(secAgent);
@@ -44,7 +44,7 @@ describe('AgentMesh E2E Simulation', () => {
   it('should drop messages that exceed token limits', async () => {
     const mesh = new Mesh(5); // Arbitrary small limit
     const brain = new RuleBasedBrain();
-    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
+    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
 
     mesh.registerAgent(devAgent);
 
@@ -77,7 +77,7 @@ describe('AgentMesh E2E Simulation', () => {
   it('should reject messages with invalid Demock patterns', async () => {
     const mesh = new Mesh();
     const brain = new RuleBasedBrain();
-    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
+    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
 
     mesh.registerAgent(devAgent);
 
