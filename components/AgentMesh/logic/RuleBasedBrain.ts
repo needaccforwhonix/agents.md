@@ -68,10 +68,10 @@ export class RuleBasedBrain implements Brain {
         break;
     }
 
-    const safeWhat = message.what.length > 4000 ? message.what.substring(0, 4000) + '...' : message.what;
-    const safeWhere = message.where.length > 4000 ? message.where.substring(0, 4000) + '...' : message.where;
-    const safeHow = message.how.length > 4000 ? message.how.substring(0, 4000) + '...' : message.how;
-    const safeReasoning = (message.reasoning || "").length > 4000 ? message.reasoning.substring(0, 4000) + '...' : message.reasoning;
+    const safeWhat = message.what.length > 500 ? message.what.substring(0, 500) + '...' : message.what;
+    const safeWhere = message.where.length > 500 ? message.where.substring(0, 500) + '...' : message.where;
+    const safeHow = message.how.length > 500 ? message.how.substring(0, 500) + '...' : message.how;
+    const safeReasoning = (message.reasoning || "").length > 500 ? message.reasoning.substring(0, 500) + '...' : message.reasoning;
 
     // Generate output explicitly defining what, where, how, reasoning based on incoming message context
     const response: Message = {
@@ -80,7 +80,8 @@ export class RuleBasedBrain implements Brain {
       timestamp: Date.now(),
       what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann gerne steht's geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Identifiziere und implementiere die nächsten nötigen Verbesserungen ohne Deletionen von Features, Ideen oder Funktionen.`,
       where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Zielorte müssen eindeutig spezifiziert werden inklusive Update aller Dateien inkl. Projektordner Cleanup, um Sauberkeit und Ordnung beizubehalten. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung.`,
-      how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung.`,
+      how: `@jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]
+(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung.`,
       reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung.`,
     };
 
