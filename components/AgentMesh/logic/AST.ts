@@ -41,6 +41,11 @@ export function analyzeCodeBlock(code: string): { isValid: boolean; errors: stri
       }
     }
 
+    // Enforce strong typing: invalidate the 'any' keyword
+    if (node.kind === ts.SyntaxKind.AnyKeyword) {
+      errors.push("Type Safety Error: Usage of the 'any' keyword is strictly prohibited.");
+    }
+
     // Demock validation: Prevent empty functions (e.g., function() {} or () => {})
     if (
       (ts.isFunctionDeclaration(node) && node.body && node.body.statements.length === 0) ||

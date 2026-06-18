@@ -1,4 +1,4 @@
-import { AgentContext, Brain, Message } from "./Types";
+import { AgentContext, Brain, Message, AgentParameters } from "./Types";
 import { boundHistory } from "./ACE";
 import { alphaEvolve } from "./AlphaEvolve";
 
@@ -10,7 +10,7 @@ export class Agent {
   public context: AgentContext;
   private brain: Brain;
 
-  constructor(id: string, name: string, role: string, brain: Brain, parameters: Record<string, any> = {}) {
+  constructor(id: string, name: string, role: string, brain: Brain, parameters: AgentParameters = {}) {
     this.context = {
       id,
       name,

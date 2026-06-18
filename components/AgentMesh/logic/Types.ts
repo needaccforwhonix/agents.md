@@ -12,12 +12,20 @@ export interface Message {
   reasoning: string;
 }
 
+export interface AgentParameters {
+  responsiveness?: number;
+  generation?: number;
+  analyticalDepth?: number;
+  contextRetention?: number;
+  [key: string]: number | undefined;
+}
+
 export interface AgentContext {
   id: string;
   name: string;
   role: string;
   history: Message[];
-  parameters: Record<string, any>;
+  parameters: AgentParameters;
 }
 
 export interface Brain {
