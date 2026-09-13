@@ -51,6 +51,7 @@ describe('AST Demock Validation', () => {
     expect(result.errors.some(err => err.includes("TODO"))).toBe(true);
   });
 
+<<<<<<< HEAD
   it('should invalidate code containing the "any" keyword', () => {
     const code = `function doSomething(data: any) { return data; }`;
     const result = analyzeCodeBlock(code);
@@ -58,6 +59,8 @@ describe('AST Demock Validation', () => {
     expect(result.errors.some(err => err.includes("strictly prohibited"))).toBe(true);
   });
 
+=======
+>>>>>>> legacy_remote/main
   it('should allow valid code', () => {
     const code = `
       function add(a: number, b: number): number {

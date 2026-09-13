@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { AgentContext, Brain, Message, AgentParameters } from "./Types";
+=======
+import { AgentContext, Brain, Message } from "./Types";
+>>>>>>> legacy_remote/main
 import { boundHistory } from "./ACE";
 import { alphaEvolve } from "./AlphaEvolve";
 
@@ -10,7 +14,11 @@ export class Agent {
   public context: AgentContext;
   private brain: Brain;
 
+<<<<<<< HEAD
   constructor(id: string, name: string, role: string, brain: Brain, parameters: AgentParameters = {}) {
+=======
+  constructor(id: string, name: string, role: string, brain: Brain, parameters: Record<string, any> = {}) {
+>>>>>>> legacy_remote/main
     this.context = {
       id,
       name,
@@ -19,8 +27,11 @@ export class Agent {
       parameters: {
         responsiveness: 0.6,
         generation: 1,
+<<<<<<< HEAD
         analyticalDepth: 0.5,
         contextRetention: 0.8,
+=======
+>>>>>>> legacy_remote/main
         ...parameters,
       },
     };
@@ -36,7 +47,11 @@ export class Agent {
     this.context.history.push(message);
 
     // 2. Bound history using Agentic Context Engineering to prevent memory leaks
+<<<<<<< HEAD
     this.context.history = boundHistory(this.context.history, 10000);
+=======
+    this.context.history = boundHistory(this.context.history, 4000);
+>>>>>>> legacy_remote/main
 
     // 3. Evolve parameters slowly per message received
     this.context.parameters = alphaEvolve(this.context.parameters, 0.05);
@@ -47,7 +62,11 @@ export class Agent {
     if (response) {
       // Add own response to history before returning
       this.context.history.push(response);
+<<<<<<< HEAD
       this.context.history = boundHistory(this.context.history, 10000);
+=======
+      this.context.history = boundHistory(this.context.history, 4000);
+>>>>>>> legacy_remote/main
     }
 
     return response;
