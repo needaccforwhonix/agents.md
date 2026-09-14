@@ -5,21 +5,12 @@ import { RuleBasedBrain } from '../../components/AgentMesh/logic/RuleBasedBrain'
 
 describe('AgentMesh E2E Simulation', () => {
   it('should initialize and run a bounded broadcast successfully', async () => {
-<<<<<<< HEAD
     const mesh = new Mesh(5); // use small messageLimit to make test fast
     const brain = new RuleBasedBrain();
 
     // Create test agents
     const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
     const secAgent = new Agent('test-sec', 'TestSec', 'Sec', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
-=======
-    const mesh = new Mesh();
-    const brain = new RuleBasedBrain();
-
-    // Create test agents
-    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
-    const secAgent = new Agent('test-sec', 'TestSec', 'Sec', brain, { responsiveness: 1.0 });
->>>>>>> legacy_remote/main
 
     mesh.registerAgent(devAgent);
     mesh.registerAgent(secAgent);
@@ -53,21 +44,13 @@ describe('AgentMesh E2E Simulation', () => {
   it('should drop messages that exceed token limits', async () => {
     const mesh = new Mesh(5); // Arbitrary small limit
     const brain = new RuleBasedBrain();
-<<<<<<< HEAD
     const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
-=======
-    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
->>>>>>> legacy_remote/main
 
     mesh.registerAgent(devAgent);
 
     // Create a message that is intentionally too large in one of its fields.
     // Assuming 2000 max tokens which is roughly 8000 characters.
-<<<<<<< HEAD
     const massiveString = "a".repeat(20000);
-=======
-    const massiveString = "a".repeat(10000);
->>>>>>> legacy_remote/main
 
     const oversizedMessage = {
       id: 'oversized-msg',
@@ -94,11 +77,7 @@ describe('AgentMesh E2E Simulation', () => {
   it('should reject messages with invalid Demock patterns', async () => {
     const mesh = new Mesh();
     const brain = new RuleBasedBrain();
-<<<<<<< HEAD
     const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0, generation: 1, analyticalDepth: 1, contextRetention: 1 });
-=======
-    const devAgent = new Agent('test-dev', 'TestDev', 'Dev', brain, { responsiveness: 1.0 });
->>>>>>> legacy_remote/main
 
     mesh.registerAgent(devAgent);
 

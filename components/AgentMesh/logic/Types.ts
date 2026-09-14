@@ -12,7 +12,6 @@ export interface Message {
   reasoning: string;
 }
 
-<<<<<<< HEAD
 export interface AgentParameters {
   responsiveness?: number;
   generation?: number;
@@ -21,18 +20,12 @@ export interface AgentParameters {
   [key: string]: number | undefined;
 }
 
-=======
->>>>>>> legacy_remote/main
 export interface AgentContext {
   id: string;
   name: string;
   role: string;
   history: Message[];
-<<<<<<< HEAD
   parameters: AgentParameters;
-=======
-  parameters: Record<string, any>;
->>>>>>> legacy_remote/main
 }
 
 export interface Brain {
