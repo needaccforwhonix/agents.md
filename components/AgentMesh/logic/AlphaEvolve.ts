@@ -1,5 +1,4 @@
 import { AgentParameters } from "./Types";
-
 /**
  * AlphaEvolve Algorithm
  * A simple mutation function to evolve agent parameters over time within a broadcast mesh.

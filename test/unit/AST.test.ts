@@ -57,7 +57,6 @@ describe('AST Demock Validation', () => {
     expect(result.isValid).toBe(false);
     expect(result.errors.some(err => err.includes("strictly prohibited"))).toBe(true);
   });
-
   it('should allow valid code', () => {
     const code = `
       function add(a: number, b: number): number {
