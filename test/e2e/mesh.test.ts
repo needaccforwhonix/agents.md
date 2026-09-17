@@ -38,6 +38,7 @@ describe('AgentMesh E2E Simulation', () => {
       expect(response.reasoning).toBeDefined();
       expect(response.reasoning).toContain('Evolved Parameters via AlphaEvolve:');
       expect(response.reasoning).toContain('generation');
+      expect(response.reasoning).toContain('Sicherheit Performance Style documentation Sauberkeit Ordnung');
     }
   });
 
