@@ -46,6 +46,16 @@ export class RuleBasedBrain implements Brain {
       case "System Developer":
         roleSpecificHow = "Implement core logic enhancements, integrate cross-domain features, and address AST demock requirements.";
         break;
+      case "TypeScript File Manager":
+      case "React Component Manager":
+        roleSpecificHow = `Optimize TypeScript/React code in ${context.name}. Enforce explicit typings, improve rendering performance, and update inline documentation.`;
+        break;
+      case "JSON Config Manager":
+        roleSpecificHow = `Validate and optimize JSON structures in ${context.name} to ensure configuration accuracy and clean dependency management.`;
+        break;
+      case "Markdown Documenter":
+        roleSpecificHow = `Update markdown documentation in ${context.name} to reflect the latest mesh evolutions accurately and cleanly.`;
+        break;
       case "tsconfig.json Manager":
       case "package.json Manager":
       case "next.config.ts Manager":
@@ -78,10 +88,10 @@ export class RuleBasedBrain implements Brain {
       id: crypto.randomUUID(),
       senderId: context.id,
       timestamp: Date.now(),
-      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen eindeutig beschreiben, was, wo und wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiterentwickelt werden und aktuell bleiben. Fokus auf: Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung. Optimierung dieses Prompts und dessen Umsetzung sowie Verbesserung. Inklusive Testing, Validierung und Aktualisierung aller Dateien inkl. Projektordner-Cleanup, ohne Feature-, Ideen- oder Function-Deletions. Demock, Testing, ACE, CI/CD Pipeline, E2E, AST, Dokumentation, Todo-Erstellung, Implementierung und Verbesserungen. Identifiziere und implementiere die nächsten nötigen Verbesserungen. Alle Agents erhalten jeden Output als Input und können entscheiden, wie sie reagieren.`,
+      what: `(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [${safeWhat}] im Bereich ${context.role}. Input und Output müssen eindeutig beschreiben, was, wo und wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiterentwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Inklusive Testing, Validierung und Aktualisierung aller Dateien inkl. Projektordner-Cleanup, ohne Feature-, Ideen- oder Function-Deletions. Demock, Testing, ACE, CI/CD Pipeline, E2E, AST, Dokumentation, Todo-Erstellung, Implementierung und Verbesserungen. Identifiziere und implementiere die nächsten nötigen Verbesserungen. Alle Agents erhalten jeden Output als Input und können entscheiden, wie sie reagieren.`,
       where: `(WO) Context: ${context.name} verarbeitet Aufgabe basierend auf [${safeWhere}]. Zielorte müssen eindeutig spezifiziert werden, inklusive Aktualisierung aller Dateien sowie Projektordner-Cleanup, um Sauberkeit und Ordnung beizubehalten.`,
       how: `(WIE) ${roleSpecificHow} Reagiert auf vorherige Aktion [${safeHow}]. Vollständig optimiert umsetzen: Inklusive Testing, Validierung und Aktualisierung aller Dateien inkl. Projektordner-Cleanup, ohne Feature-, Ideen- oder Function-Deletions. Demock, Testing, ACE, CI/CD Pipeline, E2E, AST, Dokumentation, Todo-Erstellung, Implementierung und Verbesserungen. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements]. Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext.`,
-      reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken bezüglich Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}. Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht. Optimierung dieses Prompts und dessen Umsetzung sowie Verbesserung.`,
+      reasoning: `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}. Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht.`,
     };
 
     return response;
