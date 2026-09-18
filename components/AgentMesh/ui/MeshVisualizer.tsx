@@ -8,6 +8,9 @@ export const MeshVisualizer: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [agents, setAgents] = useState<Agent[]>([]);
 
+  const [meshRef, setMeshRef] = useState<Mesh | null>(null);
+  const [isSimulating, setIsSimulating] = useState(false);
+
   useEffect(() => {
     // 1. Initialize Mesh instance
     const mesh = new Mesh();
@@ -38,32 +41,45 @@ export const MeshVisualizer: React.FC = () => {
     mesh.registerAgent(scriptsAgent);
 
     setAgents(mesh.getAgents());
+    setMeshRef(mesh);
+  }, []);
 
-    // 4. Start the initial simulation asynchronously
-    const simulate = async () => {
-      const startMessage: Message = {
-        id: crypto.randomUUID(),
-        senderId: "user-init",
-        timestamp: Date.now(),
-        what: "Implement AST analyzer component for dynamic context testing",
-        where: "components/AgentMesh/logic/AST.ts",
-        how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
-        reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
-      };
+  // 4. Start the initial simulation asynchronously
+  const startSimulation = async () => {
+    if (!meshRef || isSimulating) return;
 
-      await mesh.broadcast(startMessage);
+    setIsSimulating(true);
 
-      // Update UI explicitly after full completion of recursive bounds
-      setMessages([...mesh.getMessages()]);
-      setAgents([...mesh.getAgents()]);
+    const startMessage: Message = {
+      id: crypto.randomUUID(),
+      senderId: "user-init",
+      timestamp: Date.now(),
+      what: "Implement AST analyzer component for dynamic context testing",
+      where: "components/AgentMesh/logic/AST.ts",
+      how: "Utilize TypeScript Compiler API for parsing and bounding evaluation.",
+      reasoning: "To keep everything continuing to evolve asynchronously and stay up-to-date with security, performance, style, documentation, cleanliness, and order.",
     };
 
-    simulate();
-  }, []);
+    await meshRef.broadcast(startMessage);
+
+    // Update UI explicitly after full completion of recursive bounds
+    setMessages([...meshRef.getMessages()]);
+    setAgents([...meshRef.getAgents()]);
+    setIsSimulating(false);
+  };
 
   return (
     <div className="p-6 bg-slate-900 text-slate-200 min-h-screen font-sans">
-      <h1 className="text-3xl font-bold mb-6 text-blue-400">Agent2Agent Broadcast Mesh Simulation</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-blue-400">Agent2Agent Broadcast Mesh Simulation</h1>
+        <button
+          onClick={startSimulation}
+          disabled={isSimulating}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 text-white font-bold rounded shadow transition-colors"
+        >
+          {isSimulating ? "Simulating..." : "Start Simulation"}
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Messages Stream */}
