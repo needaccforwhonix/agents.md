@@ -20,7 +20,19 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
       mesh.registerAgent(agent);
       registerDynamicAgents(fullPath, mesh, brain);
     } else {
-      const agent = new Agent(`file-${fullPath}`, fullPath, "File Manager", brain, { responsiveness: 0.05 });
+      let role = "File Manager";
+      if (file.endsWith(".tsx")) {
+        role = "React Component Manager";
+      } else if (file.endsWith(".ts")) {
+        role = "TypeScript File Manager";
+      } else if (file.endsWith(".json")) {
+        role = "JSON Config Manager";
+      } else if (file.endsWith(".md")) {
+        role = "Markdown Documenter";
+      } else if (file.endsWith(".css") || file.endsWith(".mjs")) {
+        role = "Config & Style Manager";
+      }
+      const agent = new Agent(`file-${fullPath}`, fullPath, role, brain, { responsiveness: 0.05 });
       mesh.registerAgent(agent);
     }
   }
@@ -95,8 +107,8 @@ async function startBackgroundMesh() {
     timestamp: Date.now(),
     what: "Input und Output müssen eindeutig beschreiben, was, wo und wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiterentwickelt werden und aktuell bleiben. Fokus auf: Sicherheit, Performance, Style, Documentation, Sauberkeit und Ordnung. Führe eine kontinuierliche Hintergrundoptimierung und ein Refactoring in der Agent2Agent-Struktur durch, bei der jede Domäne, jedes Verzeichnis und jede Datei einen eigenen dedizierten Agenten erhält.",
     where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt. Zielorte müssen eindeutig spezifiziert werden, inklusive Aktualisierung aller Dateien sowie Projektordner-Cleanup, um Sauberkeit und Ordnung beizubehalten.",
-    how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll. Definiere genau, was, wo und wie. Stelle sicher, dass alle Änderungen additiv und nicht destruktiv sind. Inklusive Testing, Validierung und Aktualisierung aller Dateien inkl. Projektordner-Cleanup, ohne Feature-, Ideen- oder Function-Deletions. Demock, Testing, ACE, CI/CD Pipeline, E2E, AST, Dokumentation, Todo-Erstellung, Implementierung und Verbesserungen. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements].",
-    reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben. Alle Agents erhalten jeden Output als Input und können frei entscheiden, wie sie reagieren. Optimierung dieses Prompts und dessen Umsetzung sowie Verbesserung.",
+    how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll. Definiere genau, was, wo und wie. Stelle sicher, dass alle Änderungen additiv und nicht destruktiv sind. Inklusive Testing, Validierung und Aktualisierung aller Dateien inkl. Projektordner-Cleanup, ohne Feature-, Ideen- oder Function-Deletions. Dies umfasst: Demock, Testing, Agentic Context Engineering (ACE), CI/CD Pipeline Checks, E2E Testing, AST Validierungen, Dokumentationserstellung sowie Todo-Erstellung, Implementierung und kontinuierliche Verbesserungen. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements].",
+    reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben. Alle Agents erhalten jeden Output als Input und können frei entscheiden, wie sie reagieren. Optimierung dieses Prompts und deren Umsetzung und Verbesserung.",
   };
 
   console.log("Broadcasting initial task to mesh...");
