@@ -6,6 +6,10 @@ import { Brain, Message, AgentContext } from "./Types";
  */
 export class RuleBasedBrain implements Brain {
   async decide(message: Message, context: AgentContext): Promise<Message | null> {
+    if (!message || !context) {
+      return null;
+    }
+
     // Avoid responding to own messages
     if (message.senderId === context.id) {
       return null;
@@ -54,6 +58,18 @@ export class RuleBasedBrain implements Brain {
       case "AGENTS.md Manager":
       case "File Manager":
         roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization.`;
+        break;
+      case "TypeScript File Manager":
+        roleSpecificHow = `Analyze and optimize TypeScript logic in ${context.name}, enforcing strong typing (no 'any') and eliminating empty/mock functions.`;
+        break;
+      case "React Component Manager":
+        roleSpecificHow = `Review and refine React components in ${context.name}, focusing on rendering performance and strict prop typing.`;
+        break;
+      case "JSON Config Manager":
+        roleSpecificHow = `Validate and maintain correct JSON schema and configurations in ${context.name}.`;
+        break;
+      case "Markdown Documenter":
+        roleSpecificHow = `Update markdown documentation in ${context.name} to reflect recent system evolutions clearly and concisely.`;
         break;
       case "Root Directory Manager":
       case "Components Manager":
