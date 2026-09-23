@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import CodeExample, { HERO_AGENTS_MD } from "@/components/CodeExample";
 import GitHubIcon from "@/components/icons/GitHubIcon";
 
@@ -55,6 +56,13 @@ export default function Hero() {
             <GitHubIcon className="w-4 h-4 text-current" />
             View on GitHub
           </a>
+          {/* Tertiary CTA - View Mesh Simulation */}
+          <Link
+            href="/mesh"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-blue-500 dark:border-blue-400 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors"
+          >
+            View Mesh Simulation
+          </Link>
         </div>
         </div>
         <div className="w-full md:max-w-none">
