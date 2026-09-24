@@ -78,7 +78,7 @@ export const MeshVisualizer: React.FC = () => {
       id: crypto.randomUUID(),
       senderId: "user-init",
       timestamp: Date.now(),
-      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements.",
+      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements.",
       where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
       how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext.",
       reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht.",
