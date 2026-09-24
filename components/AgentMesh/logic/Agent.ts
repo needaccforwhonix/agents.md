@@ -32,6 +32,10 @@ export class Agent {
    * Modifies context and uses Brain to optionally decide on a response.
    */
   async receiveMessage(message: Message): Promise<Message | null> {
+    if (!message) {
+      return null;
+    }
+
     // 1. Add to context history
     this.context.history.push(message);
 

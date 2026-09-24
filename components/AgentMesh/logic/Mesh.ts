@@ -32,6 +32,9 @@ export class Mesh {
   }
 
   public registerAgent(agent: Agent) {
+    if (!agent || !agent.context || !agent.context.id) {
+      return;
+    }
     this.agents.set(agent.context.id, agent);
   }
 
@@ -41,6 +44,10 @@ export class Mesh {
    * Uses a queue-based loop to prevent OOM errors.
    */
   public async broadcast(initialMessage: Message): Promise<void> {
+    if (!initialMessage) {
+      return;
+    }
+
     const queue: Message[] = [initialMessage];
     let processedCount = 0;
 
