@@ -53,7 +53,11 @@ export class RuleBasedBrain implements Brain {
       case "README.md Manager":
       case "AGENTS.md Manager":
       case "File Manager":
-        roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization.`;
+      case "TypeScript File Manager":
+      case "React Component Manager":
+      case "JSON Config Manager":
+      case "Markdown Documenter":
+        roleSpecificHow = `Maintain the configuration and metadata in ${context.name}. Ensure strict typing, valid structure, and proper updates for optimization. Reflect recent system evolutions clearly and concisely.`;
         break;
       case "Root Directory Manager":
       case "Components Manager":

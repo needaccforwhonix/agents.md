@@ -20,7 +20,18 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
       mesh.registerAgent(agent);
       registerDynamicAgents(fullPath, mesh, brain);
     } else {
-      const agent = new Agent(`file-${fullPath}`, fullPath, "File Manager", brain, { responsiveness: 0.05 });
+      let role = "File Manager";
+      if (file.endsWith(".ts")) {
+        role = "TypeScript File Manager";
+      } else if (file.endsWith(".tsx")) {
+        role = "React Component Manager";
+      } else if (file.endsWith(".json")) {
+        role = "JSON Config Manager";
+      } else if (file.endsWith(".md")) {
+        role = "Markdown Documenter";
+      }
+
+      const agent = new Agent(`file-${fullPath}`, fullPath, role, brain, { responsiveness: 0.05 });
       mesh.registerAgent(agent);
     }
   }
