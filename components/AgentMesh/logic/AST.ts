@@ -56,7 +56,7 @@ export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
         errors.push(`Cleanliness Error: Dummy data or mock pattern '${text}' detected. Please use proper typing or context-driven state.`);
       }
       if (text.includes("TODO")) {
-        warnings.push(`Cleanliness Warning: TODO '${text}' detected.`);
+        suggestions.push(`Actionable Suggestion: Fulfill TODO item '${text}'.`);
       }
     }
 

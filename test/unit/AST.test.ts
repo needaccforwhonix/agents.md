@@ -48,7 +48,7 @@ describe('AST Demock Validation', () => {
     const code = `const note = "TODO: fix this";`;
     const result = analyzeCodeBlock(code);
     expect(result.isValid).toBe(true);
-    expect(result.warnings.some(warn => warn.includes("TODO"))).toBe(true);
+    expect(result.suggestions.some(sug => sug.includes("TODO"))).toBe(true);
   });
 
   it('should invalidate code containing the "any" keyword', () => {
