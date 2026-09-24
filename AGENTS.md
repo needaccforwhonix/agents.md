@@ -91,3 +91,32 @@ Unter keinen Umständen, zu keinem Zeitpunkt und aus keinem Grund darf ein Fallb
   1. **Bevorzugte Sprachen:** High Quality **Golang (Go), Rust, C++, Zig, PowerShell, C** sind IMMER und AUSNAHMSLOS die bevorzugten Programmiersprachen.
   2. **Kein Python:** Python ist für neue Daemons, Watcher, Automatisierungen, APIs, CLI-Tools und Dienste strikt untersagt (GIL-Bottlenecks, Dependency-Drift, Speicherineffizienz).
   3. **Natives Systems-Engineering:** Alle Hintergrunddienste, Caching-Ebenen und Task-Runner müssen als native, speichersichere und nebenläufige Binaries kompiliert werden.
+
+## 🏗️ Architectural Directives for agents.md Refinement
+
+The architecture must prioritize low-latency execution and memory efficiency to prevent jitter during distributed inference.
+
+### 1. Specific Implementation Guidance: High-Performance Paths
+*   **Typed Interfaces & Schema Enforcement:** Do not use `interface{}` or `any` where possible. Define strictly typed contracts for agent-communication to minimize reflection overhead.
+    ```go
+    type AgentTask interface {
+        Execute(ctx context.Context, req TaskRequest) (TaskResult, error)
+        Priority() int32
+    }
+    ```
+*   **Zero-Allocation Hot Paths:** For the message-processing loop, utilize `sync.Pool` for frequent buffer allocations to mitigate GC pressure. Avoid heap allocations in the hot-path.
+*   **Concurrency Model:** All asynchronous agent operations must be non-blocking. Use buffered channels with explicit backpressure mechanisms to prevent goroutine leakage under high load.
+
+### 2. Rigorous Verification Protocol
+Quality assurance is non-negotiable. No code shall be merged without the following verification suite:
+*   **Table-Driven Unit Tests:** All logic gates must be verified via table-driven tests covering edge cases (empty inputs, maximum token limits, and network timeouts).
+*   **Race Condition Detection:** Every test suite must be capable of running with the `-race` flag. Any detected data race results in an immediate rejection of the PR.
+*   **Boundary/Nil Checks:** Explicitly validate all pointers before de-referencing. Use a "fail-fast" validation strategy at the entry point of every public method.
+
+### 3. Strict Ecosystem Invariants
+We maintain a strictly immutable-evolution philosophy regarding the repository structure.
+*   **WORM Immutability (Write Once, Read Many):** You are strictly prohibited from deleting existing features, documentation, or test cases. If a feature is obsolete, mark it as `// Deprecated` rather than removing. This preserves the audit trail for the CI/CD pipeline.
+*   **RULE_Ordnerstruktur:** You must strictly adhere to the established directory hierarchy:
+    *   `/src`: Core logic and agent implementations.
+    *   `/bin`: Compiled artifacts and internal CLI tools.
+    *   `/docs`: Architectural ADRs and the `agents.md` specification.
