@@ -100,6 +100,37 @@ async function startBackgroundMesh() {
   console.log("Registering dynamic agents for all files and directories...");
   registerDynamicAgents(process.cwd(), mesh, brain);
 
+  const persistencePath = '.agent_states.json';
+  let hasHydratedState = false;
+
+  if (fs.existsSync(persistencePath)) {
+    try {
+      console.log("Hydrating Mesh state from filesystem...");
+      const data = fs.readFileSync(persistencePath, 'utf-8');
+      const state = JSON.parse(data);
+
+      if (state.messages && Array.isArray(state.messages)) {
+        mesh.setMessages(state.messages);
+      }
+
+      if (state.agents && Array.isArray(state.agents)) {
+        const agentMap = new Map(mesh.getAgents().map(a => [a.context.id, a]));
+
+        for (const loadedAgentData of state.agents) {
+          const existingAgent = agentMap.get(loadedAgentData.id);
+          if (existingAgent) {
+            // Restore context variables
+            existingAgent.context.parameters = loadedAgentData.context.parameters;
+            existingAgent.context.history = loadedAgentData.context.history || [];
+          }
+        }
+        hasHydratedState = true;
+      }
+    } catch (err) {
+      console.warn("Failed to hydrate state from filesystem:", err);
+    }
+  }
+
   const initialMessage: Message = {
     id: crypto.randomUUID(),
     senderId: "system-cron",
@@ -120,6 +151,27 @@ async function startBackgroundMesh() {
   mesh.getAgents().forEach(agent => {
     console.log(`Agent ${agent.context.name} generation: ${agent.context.parameters.generation}`);
   });
+
+  // Save state to filesystem for persistence
+  try {
+    const persistencePath = '.agent_states.json';
+    // To prevent "Invalid string length" stringify error, avoid dumping the full object at once
+    // by streaming or simply chunking the messages (we'll just drop history for now if too large)
+    const state = {
+      agents: mesh.getAgents().map((agent) => ({
+        id: agent.context.id,
+        context: {
+          ...agent.context,
+          history: [] // Drop large history arrays to save memory on persist
+        }
+      })),
+      messages: mesh.getMessages().slice(-1000), // Keep last 1000 messages
+    };
+    fs.writeFileSync(persistencePath, JSON.stringify(state, null, 2), 'utf-8');
+    console.log(`Mesh state successfully saved to ${persistencePath}`);
+  } catch (err) {
+    console.warn("Could not save Mesh state to filesystem:", err);
+  }
 }
 
 startBackgroundMesh().catch(err => {
