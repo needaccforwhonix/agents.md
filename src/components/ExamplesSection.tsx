@@ -1,7 +1,7 @@
 import React from "react";
-import Section from "@/src/components/Section";
-import CodeExample from "@/src/components/CodeExample";
-import ExampleListSection from "@/src/components/ExampleListSection";
+import Section from "@/components/Section";
+import CodeExample from "@/components/CodeExample";
+import ExampleListSection from "@/components/ExampleListSection";
 
 interface ExamplesSectionProps {
   contributorsByRepo: Record<string, { avatars: string[]; total: number }>;

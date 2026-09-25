@@ -1,4 +1,4 @@
-import Section from "@/src/components/Section";
+import Section from "@/components/Section";
 
 const AboutSection = () => (
   <Section title="About" className="pb-0" center maxWidthClass="max-w-3xl">

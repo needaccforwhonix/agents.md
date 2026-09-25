@@ -1,8 +1,8 @@
-import Section from "@/src/components/Section";
+import Section from "@/components/Section";
 import React from "react";
-import ClipboardIcon from "@/src/components/icons/ClipboardIcon";
-import UserIcon from "@/src/components/icons/UserIcon";
-import LinkIcon from "@/src/components/icons/LinkIcon";
+import ClipboardIcon from "@/components/icons/ClipboardIcon";
+import UserIcon from "@/components/icons/UserIcon";
+import LinkIcon from "@/components/icons/LinkIcon";
 
 export default function WhySection() {
   return (

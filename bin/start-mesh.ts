@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { Mesh } from "../../src/logic/Mesh";
-import { Agent } from "../../src/logic/Agent";
-import { RuleBasedBrain } from "../../src/logic/RuleBasedBrain";
-import { Message } from "../../src/logic/Types";
+import { Mesh } from "../src/logic/Mesh";
+import { Agent } from "../src/logic/Agent";
+import { RuleBasedBrain } from "../src/logic/RuleBasedBrain";
+import { Message } from "../src/logic/Types";
 
 function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
   const ignored = new Set(["node_modules", ".git", ".next", "test-results", "public", ".github", "pnpm-lock.yaml"]);

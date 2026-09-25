@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import Section from "@/src/components/Section";
+import Section from "@/components/Section";
 
 type AgentEntry = {
   name: string;

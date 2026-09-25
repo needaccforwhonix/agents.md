@@ -1,4 +1,4 @@
-import Section from "@/src/components/Section";
+import Section from "@/components/Section";
 import React from "react";
 
 export default function HowToUseSection() {
