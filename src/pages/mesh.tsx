@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { MeshVisualizer } from '../components/AgentMesh/ui/MeshVisualizer';
+import { MeshVisualizer } from '../ui/MeshVisualizer';
 
 export default function MeshPage() {
   return (

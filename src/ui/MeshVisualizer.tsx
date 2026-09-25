@@ -3,7 +3,7 @@ import { Mesh } from "../logic/Mesh";
 import { Agent } from "../logic/Agent";
 import { RuleBasedBrain } from "../logic/RuleBasedBrain";
 import { Message } from "../logic/Types";
-import type { FileNode } from "../../../pages/api/files";
+import type { FileNode } from "../../src/pages/api/files";
 
 export const MeshVisualizer: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
