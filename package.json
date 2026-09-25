@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "echo 'Skipping next lint temporarily'",
+    "lint": "eslint .",
     "test": "vitest run",
     "test:mesh": "tsx bin/start-mesh.ts"
   },
