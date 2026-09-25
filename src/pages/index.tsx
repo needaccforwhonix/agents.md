@@ -1,14 +1,14 @@
 import React from "react";
 
-import Hero from "@/components/Hero";
-import Footer from "@/components/Footer";
-import FAQSection from "@/components/FAQSection";
-import HowToUseSection from "@/components/HowToUseSection";
-import ExamplesSection from "@/components/ExamplesSection";
-import CompatibilitySection from "@/components/CompatibilitySection";
+import Hero from "@/src/components/Hero";
+import Footer from "@/src/components/Footer";
+import FAQSection from "@/src/components/FAQSection";
+import HowToUseSection from "@/src/components/HowToUseSection";
+import ExamplesSection from "@/src/components/ExamplesSection";
+import CompatibilitySection from "@/src/components/CompatibilitySection";
 import { GetStaticProps } from "next";
-import WhySection from "@/components/WhySection";
-import AboutSection from "@/components/AboutSection";
+import WhySection from "@/src/components/WhySection";
+import AboutSection from "@/src/components/AboutSection";
 
 interface LandingPageProps {
   contributorsByRepo: Record<string, { avatars: string[]; total: number }>;

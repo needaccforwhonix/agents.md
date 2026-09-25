@@ -1,6 +1,6 @@
 import React from "react";
-import Section from "@/components/Section";
-import CodeExample from "@/components/CodeExample";
+import Section from "@/src/components/Section";
+import CodeExample from "@/src/components/CodeExample";
 
 interface FAQItem {
   question: string;

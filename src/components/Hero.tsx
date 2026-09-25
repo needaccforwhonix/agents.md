@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import CodeExample, { HERO_AGENTS_MD } from "@/components/CodeExample";
-import GitHubIcon from "@/components/icons/GitHubIcon";
+import CodeExample, { HERO_AGENTS_MD } from "@/src/components/CodeExample";
+import GitHubIcon from "@/src/components/icons/GitHubIcon";
 
 export default function Hero() {
   return (
