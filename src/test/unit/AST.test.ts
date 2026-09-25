@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { analyzeCodeBlock, extractCodeBlocks } from '../../logic/AST';
+import { describe, it, expect } from "vitest";
+import { analyzeCodeBlock, extractCodeBlocks } from "../../logic/AST";
 
 describe("AST Module", () => {
     describe("analyzeCodeBlock", () => {
