@@ -64,6 +64,34 @@ export const MeshVisualizer: React.FC = () => {
       mesh.registerAgent(agent);
     });
 
+    // 4. Restore state from localStorage into the mesh and agents
+    try {
+      const savedState = localStorage.getItem('agentMeshState');
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+
+        if (parsedState.messages && Array.isArray(parsedState.messages)) {
+          mesh.setMessages(parsedState.messages);
+          setMessages(parsedState.messages);
+        }
+
+        if (parsedState.agents && Array.isArray(parsedState.agents)) {
+          const agentMap = new Map(mesh.getAgents().map(a => [a.context.id, a]));
+
+          for (const loadedAgentData of parsedState.agents) {
+            const existingAgent = agentMap.get(loadedAgentData.id);
+            if (existingAgent && loadedAgentData.context) {
+              // Hydrate context onto the properly instantiated Agent class
+              existingAgent.context.parameters = loadedAgentData.context.parameters;
+              existingAgent.context.history = loadedAgentData.context.history || [];
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Failed to load mesh state from localStorage:", err);
+    }
+
     setAgents(mesh.getAgents());
     setMeshRef(mesh);
   }, [fileStructure]);
@@ -87,8 +115,22 @@ export const MeshVisualizer: React.FC = () => {
     await meshRef.broadcast(startMessage);
 
     // Update UI explicitly after full completion of recursive bounds
-    setMessages([...meshRef.getMessages()]);
-    setAgents([...meshRef.getAgents()]);
+    const updatedMessages = [...meshRef.getMessages()];
+    const updatedAgents = [...meshRef.getAgents()];
+    setMessages(updatedMessages);
+    setAgents(updatedAgents);
+
+    // Save state to localStorage for persistence
+    try {
+      const stateToSave = {
+        messages: updatedMessages,
+        agents: updatedAgents.map(a => ({ id: a.context.id, context: a.context }))
+      };
+      localStorage.setItem('agentMeshState', JSON.stringify(stateToSave));
+    } catch (err) {
+      console.warn("Failed to save mesh state to localStorage:", err);
+    }
+
     setIsSimulating(false);
   };
 

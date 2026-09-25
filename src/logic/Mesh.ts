@@ -108,4 +108,11 @@ export class Mesh {
   public getMessages(): Message[] {
     return this.messages;
   }
+
+  /**
+   * Helper to set messages directly (useful for hydration).
+   */
+  public setMessages(messages: Message[]): void {
+    this.messages = messages;
+  }
 }
