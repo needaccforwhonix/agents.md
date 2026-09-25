@@ -2,12 +2,12 @@
 # TODO
 
 - Add real persistence (database) to agent states to replace in-memory maps.
-- Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.
 - Develop custom Web Worker architecture to run simulations completely decoupled from the main thread.
 - Explore integration with actual Language Models (LLMs) utilizing generated JSON definitions.
 
 ## Done
 
+- Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.
 - Connect specific AgentMesh simulation outcomes directly to the real application interface.
 
 - Implement German-specific AgentMesh Prompt instructions ensuring explicit formatting around Optimizations, Demock Testing, ACE, E2E Testing, AST, Documentation updates, and full system modifications.
