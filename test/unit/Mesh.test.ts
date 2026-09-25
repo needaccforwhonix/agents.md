@@ -60,4 +60,29 @@ describe('Mesh Unit Tests', () => {
     await mesh.broadcast(null);
     expect(mesh.getMessages().length).toBe(0);
   });
+
+  it('should drop messages that exceed token limits', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 1.0 });
+    mesh.registerAgent(agent1);
+
+    const oversizedMessage: Message = {
+      id: "oversized-msg",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "a".repeat(20000), // Exceeds typical token limits by far
+      where: "where",
+      how: "how",
+      reasoning: "reasoning",
+    };
+
+    await mesh.broadcast(oversizedMessage);
+
+    // The initial message is pushed to this.messages before validation.
+    // However, validation fails, so it is not sent to agents.
+    // Therefore, there should be no responses from agents, and length remains 1.
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("oversized-msg");
+  });
 });

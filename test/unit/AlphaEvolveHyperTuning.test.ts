@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { alphaEvolve } from '../../src/logic/AlphaEvolve';
+import { AgentParameters } from '../../src/logic/Types';
 
 describe('AlphaEvolve Hyperparameter Tuning', () => {
   it('should maintain stable parameters over 1000 generations with a low mutation rate', () => {
-    let params = { generation: 1, analyticalDepth: 0.5, responsiveness: 0.5 };
+    let params: AgentParameters = { generation: 1, analyticalDepth: 0.5, responsiveness: 0.5 };
     for (let i = 0; i < 1000; i++) {
       params = alphaEvolve(params, 0.01);
     }
@@ -19,8 +20,8 @@ describe('AlphaEvolve Hyperparameter Tuning', () => {
 
     // We try 10 times to get the stochastic behaviour to show higher variance for high mutation.
     for (let run = 0; run < 10; run++) {
-      let paramsHigh = { generation: 1, analyticalDepth: 0.5, responsiveness: 0.5 };
-      let paramsLow = { generation: 1, analyticalDepth: 0.5, responsiveness: 0.5 };
+      let paramsHigh: AgentParameters = { generation: 1, analyticalDepth: 0.5, responsiveness: 0.5 };
+      let paramsLow: AgentParameters = { generation: 1, analyticalDepth: 0.5, responsiveness: 0.5 };
 
       let varianceHigh = 0;
       let varianceLow = 0;

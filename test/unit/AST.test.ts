@@ -36,6 +36,16 @@ describe("AST Module", () => {
             expect(result2.errors[0]).toContain("mock_data");
         });
 
+        it("should catch mock identifiers within destructured objects/arrays", () => {
+            const result1 = analyzeCodeBlock("const { mock_id } = obj;");
+            expect(result1.isValid).toBe(false);
+            expect(result1.errors[0]).toContain("mock_id");
+
+            const result2 = analyzeCodeBlock("const [dummy_val] = arr;");
+            expect(result2.isValid).toBe(false);
+            expect(result2.errors[0]).toContain("dummy_val");
+        });
+
         it("should suggest for 'TODO'", () => {
             const result = analyzeCodeBlock("const x = 'TODO: something';");
             expect(result.suggestions[0]).toContain("TODO: something");
@@ -65,6 +75,12 @@ describe("AST Module", () => {
             const msg = "Here is some code:\n```typescript\nconst x = 1;\n```\nAnd more:\n```ts\nconst y = 2;\n```";
             const blocks = extractCodeBlocks(msg);
             expect(blocks).toEqual(["const x = 1;", "const y = 2;"]);
+        });
+
+        it("should extract javascript and plain blocks", () => {
+            const msg = "```javascript\nconst a = 1;\n```\nPlain block:\n```\nconst b = 2;\n```";
+            const blocks = extractCodeBlocks(msg);
+            expect(blocks).toEqual(["const a = 1;", "const b = 2;"]);
         });
 
         it("should return empty if no match", () => {
