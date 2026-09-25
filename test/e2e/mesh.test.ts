@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { Mesh } from '../../components/AgentMesh/logic/Mesh';
-import { Agent } from '../../components/AgentMesh/logic/Agent';
-import { RuleBasedBrain } from '../../components/AgentMesh/logic/RuleBasedBrain';
+import { Mesh } from '../../src/logic/Mesh';
+import { Agent } from '../../src/logic/Agent';
+import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
 
 describe('AgentMesh E2E Simulation', () => {
   it('should initialize and run a bounded broadcast successfully', async () => {
