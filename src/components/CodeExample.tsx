@@ -1,5 +1,5 @@
 import React from "react";
-import ClipboardIcon from "./icons/ClipboardIcon";
+
 import CopyIcon from "./icons/CopyIcon";
 
 interface CodeExampleProps {
@@ -125,7 +125,7 @@ function renderLineWithInlineCode(line: string): React.ReactNode {
  */
 export default function CodeExample({
   code,
-  href,
+
   compact = false,
   heightClass,
   centerVertically = false,

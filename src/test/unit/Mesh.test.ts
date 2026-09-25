@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { Mesh } from '../../src/logic/Mesh';
-import { Agent } from '../../src/logic/Agent';
-import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
-import { Message } from '../../src/logic/Types';
+import { Mesh } from '../../logic/Mesh';
+import { Agent } from '../../logic/Agent';
+import { RuleBasedBrain } from '../../logic/RuleBasedBrain';
+import { Message } from '../../logic/Types';
 
 describe('Mesh Unit Tests', () => {
   it('should register an agent correctly', () => {
@@ -17,11 +17,11 @@ describe('Mesh Unit Tests', () => {
 
   it('should silently ignore registering invalid agents', () => {
     const mesh = new Mesh(100);
-    // @ts-ignore
+    // @ts-expect-error test ignore
     mesh.registerAgent(null);
     expect(mesh.getAgents().length).toBe(0);
 
-    // @ts-ignore
+    // @ts-expect-error test ignore
     mesh.registerAgent({});
     expect(mesh.getAgents().length).toBe(0);
   });
@@ -56,7 +56,7 @@ describe('Mesh Unit Tests', () => {
 
   it('should gracefully handle empty or null broadcast', async () => {
     const mesh = new Mesh(10);
-    // @ts-ignore
+    // @ts-expect-error test ignore
     await mesh.broadcast(null);
     expect(mesh.getMessages().length).toBe(0);
   });

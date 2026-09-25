@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { Agent } from '../../src/logic/Agent';
-import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
-import { Message, AgentContext } from '../../src/logic/Types';
+import { Agent } from '../../logic/Agent';
+import { RuleBasedBrain } from '../../logic/RuleBasedBrain';
+import { Message } from '../../logic/Types';
 
 describe('Agent Unit Tests', () => {
   it('should initialize correctly with default parameters', () => {
@@ -44,7 +44,7 @@ describe('Agent Unit Tests', () => {
     const brain = new RuleBasedBrain();
     const agent = new Agent("agent-1", "Test Agent", "Test Role", brain);
 
-    // @ts-ignore
+    // @ts-expect-error test ignore
     const response = await agent.receiveMessage(null);
     expect(response).toBeNull();
     expect(agent.context.history.length).toBe(0);
@@ -54,7 +54,7 @@ describe('Agent Unit Tests', () => {
     const brain = new RuleBasedBrain();
     const agent = new Agent("agent-1", "Test Agent", "Test Role", brain);
 
-    const initialResponsiveness = agent.context.parameters.responsiveness!;
+
 
     const message: Message = {
       id: "msg-1",

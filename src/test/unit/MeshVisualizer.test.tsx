@@ -2,9 +2,9 @@ import React from 'react';
 // @vitest-environment jsdom
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { MeshVisualizer } from '../../src/ui/MeshVisualizer';
+import { MeshVisualizer } from '../../ui/MeshVisualizer';
 
-import { Mesh } from '../../src/logic/Mesh';
+import { Mesh } from '../../logic/Mesh';
 
 describe('MeshVisualizer Component', () => {
   it('should render the "Start Simulation" button', () => {
@@ -12,7 +12,7 @@ describe('MeshVisualizer Component', () => {
       Promise.resolve({
         json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
       })
-    ) as any;
+    ) as unknown as typeof global.fetch;
     render(<MeshVisualizer />);
     const startButton = screen.getAllByText(/Start Simulation/i)[0];
     expect(startButton).toBeDefined();
@@ -24,7 +24,7 @@ describe('MeshVisualizer Component', () => {
       Promise.resolve({
         json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
       })
-    ) as any;
+    ) as unknown as typeof global.fetch;
 
     const mockBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
       () => new Promise((resolve) => setTimeout(resolve, 100))

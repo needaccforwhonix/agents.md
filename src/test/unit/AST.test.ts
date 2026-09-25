@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { analyzeCodeBlock } from '../../src/logic/AST';
+import { analyzeCodeBlock } from '../../logic/AST';
 
 describe('AST Demock Validation', () => {
   it('should invalidate code containing dummy data string literals', () => {
