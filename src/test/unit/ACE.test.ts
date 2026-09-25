@@ -74,5 +74,11 @@ describe('ACE (Agentic Context Engineering) Unit Tests', () => {
       const bounded = boundHistory(history, 5);
       expect(bounded.length).toBe(0);
     });
+
+    it("should return empty array if maxTokens is 0", () => {
+      const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: "1", where: "2", how: "3", reasoning: "4" };
+      const history = [msg];
+      expect(boundHistory(history, 0)).toEqual([]);
+    });
   });
 });
