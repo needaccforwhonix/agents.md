@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { RuleBasedBrain } from "../../src/logic/RuleBasedBrain";
-import { Message, AgentContext } from "../../src/logic/Types";
+import { Message, AgentContext, AgentParameters } from "../../src/logic/Types";
 
 describe("RuleBasedBrain", () => {
     it("should cover different roles", async () => {
@@ -68,8 +68,7 @@ describe("RuleBasedBrain", () => {
         const brain = new RuleBasedBrain();
         const context: AgentContext = {
             id: "1", name: "n", role: "r", history: [],
-            // @ts-expect-error Intentionally omitting parameters to test safe handling
-            parameters: undefined
+            parameters: undefined as unknown as AgentParameters
         }; // Context without parameters
 
         const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
@@ -93,7 +92,7 @@ describe("RuleBasedBrain", () => {
             parameters: { responsiveness: 1.0 }
         };
         // Intentionally testing missing reasoning field
-        const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h" }; // No reasoning
+        const msg = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h" } as unknown as Message; // No reasoning
         const resp = await brain.decide(msg, context);
         expect(resp).not.toBeNull();
         expect(resp!.reasoning).toContain("aufbauend auf []"); // Should use "" when reasoning is undefined, but the implementation does (message.reasoning || "").length but later uses [${safeReasoning}] and safeReasoning becomes 'undefined' string because of template literal string conversion somewhere else? No, `(message.reasoning || "").length` gives 0. `message.reasoning.substring()` is not called. safeReasoning is just `message.reasoning` (which is undefined)
@@ -113,13 +112,12 @@ describe("RuleBasedBrain", () => {
 
     it("should return null for invalid inputs", async () => {
         const brain = new RuleBasedBrain();
-        // @ts-expect-error Testing invalid inputs
-        expect(await brain.decide(null, null)).toBeNull();
+        expect(await brain.decide(null as unknown as Message, null as unknown as AgentContext)).toBeNull();
     });
 
     it("should return null if sender is self", async () => {
         const brain = new RuleBasedBrain();
-        const context: AgentContext = { id: "1", name: "n", role: "r", history: [], parameters: {} };
+        const context: AgentContext = { id: "1", name: "n", role: "r", history: [], parameters: undefined as unknown as AgentParameters };
         const msg: Message = { id: "m", senderId: "1", timestamp: 1, what: "", where: "", how: "", reasoning: "" };
         expect(await brain.decide(msg, context)).toBeNull();
     });
@@ -144,16 +142,16 @@ describe("RuleBasedBrain", () => {
     };
 
 
-    let response = await brain.decide(null, mockContext);
+    let response = await brain.decide(null as unknown as Message, mockContext);
     expect(response).toBeNull();
 
 
-    response = await brain.decide(undefined, mockContext);
+    response = await brain.decide(undefined as unknown as Message, mockContext);
     expect(response).toBeNull();
 
-    const validMsg = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" } as Message;
+    const validMsg = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" } as unknown as Message;
 
-    response = await brain.decide(validMsg, null);
+    response = await brain.decide(validMsg, null as unknown as AgentContext);
     expect(response).toBeNull();
   });
 
@@ -206,7 +204,7 @@ describe("RuleBasedBrain", () => {
     const brain = new RuleBasedBrain();
     const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
     const context: AgentContext = {
-      id: "agent-test", name: "Test Agent", role: "Role", history: [], parameters: undefined as any
+      id: "agent-test", name: "Test Agent", role: "Role", history: [], parameters: undefined as unknown as AgentParameters
     };
 
     // It should fall back to 0.5 responsiveness. By running it enough times we can ensure it handles undefined parameters safely.
