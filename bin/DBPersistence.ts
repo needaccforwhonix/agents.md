@@ -66,7 +66,18 @@ export class DBPersistence {
     const stmt = this.db.prepare(`
       SELECT * FROM messages ORDER BY timestamp DESC LIMIT ?
     `);
-    const rows = stmt.all(limit) as any[];
+
+    interface MessageRow {
+      id: string;
+      senderId: string;
+      timestamp: number;
+      what: string;
+      where_field: string;
+      how: string;
+      reasoning: string | null;
+    }
+
+    const rows = stmt.all(limit) as MessageRow[];
     return rows.reverse().map(row => ({
       id: row.id,
       senderId: row.senderId,
@@ -74,17 +85,26 @@ export class DBPersistence {
       what: row.what,
       where: row.where_field,
       how: row.how,
-      reasoning: row.reasoning || undefined
+      reasoning: row.reasoning || ""
     }));
   }
 
-  public loadAgentStates(): any[] {
+  public loadAgentStates(): { id: string; name: string; role: string; parameters: Record<string, unknown> }[] {
     const stmt = this.db.prepare(`SELECT * FROM agents`);
-    return stmt.all().map((row: any) => ({
+
+    interface AgentRow {
+      id: string;
+      name: string;
+      role: string;
+      parameters: string;
+    }
+
+    const rows = stmt.all() as AgentRow[];
+    return rows.map(row => ({
       id: row.id,
       name: row.name,
       role: row.role,
-      parameters: JSON.parse(row.parameters)
+      parameters: JSON.parse(row.parameters) as Record<string, unknown>
     }));
   }
 

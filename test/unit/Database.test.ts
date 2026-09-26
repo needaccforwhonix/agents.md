@@ -40,6 +40,25 @@ describe("DBPersistence", () => {
     expect(loaded[0].reasoning).toBe("test reasoning");
   });
 
+  it("should save and load messages without reasoning gracefully", () => {
+    const msg: Message = {
+      id: "msg2",
+      senderId: "agent2",
+      timestamp: 2000,
+      what: "test what",
+      where: "test where",
+      how: "test how",
+      reasoning: ""
+    };
+
+    db.saveMessage(msg);
+
+    const loaded = db.loadMessages();
+    expect(loaded.length).toBe(1);
+    expect(loaded[0].id).toBe("msg2");
+    expect(loaded[0].reasoning).toBe("");
+  });
+
   it("should save and load agent states", () => {
     const context: AgentContext = {
       id: "agent1",
