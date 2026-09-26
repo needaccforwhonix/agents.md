@@ -59,6 +59,10 @@ describe('Mesh Unit Tests', () => {
     // @ts-ignore
     await mesh.broadcast(null);
     expect(mesh.getMessages().length).toBe(0);
+
+    // @ts-ignore
+    await mesh.broadcast(undefined);
+    expect(mesh.getMessages().length).toBe(0);
   });
 
   it('should reject messages with invalid Demock patterns based on AST Demock validation', async () => {
@@ -126,7 +130,8 @@ describe('Mesh Unit Tests', () => {
       timestamp: Date.now(),
       what: "what",
       where: "where",
-      how: "how"
+      how: "how",
+      reasoning: "reasoning"
     };
 
     // Should not throw, should just log error and proceed
@@ -137,7 +142,7 @@ describe('Mesh Unit Tests', () => {
   it('should allow setting messages directly', () => {
     const mesh = new Mesh(10);
     const messages: Message[] = [
-      { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" }
+      { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" }
     ];
     mesh.setMessages(messages);
     expect(mesh.getMessages()).toEqual(messages);

@@ -110,6 +110,7 @@ export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
  * Extracts TypeScript code blocks from a message string.
  */
 export function extractCodeBlocks(messageContent: string): string[] {
+  if (!messageContent) return [];
   const codeBlockRegex = /```(?:typescript|ts|javascript|js)?\s*\n([\s\S]*?)```/g;
   const blocks: string[] = [];
   let match;

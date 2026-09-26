@@ -46,4 +46,9 @@ describe("AlphaEvolve Module", () => {
     const evolved = alphaEvolve(params, 0.5);
     expect(evolved.someStringParam).toBe("test");
   });
+
+  it('should return empty object for null or undefined input', () => {
+    expect(alphaEvolve(null as unknown as AgentParameters)).toEqual({});
+    expect(alphaEvolve(undefined as unknown as AgentParameters)).toEqual({});
+  });
 });

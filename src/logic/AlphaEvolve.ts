@@ -5,6 +5,7 @@ import { AgentParameters } from "./Types";
  * A simple mutation function to evolve agent parameters over time within a broadcast mesh.
  */
 export function alphaEvolve(parameters: AgentParameters, mutationRate: number = 0.1): AgentParameters {
+  if (!parameters) return {};
   const evolved = { ...parameters };
 
   for (const key in evolved) {

@@ -11,6 +11,9 @@ export class Agent {
   private brain: Brain;
 
   constructor(id: string, name: string, role: string, brain: Brain, parameters: AgentParameters = {}) {
+    if (!brain) {
+      throw new Error("Agent constructor requires a valid Brain instance.");
+    }
     this.context = {
       id,
       name,

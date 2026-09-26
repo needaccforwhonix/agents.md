@@ -36,5 +36,10 @@ describe("ACE Module", () => {
       const history = [msg];
       expect(boundHistory(history, 0)).toEqual([]);
     });
+
+    it("should safely handle null or undefined history array", () => {
+      expect(boundHistory(null as unknown as Message[], 1000)).toEqual([]);
+      expect(boundHistory(undefined as unknown as Message[], 1000)).toEqual([]);
+    });
   });
 });
