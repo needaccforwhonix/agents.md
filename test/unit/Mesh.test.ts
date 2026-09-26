@@ -61,6 +61,31 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages().length).toBe(0);
   });
 
+  it('should reject messages with invalid Demock patterns based on AST Demock validation', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 1.0 });
+    mesh.registerAgent(agent1);
+
+    const invalidMessage: Message = {
+      id: "demock-invalid-msg",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how ```typescript\nconst dummy = 'mock_data';\n```",
+      reasoning: "reasoning",
+    };
+
+    await mesh.broadcast(invalidMessage);
+
+    // The initial message is pushed to this.messages before validation.
+    // However, validation fails because of 'dummy' / 'mock_' patterns.
+    // Therefore, it is not sent to agents.
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("demock-invalid-msg");
+  });
+
   it('should drop messages that exceed token limits', async () => {
     const mesh = new Mesh(10);
     const brain = new RuleBasedBrain();
@@ -84,5 +109,37 @@ describe('Mesh Unit Tests', () => {
     // Therefore, there should be no responses from agents, and length remains 1.
     expect(mesh.getMessages().length).toBe(1);
     expect(mesh.getMessages()[0].id).toBe("oversized-msg");
+  });
+
+  it('should handle errors thrown by agents during message receiving', async () => {
+    const mesh = new Mesh(10);
+    const mockBrain = {
+      decide: async () => { throw new Error("Agent explosion"); }
+    };
+    // @ts-ignore
+    const agent = new Agent("agent-err", "ErrAgent", "Role", mockBrain);
+    mesh.registerAgent(agent);
+
+    const initialMessage: Message = {
+      id: "msg-initial",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how"
+    };
+
+    // Should not throw, should just log error and proceed
+    await mesh.broadcast(initialMessage);
+    expect(mesh.getMessages().length).toBe(1);
+  });
+
+  it('should allow setting messages directly', () => {
+    const mesh = new Mesh(10);
+    const messages: Message[] = [
+      { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" }
+    ];
+    mesh.setMessages(messages);
+    expect(mesh.getMessages()).toEqual(messages);
   });
 });

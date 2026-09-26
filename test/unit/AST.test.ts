@@ -68,6 +68,18 @@ describe("AST Module", () => {
             expect(result.isValid).toBe(false);
             expect(result.errors).toContain("Optimization Error: Empty function 'myMethod' detected. Avoid empty implementations.");
         });
+
+        it("should safely ignore empty code", () => {
+            const result = analyzeCodeBlock(undefined as unknown as string);
+            expect(result.isValid).toBe(true);
+            expect(result.errors).toHaveLength(0);
+        });
+
+        it("should handle unexpected property access gracefully", () => {
+            const result = analyzeCodeBlock("window.location;");
+            expect(result.isValid).toBe(true);
+            expect(result.warnings).toHaveLength(0);
+        });
     });
 
     describe("extractCodeBlocks", () => {
@@ -86,6 +98,11 @@ describe("AST Module", () => {
         it("should return empty if no match", () => {
             const blocks = extractCodeBlocks("Just text");
             expect(blocks).toEqual([]);
+        });
+
+        it("should handle code block matches with empty groups correctly", () => {
+            const blocks = extractCodeBlocks("```ts\n```");
+            expect(blocks).toEqual([]); // match[1] is an empty string, so `if(match[1])` is false in our implementation.
         });
     });
 });

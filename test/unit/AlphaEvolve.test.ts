@@ -36,4 +36,14 @@ describe("AlphaEvolve Module", () => {
     const evolved = alphaEvolve(params, 1.0); // high mutation rate
     expect(evolved.creativity).toBeGreaterThanOrEqual(0);
   });
+
+  it("should skip non-number parameters during mutation", () => {
+    const params: AgentParameters = {
+      creativity: 0.5,
+      someStringParam: "test" as unknown as number // Mocking non-number
+    };
+
+    const evolved = alphaEvolve(params, 0.5);
+    expect(evolved.someStringParam).toBe("test");
+  });
 });

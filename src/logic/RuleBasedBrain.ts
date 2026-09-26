@@ -16,7 +16,8 @@ export class RuleBasedBrain implements Brain {
     }
 
     // Determine basic response strategy based on agent role
-    const chanceToRespond = context.parameters.responsiveness !== undefined ? context.parameters.responsiveness : 0.5;
+    const parameters = context.parameters || {};
+    const chanceToRespond = parameters.responsiveness !== undefined ? parameters.responsiveness : 0.5;
 
     // Simulate recursive response throttling / basic chance
     if (Math.random() > chanceToRespond) {
@@ -24,7 +25,7 @@ export class RuleBasedBrain implements Brain {
     }
 
     // Serialize context parameters to show evolution in the reasoning field
-    const stringifiedParameters = JSON.stringify(context.parameters);
+    const stringifiedParameters = JSON.stringify(parameters);
 
     let roleSpecificHow = `Apply Agentic Context Engineering for token bounds and AlphaEvolve for parameter mutation. Use specialized ${context.role} strategies to proactively enhance Security, Performance, Style, Documentation, Cleanliness, and Order.`;
 
@@ -87,7 +88,8 @@ export class RuleBasedBrain implements Brain {
     const safeWhat = message.what.length > 4000 ? message.what.substring(0, 4000) + '...' : message.what;
     const safeWhere = message.where.length > 4000 ? message.where.substring(0, 4000) + '...' : message.where;
     const safeHow = message.how.length > 4000 ? message.how.substring(0, 4000) + '...' : message.how;
-    const safeReasoning = (message.reasoning || "").length > 4000 ? message.reasoning.substring(0, 4000) + '...' : message.reasoning;
+    const reasoning = message.reasoning || "";
+    const safeReasoning = reasoning.length > 4000 ? reasoning.substring(0, 4000) + '...' : reasoning;
 
     // Generate output explicitly defining what, where, how, reasoning based on incoming message context
     const response: Message = {
