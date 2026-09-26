@@ -192,4 +192,26 @@ describe('Mesh Unit Tests', () => {
     mesh.setMessages(messages);
     expect(mesh.getMessages()).toEqual(messages);
   });
+
+  it('should handle messages with undefined reasoning properly', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent = new Agent("agent-1", "Test", "Role", brain, { responsiveness: 0 }); // ensure it doesn't respond
+    mesh.registerAgent(agent);
+
+    const msgWithoutReasoning = {
+      id: "no-reasoning-msg",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how"
+    } as unknown as Message;
+
+    await mesh.broadcast(msgWithoutReasoning);
+
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("no-reasoning-msg");
+  });
+
 });

@@ -137,4 +137,87 @@ describe("RuleBasedBrain", () => {
         expect(resp!.what.length).toBeLessThan(10000); // 4000 + additional wrapper text
         expect(resp!.what.includes("...")).toBe(true);
     });
+  it('should gracefully handle empty or invalid inputs', async () => {
+    const brain = new RuleBasedBrain();
+    const mockContext: AgentContext = {
+      id: "agent-1", name: "Test Agent", role: "Role", parameters: {}
+    };
+
+    // @ts-ignore
+    let response = await brain.decide(null, mockContext);
+    expect(response).toBeNull();
+
+    // @ts-ignore
+    response = await brain.decide(undefined, mockContext);
+    expect(response).toBeNull();
+
+    const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" };
+    // @ts-ignore
+    response = await brain.decide(validMsg, null);
+    expect(response).toBeNull();
+  });
+
+  it('should set appropriate roleSpecificHow for all known roles', async () => {
+    const brain = new RuleBasedBrain();
+    const rolesToTest = [
+      "System Security Analyst",
+      "System Performance Optimizer",
+      "System Style Enforcer",
+      "System Documenter",
+      "System Cleanliness & Order",
+      "Prompt & Logic Optimizer",
+      "System Developer",
+      "tsconfig.json Manager",
+      "package.json Manager",
+      "next.config.ts Manager",
+      "postcss.config.mjs Manager",
+      "README.md Manager",
+      "AGENTS.md Manager",
+      "File Manager",
+      "TypeScript File Manager",
+      "React Component Manager",
+      "JSON Config Manager",
+      "Markdown Documenter",
+      "Root Directory Manager",
+      "Components Manager",
+      "Pages Manager",
+      "Scripts Manager",
+      "Github Config Manager",
+      "Public Assets Manager",
+      "Styles Manager",
+      "Test Directory Manager",
+      "Directory Manager",
+      "Unknown Role" // Fallback branch
+    ];
+
+    const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
+
+    for (const role of rolesToTest) {
+      const context: AgentContext = {
+        id: "agent-test", name: `Test-${role}`, role: role, parameters: { responsiveness: 1.0 }
+      };
+      const response = await brain.decide(validMsg, context);
+      expect(response).toBeDefined();
+      expect(response?.how).toBeDefined();
+    }
+  });
+
+  it('should gracefully handle missing parameters object', async () => {
+    const brain = new RuleBasedBrain();
+    const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
+    const context: AgentContext = {
+      id: "agent-test", name: "Test Agent", role: "Role", parameters: undefined
+    };
+
+    // It should fall back to 0.5 responsiveness. By running it enough times we can ensure it handles undefined parameters safely.
+    let handled = false;
+    for (let i = 0; i < 20; i++) {
+      const response = await brain.decide(validMsg, context);
+      if (response !== null) {
+        handled = true;
+        break;
+      }
+    }
+    expect(handled).toBe(true);
+  });
 });
