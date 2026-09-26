@@ -4,6 +4,10 @@ import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
 import { Message, AgentContext } from '../../src/logic/Types';
 
 describe('Agent Unit Tests', () => {
+  it('should throw an error if initialized without a valid brain', () => {
+    expect(() => new Agent("agent-err", "Err", "Role", null as unknown as RuleBasedBrain)).toThrow("Agent constructor requires a valid Brain instance.");
+  });
+
   it('should initialize correctly with default parameters', () => {
     const brain = new RuleBasedBrain();
     const agent = new Agent("agent-1", "Test Agent", "Test Role", brain);

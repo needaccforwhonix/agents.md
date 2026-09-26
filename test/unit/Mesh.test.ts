@@ -90,29 +90,74 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages()[0].id).toBe("demock-invalid-msg");
   });
 
-  it('should drop messages that exceed token limits', async () => {
+  it('should drop messages that exceed token limits in various fields', async () => {
     const mesh = new Mesh(10);
     const brain = new RuleBasedBrain();
     const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 1.0 });
     mesh.registerAgent(agent1);
 
-    const oversizedMessage: Message = {
-      id: "oversized-msg",
+    const oversizedWhat: Message = {
+      id: "oversized-what", senderId: "system", timestamp: Date.now(),
+      what: "a".repeat(20000), where: "where", how: "how", reasoning: "reasoning",
+    };
+    await mesh.broadcast(oversizedWhat);
+
+    const oversizedWhere: Message = {
+      id: "oversized-where", senderId: "system", timestamp: Date.now(),
+      what: "what", where: "a".repeat(20000), how: "how", reasoning: "reasoning",
+    };
+    await mesh.broadcast(oversizedWhere);
+
+    const oversizedHow: Message = {
+      id: "oversized-how", senderId: "system", timestamp: Date.now(),
+      what: "what", where: "where", how: "a".repeat(20000), reasoning: "reasoning",
+    };
+    await mesh.broadcast(oversizedHow);
+
+    const oversizedReasoning: Message = {
+      id: "oversized-reasoning", senderId: "system", timestamp: Date.now(),
+      what: "what", where: "where", how: "how", reasoning: "a".repeat(20000),
+    };
+    await mesh.broadcast(oversizedReasoning);
+
+    // The initial messages are pushed to this.messages before validation.
+    expect(mesh.getMessages().length).toBe(4);
+    expect(mesh.getMessages()[0].id).toBe("oversized-what");
+    expect(mesh.getMessages()[1].id).toBe("oversized-where");
+    expect(mesh.getMessages()[2].id).toBe("oversized-how");
+    expect(mesh.getMessages()[3].id).toBe("oversized-reasoning");
+  });
+
+  it('should gracefully handle empty or undefined broadcasts', async () => {
+    const mesh = new Mesh(10);
+    // Passing undefined directly to test the initial boundary defensive check
+    await mesh.broadcast(undefined as unknown as Message);
+
+    expect(mesh.getMessages().length).toBe(0);
+  });
+
+  it('should skip processing if analyzeCodeBlock fails in the loop', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 1.0 });
+    mesh.registerAgent(agent1);
+
+    // Create a message with multiple code blocks where one is invalid.
+    const invalidMessage: Message = {
+      id: "invalid-code-blocks",
       senderId: "system",
       timestamp: Date.now(),
-      what: "a".repeat(20000), // Exceeds typical token limits by far
+      what: "what",
       where: "where",
-      how: "how",
+      how: "how \n```ts\nconst x = 1;\n```\n ```ts\nlet y: any;\n```",
       reasoning: "reasoning",
     };
 
-    await mesh.broadcast(oversizedMessage);
+    await mesh.broadcast(invalidMessage);
 
-    // The initial message is pushed to this.messages before validation.
-    // However, validation fails, so it is not sent to agents.
-    // Therefore, there should be no responses from agents, and length remains 1.
+    // Should push to messages, but agent won't respond because validation fails on the 'any' keyword
     expect(mesh.getMessages().length).toBe(1);
-    expect(mesh.getMessages()[0].id).toBe("oversized-msg");
+    expect(mesh.getMessages()[0].id).toBe("invalid-code-blocks");
   });
 
   it('should handle errors thrown by agents during message receiving', async () => {
