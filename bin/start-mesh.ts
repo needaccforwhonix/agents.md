@@ -100,35 +100,35 @@ async function startBackgroundMesh() {
   console.log("Registering dynamic agents for all files and directories...");
   registerDynamicAgents(process.cwd(), mesh, brain);
 
-  const persistencePath = '.agent_states.json';
+  const { DBPersistence } = await import("./DBPersistence");
+  const dbPersistence = new DBPersistence();
+
   let hasHydratedState = false;
+  try {
+    console.log("Hydrating Mesh state from SQLite database...");
 
-  if (fs.existsSync(persistencePath)) {
-    try {
-      console.log("Hydrating Mesh state from filesystem...");
-      const data = fs.readFileSync(persistencePath, 'utf-8');
-      const state = JSON.parse(data);
-
-      if (state.messages && Array.isArray(state.messages)) {
-        mesh.setMessages(state.messages);
-      }
-
-      if (state.agents && Array.isArray(state.agents)) {
-        const agentMap = new Map(mesh.getAgents().map(a => [a.context.id, a]));
-
-        for (const loadedAgentData of state.agents) {
-          const existingAgent = agentMap.get(loadedAgentData.id);
-          if (existingAgent) {
-            // Restore context variables
-            existingAgent.context.parameters = loadedAgentData.context.parameters;
-            existingAgent.context.history = loadedAgentData.context.history || [];
-          }
-        }
-        hasHydratedState = true;
-      }
-    } catch (err) {
-      console.warn("Failed to hydrate state from filesystem:", err);
+    const loadedMessages = dbPersistence.loadMessages(1000);
+    if (loadedMessages && loadedMessages.length > 0) {
+      mesh.setMessages(loadedMessages);
     }
+
+    const loadedAgents = dbPersistence.loadAgentStates();
+    if (loadedAgents && loadedAgents.length > 0) {
+      const agentMap = new Map(mesh.getAgents().map(a => [a.context.id, a]));
+
+      for (const loadedAgentData of loadedAgents) {
+        const existingAgent = agentMap.get(loadedAgentData.id);
+        if (existingAgent) {
+          // Restore context variables
+          existingAgent.context.parameters = loadedAgentData.parameters;
+          // History gets dropped in save step to save memory, start empty
+          existingAgent.context.history = [];
+        }
+      }
+      hasHydratedState = true;
+    }
+  } catch (err) {
+    console.warn("Failed to hydrate state from database:", err);
   }
 
   const initialMessage: Message = {
@@ -152,25 +152,23 @@ async function startBackgroundMesh() {
     console.log(`Agent ${agent.context.name} generation: ${agent.context.parameters.generation}`);
   });
 
-  // Save state to filesystem for persistence
+  // Save state to SQLite database for persistence
   try {
-    const persistencePath = '.agent_states.json';
-    // To prevent "Invalid string length" stringify error, avoid dumping the full object at once
-    // by streaming or simply chunking the messages (we'll just drop history for now if too large)
-    const state = {
-      agents: mesh.getAgents().map((agent) => ({
-        id: agent.context.id,
-        context: {
-          ...agent.context,
-          history: [] // Drop large history arrays to save memory on persist
-        }
-      })),
-      messages: mesh.getMessages().slice(-1000), // Keep last 1000 messages
-    };
-    fs.writeFileSync(persistencePath, JSON.stringify(state, null, 2), 'utf-8');
-    console.log(`Mesh state successfully saved to ${persistencePath}`);
+    console.log("Saving mesh state to SQLite database...");
+    // Keep last 1000 messages
+    const recentMessages = mesh.getMessages().slice(-1000);
+    for (const msg of recentMessages) {
+      dbPersistence.saveMessage(msg);
+    }
+
+    for (const agent of mesh.getAgents()) {
+      dbPersistence.saveAgentState(agent.context);
+    }
+
+    dbPersistence.close();
+    console.log(`Mesh state successfully saved to SQLite database.`);
   } catch (err) {
-    console.warn("Could not save Mesh state to filesystem:", err);
+    console.warn("Could not save Mesh state to database:", err);
   }
 }
 
