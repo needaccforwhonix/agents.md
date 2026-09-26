@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Mesh } from '../../src/logic/Mesh';
 import { Agent } from '../../src/logic/Agent';
 import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
-import { Message } from '../../src/logic/Types';
+import { Message, Brain } from '../../src/logic/Types';
 
 describe('Mesh Unit Tests', () => {
   it('should register an agent correctly', () => {
@@ -57,6 +57,7 @@ describe('Mesh Unit Tests', () => {
   it('should gracefully handle empty or null broadcast', async () => {
     const mesh = new Mesh(10);
 
+    // We cast via `any` equivalent to test runtime bounds handling
     await mesh.broadcast(null as unknown as Message);
     expect(mesh.getMessages().length).toBe(0);
 
@@ -208,7 +209,7 @@ describe('Mesh Unit Tests', () => {
     const mockBrain = {
       decide: async () => { throw new Error("Agent explosion"); }
     };
-    const agent = new Agent("agent-err", "ErrAgent", "Role", mockBrain as any);
+    const agent = new Agent("agent-err", "ErrAgent", "Role", mockBrain as unknown as Brain);
     mesh.registerAgent(agent);
 
     const initialMessage: Message = {
