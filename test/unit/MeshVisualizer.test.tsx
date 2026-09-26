@@ -148,6 +148,49 @@ describe('MeshVisualizer Component', () => {
     mockBroadcast.mockRestore();
   });
 
+  it('should handle fetch errors gracefully', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
+
+    render(<MeshVisualizer />);
+
+    await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to fetch file structure:", expect.any(Error));
+    });
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('should correctly register agents for all file extensions', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve([
+          { path: 'mockDir', name: 'mockDir', isDirectory: true },
+          { path: 'mock.ts', name: 'mock.ts', isDirectory: false },
+          { path: 'mock.tsx', name: 'mock.tsx', isDirectory: false },
+          { path: 'mock.json', name: 'mock.json', isDirectory: false },
+          { path: 'mock.md', name: 'mock.md', isDirectory: false },
+          { path: 'mock.unknown', name: 'mock.unknown', isDirectory: false },
+        ]),
+      } as unknown as Response)
+    );
+    const mockState = { messages: [], agents: [] };
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+
+    render(<MeshVisualizer />);
+
+    await waitFor(() => {
+      expect(screen.getAllByText(/Directory Manager/i)).toBeDefined();
+      expect(screen.getAllByText(/TypeScript File Manager/i)).toBeDefined();
+      expect(screen.getAllByText(/React Component Manager/i)).toBeDefined();
+      expect(screen.getAllByText(/JSON Config Manager/i)).toBeDefined();
+      expect(screen.getAllByText(/Markdown Documenter/i)).toBeDefined();
+      expect(screen.getAllByText(/File Manager/i)).toBeDefined();
+    });
+
+    getItemSpy.mockRestore();
+  });
+
   it('should render messages correctly even if reasoning is absent', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({

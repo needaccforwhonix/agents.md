@@ -120,7 +120,7 @@ async function startBackgroundMesh() {
         const existingAgent = agentMap.get(loadedAgentData.id);
         if (existingAgent) {
           // Restore context variables
-          existingAgent.context.parameters = loadedAgentData.parameters;
+          existingAgent.context.parameters = loadedAgentData.parameters as Record<string, number | undefined>;
           // History gets dropped in save step to save memory, start empty
           existingAgent.context.history = [];
         }
