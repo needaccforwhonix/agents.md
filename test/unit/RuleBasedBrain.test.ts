@@ -15,10 +15,24 @@ describe("RuleBasedBrain", () => {
             "Prompt & Logic Optimizer",
             "System Developer",
             "tsconfig.json Manager",
+            "package.json Manager",
+            "next.config.ts Manager",
+            "postcss.config.mjs Manager",
+            "README.md Manager",
+            "AGENTS.md Manager",
+            "File Manager",
             "TypeScript File Manager",
             "React Component Manager",
             "JSON Config Manager",
             "Markdown Documenter",
+            "Root Directory Manager",
+            "Components Manager",
+            "Pages Manager",
+            "Scripts Manager",
+            "Github Config Manager",
+            "Public Assets Manager",
+            "Styles Manager",
+            "Test Directory Manager",
             "Directory Manager",
             "Default Role"
         ];
@@ -48,6 +62,50 @@ describe("RuleBasedBrain", () => {
         const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
         const resp = await brain.decide(msg, context);
         expect(resp).toBeNull();
+    });
+
+    it("should handle missing parameters object safely", async () => {
+        const brain = new RuleBasedBrain();
+        const context = {
+            id: "1", name: "n", role: "r", history: []
+        } as unknown as AgentContext; // Context without parameters
+
+        const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
+
+        // Mock Math.random to always allow response (return 0)
+        const originalRandom = Math.random;
+        Math.random = () => 0.1;
+
+        try {
+            const resp = await brain.decide(msg, context);
+            expect(resp).not.toBeNull();
+        } finally {
+            Math.random = originalRandom;
+        }
+    });
+
+    it("should correctly handle missing reasoning field in message", async () => {
+        const brain = new RuleBasedBrain();
+        const context: AgentContext = {
+            id: "1", name: "n", role: "r", history: [],
+            parameters: { responsiveness: 1.0 }
+        };
+        const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h" }; // No reasoning
+        const resp = await brain.decide(msg, context);
+        expect(resp).not.toBeNull();
+        expect(resp!.reasoning).toContain("aufbauend auf []"); // Should use "" when reasoning is undefined, but the implementation does (message.reasoning || "").length but later uses [${safeReasoning}] and safeReasoning becomes 'undefined' string because of template literal string conversion somewhere else? No, `(message.reasoning || "").length` gives 0. `message.reasoning.substring()` is not called. safeReasoning is just `message.reasoning` (which is undefined)
+    });
+
+    it("should check default role fallback correctly", async () => {
+        const brain = new RuleBasedBrain();
+        const context: AgentContext = {
+            id: "1", name: "n", role: "UnknownRole", history: [],
+            parameters: { responsiveness: 1.0 }
+        };
+        const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
+        const resp = await brain.decide(msg, context);
+        expect(resp).not.toBeNull();
+        expect(resp!.how).toContain("Apply Agentic Context Engineering");
     });
 
     it("should return null for invalid inputs", async () => {
