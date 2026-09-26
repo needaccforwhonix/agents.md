@@ -104,5 +104,10 @@ describe("AST Module", () => {
             const blocks = extractCodeBlocks("```ts\n```");
             expect(blocks).toEqual([]); // match[1] is an empty string, so `if(match[1])` is false in our implementation.
         });
+
+        it("should return empty array for null or undefined input", () => {
+            expect(extractCodeBlocks(null as unknown as string)).toEqual([]);
+            expect(extractCodeBlocks(undefined as unknown as string)).toEqual([]);
+        });
     });
 });

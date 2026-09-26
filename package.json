@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "echo 'Skipping next lint temporarily'",
+    "lint": "eslint .",
     "test": "vitest run",
     "test:mesh": "tsx bin/start-mesh.ts"
   },
@@ -26,6 +26,8 @@
     "@types/react": "19",
     "@types/react-dom": "19",
     "@vitest/coverage-v8": "^4.1.0",
+    "eslint": "8",
+    "eslint-config-next": "14",
     "jsdom": "^28.1.0",
     "tsx": "^4.21.0",
     "typescript": "5",

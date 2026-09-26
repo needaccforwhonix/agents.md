@@ -66,9 +66,11 @@ describe("RuleBasedBrain", () => {
 
     it("should handle missing parameters object safely", async () => {
         const brain = new RuleBasedBrain();
-        const context = {
-            id: "1", name: "n", role: "r", history: []
-        } as unknown as AgentContext; // Context without parameters
+        const context: AgentContext = {
+            id: "1", name: "n", role: "r", history: [],
+            // @ts-expect-error Intentionally omitting parameters to test safe handling
+            parameters: undefined
+        }; // Context without parameters
 
         const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
 
@@ -90,6 +92,7 @@ describe("RuleBasedBrain", () => {
             id: "1", name: "n", role: "r", history: [],
             parameters: { responsiveness: 1.0 }
         };
+        // @ts-ignore: Intentionally testing missing reasoning field
         const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h" }; // No reasoning
         const resp = await brain.decide(msg, context);
         expect(resp).not.toBeNull();

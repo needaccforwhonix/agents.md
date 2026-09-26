@@ -12,6 +12,7 @@ export function countTokens(text: string): number {
 
 // Ensure the message history stays within a token limit
 export function boundHistory(history: Message[], maxTokens: number = 2000): Message[] {
+  if (!history || !Array.isArray(history)) return [];
   let currentTokens = 0;
   const boundedHistory: Message[] = [];
 

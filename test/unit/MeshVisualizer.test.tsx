@@ -11,8 +11,8 @@ describe('MeshVisualizer Component', () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
-      })
-    ) as any;
+      } as unknown as Response)
+    );
     render(<MeshVisualizer />);
     const startButton = screen.getAllByText(/Start Simulation/i)[0];
     expect(startButton).toBeDefined();
@@ -23,8 +23,8 @@ describe('MeshVisualizer Component', () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
-      })
-    ) as any;
+      } as unknown as Response)
+    );
 
     const mockBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
       () => new Promise((resolve) => setTimeout(resolve, 100))
