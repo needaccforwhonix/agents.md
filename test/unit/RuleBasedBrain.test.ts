@@ -92,7 +92,7 @@ describe("RuleBasedBrain", () => {
             id: "1", name: "n", role: "r", history: [],
             parameters: { responsiveness: 1.0 }
         };
-        // @ts-ignore: Intentionally testing missing reasoning field
+        // Intentionally testing missing reasoning field
         const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h" }; // No reasoning
         const resp = await brain.decide(msg, context);
         expect(resp).not.toBeNull();
@@ -140,19 +140,19 @@ describe("RuleBasedBrain", () => {
   it('should gracefully handle empty or invalid inputs', async () => {
     const brain = new RuleBasedBrain();
     const mockContext: AgentContext = {
-      id: "agent-1", name: "Test Agent", role: "Role", parameters: {}
+      id: "agent-1", name: "Test Agent", role: "Role", history: [], parameters: {}
     };
 
-    // @ts-ignore
+
     let response = await brain.decide(null, mockContext);
     expect(response).toBeNull();
 
-    // @ts-ignore
+
     response = await brain.decide(undefined, mockContext);
     expect(response).toBeNull();
 
-    const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" };
-    // @ts-ignore
+    const validMsg = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" } as Message;
+
     response = await brain.decide(validMsg, null);
     expect(response).toBeNull();
   });
@@ -194,7 +194,7 @@ describe("RuleBasedBrain", () => {
 
     for (const role of rolesToTest) {
       const context: AgentContext = {
-        id: "agent-test", name: `Test-${role}`, role: role, parameters: { responsiveness: 1.0 }
+        id: "agent-test", name: `Test-${role}`, role: role, history: [], parameters: { responsiveness: 1.0 }
       };
       const response = await brain.decide(validMsg, context);
       expect(response).toBeDefined();
@@ -206,7 +206,7 @@ describe("RuleBasedBrain", () => {
     const brain = new RuleBasedBrain();
     const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
     const context: AgentContext = {
-      id: "agent-test", name: "Test Agent", role: "Role", parameters: undefined
+      id: "agent-test", name: "Test Agent", role: "Role", history: [], parameters: undefined as any
     };
 
     // It should fall back to 0.5 responsiveness. By running it enough times we can ensure it handles undefined parameters safely.

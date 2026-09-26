@@ -48,8 +48,8 @@ describe('Agent Unit Tests', () => {
     const brain = new RuleBasedBrain();
     const agent = new Agent("agent-1", "Test Agent", "Test Role", brain);
 
-    // @ts-ignore
-    const response = await agent.receiveMessage(null);
+
+    const response = await agent.receiveMessage(null as unknown as Message);
     expect(response).toBeNull();
     expect(agent.context.history.length).toBe(0);
   });
