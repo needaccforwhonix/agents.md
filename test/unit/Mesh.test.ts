@@ -17,12 +17,12 @@ describe('Mesh Unit Tests', () => {
 
   it('should silently ignore registering invalid agents', () => {
     const mesh = new Mesh(100);
-    // @ts-ignore
-    mesh.registerAgent(null);
+
+    mesh.registerAgent(null as unknown as Agent);
     expect(mesh.getAgents().length).toBe(0);
 
-    // @ts-ignore
-    mesh.registerAgent({});
+
+    mesh.registerAgent({} as Agent);
     expect(mesh.getAgents().length).toBe(0);
   });
 
@@ -56,12 +56,12 @@ describe('Mesh Unit Tests', () => {
 
   it('should gracefully handle empty or null broadcast', async () => {
     const mesh = new Mesh(10);
-    // @ts-ignore
-    await mesh.broadcast(null);
+
+    await mesh.broadcast(null as unknown as Message);
     expect(mesh.getMessages().length).toBe(0);
 
-    // @ts-ignore
-    await mesh.broadcast(undefined);
+
+    await mesh.broadcast(undefined as unknown as Message);
     expect(mesh.getMessages().length).toBe(0);
   });
 
@@ -136,6 +136,49 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages().length).toBe(0);
   });
 
+  it('should continue loop gracefully if an undefined message is shifted from the queue', async () => {
+    const mesh = new Mesh(10);
+
+    const initialMessage: Message = {
+      id: "msg-initial",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how",
+      reasoning: "reasoning"
+    };
+
+    // We can spy on Array.prototype.shift to inject an undefined message into the loop
+    // just once to trigger the `if (!message) continue;` line
+    const originalShift = Array.prototype.shift;
+    let shiftCalled = 0;
+    Array.prototype.shift = function() {
+      shiftCalled++;
+      if (shiftCalled === 2) {
+        // Mock a sparse array returning undefined even if length > 0
+        return undefined;
+      }
+      return originalShift.apply(this);
+    };
+
+    try {
+      // We need at least one valid message to enter the loop, then we inject undefined
+      // on the second iteration.
+      // To make sure there is a second iteration, we need an agent to respond to the first message.
+      const brain = new RuleBasedBrain();
+      const agent = new Agent("agent-1", "Test", "Role", brain, { responsiveness: 1.0 });
+      mesh.registerAgent(agent);
+
+      await mesh.broadcast(initialMessage);
+    } finally {
+      Array.prototype.shift = originalShift;
+    }
+
+    // As long as it didn't throw an error, the line was successfully triggered and passed.
+    expect(mesh.getMessages().length).toBeGreaterThan(0);
+  });
+
   it('should skip processing if analyzeCodeBlock fails in the loop', async () => {
     const mesh = new Mesh(10);
     const brain = new RuleBasedBrain();
@@ -165,8 +208,7 @@ describe('Mesh Unit Tests', () => {
     const mockBrain = {
       decide: async () => { throw new Error("Agent explosion"); }
     };
-    // @ts-ignore
-    const agent = new Agent("agent-err", "ErrAgent", "Role", mockBrain);
+    const agent = new Agent("agent-err", "ErrAgent", "Role", mockBrain as any);
     mesh.registerAgent(agent);
 
     const initialMessage: Message = {
