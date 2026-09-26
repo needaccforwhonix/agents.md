@@ -1,12 +1,13 @@
 
 # TODO
 
-- Add real persistence (database) to agent states to replace in-memory maps.
+- Implement distributed agent mesh across multiple servers using WebSockets or gRPC.
 - Develop custom Web Worker architecture to run simulations completely decoupled from the main thread.
 - Explore integration with actual Language Models (LLMs) utilizing generated JSON definitions.
 
 ## Done
 
+- Add real persistence (database) to agent states to replace in-memory maps.
 - Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.
 - Connect specific AgentMesh simulation outcomes directly to the real application interface.
 
