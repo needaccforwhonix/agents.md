@@ -103,7 +103,7 @@ async function startBackgroundMesh() {
   const { DBPersistence } = await import("../src/logic/DBPersistence");
   const dbPersistence = new DBPersistence();
 
-  let hasHydratedState = false;
+
   try {
     console.log("Hydrating Mesh state from SQLite database...");
 
@@ -125,7 +125,7 @@ async function startBackgroundMesh() {
           existingAgent.context.history = [];
         }
       }
-      hasHydratedState = true;
+
     }
   } catch (err) {
     console.warn("Failed to hydrate state from database:", err);
