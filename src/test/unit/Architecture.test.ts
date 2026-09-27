@@ -4,7 +4,7 @@ import path from 'path';
 
 describe('Architectural Audit - RULE_Ordnerstruktur', () => {
   it('should verify root directory compliance with RULE_Ordnerstruktur', () => {
-    const rootDir = path.resolve(__dirname, '../..');
+    const rootDir = path.resolve(__dirname, '../../..');
     const entries = fs.readdirSync(rootDir, { withFileTypes: true });
 
     const directories = entries

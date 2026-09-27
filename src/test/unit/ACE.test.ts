@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { countTokens, boundHistory } from "../../src/logic/ACE";
-import { Message } from "../../src/logic/Types";
+import { countTokens, boundHistory } from "../../logic/ACE";
+import { Message } from "../../logic/Types";
 
 describe("ACE Module", () => {
   describe("countTokens", () => {

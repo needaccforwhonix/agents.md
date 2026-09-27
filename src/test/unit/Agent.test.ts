@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { Agent } from '../../src/logic/Agent';
-import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
-import { Message, AgentContext } from '../../src/logic/Types';
+import { Agent } from '../../logic/Agent';
+import { RuleBasedBrain } from '../../logic/RuleBasedBrain';
+import { Message, AgentContext } from '../../logic/Types';
 
 describe('Agent Unit Tests', () => {
   it('should throw an error if initialized without a valid brain', () => {

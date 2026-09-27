@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { Mesh } from '../../src/logic/Mesh';
-import { Agent } from '../../src/logic/Agent';
-import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
-import { Message, Brain } from '../../src/logic/Types';
+import { Mesh } from '../../logic/Mesh';
+import { Agent } from '../../logic/Agent';
+import { RuleBasedBrain } from '../../logic/RuleBasedBrain';
+import { Message, Brain } from '../../logic/Types';
 
 describe('Mesh Unit Tests', () => {
   it('should register an agent correctly', () => {
@@ -193,7 +193,7 @@ describe('Mesh Unit Tests', () => {
       timestamp: Date.now(),
       what: "what",
       where: "where",
-      how: "how \n```ts\nconst x = 1;\n```\n ```ts\nlet y: any;\n```",
+      how: "how \n```ts\nconst x = 1;\n```\n ```ts\n@ts-expect-error We are intentionally generating invalid code with the any keyword to test the AST parser rejecting it.\nlet y: any;\n```",
       reasoning: "reasoning",
     };
 
