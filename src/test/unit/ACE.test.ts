@@ -42,6 +42,14 @@ describe("ACE Module", () => {
       expect(boundHistory(history, 0)).toEqual([]);
     });
 
+    it("should drop a single message from history if that individual message's token count strictly exceeds maxTokens", () => {
+      const oversizedMsg: Message = { id: "1", senderId: "s", timestamp: 1, what: "12345678", where: "", how: "", reasoning: "" };
+      // "12345678   " -> length 11 -> ceil(11/4) = 3 tokens
+      const history = [oversizedMsg];
+      const bounded = boundHistory(history, 2);
+      expect(bounded).toEqual([]);
+    });
+
     it("should safely handle null or undefined history array", () => {
       expect(boundHistory(null as unknown as Message[], 1000)).toEqual([]);
       expect(boundHistory(undefined as unknown as Message[], 1000)).toEqual([]);

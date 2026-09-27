@@ -34,6 +34,16 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
     expect(fs.existsSync(path.join(rootDir, 'bin', 'start-mesh.ts'))).toBe(true);
   });
 
+  it('should explicitly fail if any core interface in Types.ts has been deleted or renamed (WORM Immutability Policy)', () => {
+    const rootDir = path.resolve(__dirname, '../../..');
+    const typesContent = fs.readFileSync(path.join(rootDir, 'src', 'logic', 'Types.ts'), 'utf8');
+
+    expect(typesContent).toContain('export interface Message {');
+    expect(typesContent).toContain('export interface AgentParameters {');
+    expect(typesContent).toContain('export interface AgentContext {');
+    expect(typesContent).toContain('export interface Brain {');
+  });
+
   it('should enforce no-python policy and no forbidden root files', () => {
     const rootDir = path.resolve(__dirname, '../../..');
     const entries = fs.readdirSync(rootDir, { withFileTypes: true });
