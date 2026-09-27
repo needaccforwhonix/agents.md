@@ -21,7 +21,7 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
       expect(allowedDirectories).toContain(dir);
     }
 
-    // Explicitly check for required directories
+    // Explicitly check for required directories based on WORM and strict structure
     expect(directories).toContain('src');
     expect(directories).toContain('bin');
     expect(directories).toContain('docs');
