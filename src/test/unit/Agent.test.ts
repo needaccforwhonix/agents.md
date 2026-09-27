@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Agent } from '../../logic/Agent';
 import { RuleBasedBrain } from '../../logic/RuleBasedBrain';
-import { Message, AgentContext } from '../../logic/Types';
+import { Message } from '../../logic/Types';
 
 describe('Agent Unit Tests', () => {
   it('should throw an error if initialized without a valid brain', () => {
@@ -58,7 +58,7 @@ describe('Agent Unit Tests', () => {
     const brain = new RuleBasedBrain();
     const agent = new Agent("agent-1", "Test Agent", "Test Role", brain);
 
-    const initialResponsiveness = agent.context.parameters.responsiveness!;
+
 
     const message: Message = {
       id: "msg-1",

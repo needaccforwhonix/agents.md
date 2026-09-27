@@ -17,7 +17,7 @@ export function getFileStructure(dir: string, baseDir: string = dir, maxDepth = 
 
   try {
     files = fs.readdirSync(dir);
-  } catch (err) {
+  } catch {
     return [];
   }
 
@@ -30,7 +30,7 @@ export function getFileStructure(dir: string, baseDir: string = dir, maxDepth = 
     let stats;
     try {
       stats = fs.statSync(fullPath);
-    } catch (err) {
+    } catch {
       continue;
     }
 
