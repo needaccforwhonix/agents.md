@@ -11,6 +11,7 @@ export function alphaEvolve(parameters: AgentParameters, mutationRate: number = 
   for (const key in evolved) {
     if (key === 'generation') continue; // Do not apply random mutation to the generation counter
     if (typeof evolved[key] === 'number') {
+      if (!Number.isFinite(evolved[key])) continue;
       // Apply slight random mutation based on mutationRate
       const variation = evolved[key] * mutationRate * (Math.random() * 2 - 1);
       evolved[key] = Math.max(0, evolved[key] + variation); // Clamp to non-negative

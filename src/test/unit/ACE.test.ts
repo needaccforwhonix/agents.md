@@ -10,6 +10,11 @@ describe("ACE Module", () => {
       expect(countTokens("12345678")).toBe(2);
       expect(countTokens("123456789")).toBe(3);
     });
+
+    it("should handle extremely large input strings without failure", () => {
+      const largeString = "a".repeat(100000);
+      expect(countTokens(largeString)).toBe(25000);
+    });
   });
 
   describe("boundHistory", () => {
