@@ -305,6 +305,7 @@ describe('Mesh Unit Tests', () => {
   });
   it.each([
     { name: 'null array', val: null },
+    { name: 'undefined array', val: undefined },
     { name: 'not an array', val: {} }
   ])('should throw error for $name in setMessages', ({ val }) => {
     const mesh = new Mesh(10);
