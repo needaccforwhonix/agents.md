@@ -15,7 +15,7 @@ describe('AlphaEvolve Hyperparameter Tuning', () => {
 
   it('should show higher variance with a higher mutation rate', () => {
     // Math.random() in tests is unpredictable, so let's run more iterations or use a fixed seed.
-    // Given we can't easily mock Math.random() without affecting everything, let's run a sufficient number of times
+    // Given we can't easily stub Math.random() without affecting everything, let's run a sufficient number of times
     let successCount = 0;
 
     // We try 10 times to get the stochastic behaviour to show higher variance for high mutation.

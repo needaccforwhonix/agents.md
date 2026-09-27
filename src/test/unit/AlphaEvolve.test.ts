@@ -73,21 +73,28 @@ describe("AlphaEvolve Module", () => {
     expect(evolved.detailOrientation).toBeGreaterThanOrEqual(0);
   });
 
-  it('should handle NaN gracefully', () => {
-    const params: AgentParameters = {
-      creativity: NaN
-    };
+  describe("AlphaEvolve edge cases", () => {
+    it("should handle mutation rate of 0.0 with no changes to params", () => {
+      const params: AgentParameters = {
+        creativity: 0.5,
+        detailOrientation: 0.7,
+        generation: 1
+      };
+      const evolved = alphaEvolve(params, 0.0);
+      expect(evolved.creativity).toBe(0.5);
+      expect(evolved.detailOrientation).toBe(0.7);
+      expect(evolved.generation).toBe(2);
+    });
 
-    const evolved = alphaEvolve(params, 0.1);
-    expect(Number.isNaN(evolved.creativity)).toBe(true);
-  });
-
-  it('should handle Infinity gracefully', () => {
-    const params: AgentParameters = {
-      creativity: Infinity
-    };
-
-    const evolved = alphaEvolve(params, 0.1);
-    expect(evolved.creativity).toBe(Infinity);
+    it("should safely handle Infinity and NaN within parameters gracefully", () => {
+      const params: AgentParameters = {
+        creativity: Infinity,
+        detailOrientation: NaN,
+        generation: 1
+      };
+      const evolved = alphaEvolve(params, 0.1);
+      expect(evolved.creativity).toBe(Infinity);
+      expect(Number.isNaN(evolved.detailOrientation)).toBe(true);
+    });
   });
 });

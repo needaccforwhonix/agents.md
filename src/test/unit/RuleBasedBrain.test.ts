@@ -236,4 +236,16 @@ describe("RuleBasedBrain", () => {
       Math.random = originalRandom;
     }
   });
+
+  it('should safely fall back when history array is undefined or null', async () => {
+    const brain = new RuleBasedBrain();
+    const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
+    const context: AgentContext = {
+      id: "agent-test", name: "Test Agent", role: "Role", history: undefined as unknown as Message[], parameters: { responsiveness: 1.0 }
+    };
+
+    const response = await brain.decide(validMsg, context);
+    expect(response).not.toBeNull();
+    expect(response!.reasoning).toContain("AlphaEvolve");
+  });
 });

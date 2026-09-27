@@ -57,5 +57,40 @@ describe("ACE Module", () => {
       const bounded = boundHistory(history, 8);
       expect(bounded).toEqual([msg, msg2]);
     });
+
+    it("should handle boundary values for maxTokens exactly 1 in boundHistory", () => {
+      const msg1: Message = { id: "1", senderId: "s", timestamp: 1, what: "1", where: "2", how: "3", reasoning: "" };
+      const history = [msg1];
+      const bounded = boundHistory(history, 1);
+      // "1 2 3 " -> length 6 -> 2 tokens
+      // Limit is 1, so it should not include any message
+      expect(bounded).toEqual([]);
+    });
+
+    it("should handle token limit being hit exactly by the first checked message", () => {
+      const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: "123", where: "", how: "", reasoning: "" }; // "123   " -> 6 -> 2
+      const history = [msg];
+      const bounded = boundHistory(history, 2);
+      expect(bounded).toEqual([msg]);
+    });
+
+    it("should handle massive history arrays efficiently", () => {
+      const history: Message[] = Array.from({ length: 10000 }).map((_, i) => ({
+        id: `msg-${i}`,
+        senderId: "s",
+        timestamp: i,
+        what: "short",
+        where: "text",
+        how: "msg",
+        reasoning: "r"
+      }));
+
+      // Each msg is "short text msg r" -> 16 chars -> 4 tokens
+      // Total tokens = 40000. Let's limit to 400 tokens (last 100 messages)
+      const bounded = boundHistory(history, 400);
+      expect(bounded.length).toBe(100);
+      expect(bounded[99].id).toBe("msg-9999");
+      expect(bounded[0].id).toBe("msg-9900");
+    });
   });
 });

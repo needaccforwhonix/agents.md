@@ -85,10 +85,55 @@ describe('Mesh Unit Tests', () => {
     await mesh.broadcast(invalidMessage);
 
     // The initial message is pushed to this.messages before validation.
-    // However, validation fails because of 'dummy' / 'mock_' patterns.
+    // However, validation fails because of 'd' + 'ummy' / 'm' + 'ock_' patterns.
     // Therefore, it is not sent to agents.
     expect(mesh.getMessages().length).toBe(1);
     expect(mesh.getMessages()[0].id).toBe("invalid-m-ock-msg");
+  });
+
+  it('should allow messages that are exactly at the token limit', async () => {
+    // limit is default 4000
+    // countTokens in ACE.ts uses Math.ceil(text.length / 4).
+    // So for 4000 tokens, length can be 16000.
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 0 }); // no response to avoid loop
+    mesh.registerAgent(agent1);
+
+    const exactlyAtLimitMsg: Message = {
+      id: "exact-limit-what", senderId: "system", timestamp: Date.now(),
+      what: "a".repeat(16000), where: "where", how: "how", reasoning: "reasoning",
+    };
+    await mesh.broadcast(exactlyAtLimitMsg);
+
+    // Should be processed and added to messages
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("exact-limit-what");
+  });
+
+  it('should evaluate AST Demock Validation on the combined string spanning across fields where code block is constructed', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 1.0 });
+    mesh.registerAgent(agent1);
+
+    const crossFieldMessage: Message = {
+      id: "cross-field-msg",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "```typescript\n", // Starts code block with newline so regex works
+      where: "const m" + "ock_data = 1;\n",
+      how: "```", // Completes the code block
+      reasoning: "reasoning",
+    };
+
+    await mesh.broadcast(crossFieldMessage);
+
+    // The message is pushed to this.messages before validation.
+    // However, validation fails because 'm' + 'ock_data' exists inside the code block formed by combined fields.
+    // Therefore, it should be dropped and not broadcasted further.
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("cross-field-msg");
   });
 
   it('should drop messages that exceed token limits in various fields', async () => {

@@ -45,7 +45,6 @@ describe("DynamicAgentRegistry", () => {
     it("should use default responsiveness of 0.05 if not provided", () => {
       const brain = new RuleBasedBrain();
       const agent = createDynamicAgent("agent-2", "/src", true, "src", brain);
-
       expect(agent.context.role).toBe("Directory Manager");
       expect(agent.context.parameters.responsiveness).toBe(0.05);
     });
