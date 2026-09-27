@@ -13,8 +13,8 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
       .filter(name => !name.startsWith('.') && name !== 'node_modules'); // Ignore hidden folders and node_modules
 
     const allowedDirectories = [
-      'src', 'bin', 'docs', 'test', 'public', 'test-results',
-      'coverage', 'dist', 'build', 'out', '.next', '.husky'
+      "src", "bin", "docs", "public", "test-results",
+      "coverage", "dist", "build", "out", ".next", ".husky"
     ];
 
     for (const dir of directories) {

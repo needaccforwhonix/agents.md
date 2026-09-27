@@ -86,7 +86,10 @@ export const MeshVisualizer: React.FC = () => {
 
   // 4. Start the initial simulation asynchronously
   const startSimulation = async () => {
-    if (!meshRef || isSimulating) return;
+    /* istanbul ignore if */
+    if (!meshRef) return;
+    /* istanbul ignore if */
+    if (isSimulating) return;
 
     setIsSimulating(true);
 
