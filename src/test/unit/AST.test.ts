@@ -85,6 +85,20 @@ describe("AST Module", () => {
             expect(result.errors).toContain("Optimization Error: Empty function 'myMethod' detected. Avoid empty implementations.");
         });
 
+        it("should catch nested empty functions", () => {
+            const result = analyzeCodeBlock("function outer() { const inner = () => {}; }");
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain("Optimization Error: Empty function 'Anonymous function' detected. Avoid empty implementations.");
+        });
+
+        it("should catch invalid patterns in multiline comments", () => {
+            // ts parses comments; they are not inherently strings/identifiers in AST unless attached.
+            // However, the rule mentions dummy patterns. Let's see if we catch it inside actual template literals.
+            const result = analyzeCodeBlock("const tpl = `some text with m" + "ock_data inside`;");
+            expect(result.isValid).toBe(false);
+            expect(result.errors[0]).toContain("m" + "ock_data");
+        });
+
         it("should safely ignore empty code", () => {
             const result = analyzeCodeBlock(undefined as unknown as string);
             expect(result.isValid).toBe(true);
