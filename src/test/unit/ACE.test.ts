@@ -10,6 +10,11 @@ describe("ACE Module", () => {
       expect(countTokens("12345678")).toBe(2);
       expect(countTokens("123456789")).toBe(3);
     });
+
+    it("should handle extremely large string inputs", () => {
+      const largeString = "a".repeat(10000);
+      expect(countTokens(largeString)).toBe(2500);
+    });
   });
 
   describe("boundHistory", () => {
@@ -51,6 +56,22 @@ describe("ACE Module", () => {
       // Max is exactly 8
       const bounded = boundHistory(history, 8);
       expect(bounded).toEqual([msg, msg2]);
+    });
+
+    it("should handle boundary values for maxTokens exactly 1 in boundHistory", () => {
+      const msg1: Message = { id: "1", senderId: "s", timestamp: 1, what: "1", where: "2", how: "3", reasoning: "" };
+      const history = [msg1];
+      const bounded = boundHistory(history, 1);
+      // "1 2 3 " -> length 6 -> 2 tokens
+      // Limit is 1, so it should not include any message
+      expect(bounded).toEqual([]);
+    });
+
+    it("should handle token limit being hit exactly by the first checked message", () => {
+      const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: "123", where: "", how: "", reasoning: "" }; // "123   " -> 6 -> 2
+      const history = [msg];
+      const bounded = boundHistory(history, 2);
+      expect(bounded).toEqual([msg]);
     });
   });
 });

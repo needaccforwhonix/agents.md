@@ -72,4 +72,31 @@ describe("AlphaEvolve Module", () => {
     expect(evolved.creativity).toBeGreaterThanOrEqual(0);
     expect(evolved.detailOrientation).toBeGreaterThanOrEqual(0);
   });
+
+  describe("AlphaEvolve edge cases", () => {
+    it("should handle mutation rate of 0.0 with no changes to params", () => {
+      const params: AgentParameters = {
+        creativity: 0.5,
+        detailOrientation: 0.7,
+        generation: 1
+      };
+      const evolved = alphaEvolve(params, 0.0);
+      expect(evolved.creativity).toBe(0.5);
+      expect(evolved.detailOrientation).toBe(0.7);
+      expect(evolved.generation).toBe(2);
+    });
+
+    it("should safely handle Infinity and NaN within parameters", () => {
+      const params: AgentParameters = {
+        creativity: Infinity,
+        detailOrientation: NaN,
+        generation: 1
+      };
+      const evolved = alphaEvolve(params, 0.1);
+      // Math.max(0, Infinity + variation) will remain Infinity
+      // Math.max(0, NaN) is NaN
+      expect(evolved.creativity).toBe(Infinity);
+      expect(Number.isNaN(evolved.detailOrientation)).toBe(true);
+    });
+  });
 });
