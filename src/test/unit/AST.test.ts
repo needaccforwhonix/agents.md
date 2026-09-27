@@ -137,4 +137,16 @@ describe("AST Module", () => {
             expect(extractCodeBlocks(undefined as unknown as string)).toEqual([]);
         });
     });
+
+    describe("Edge cases for analyzeCodeBlock", () => {
+        it("should parse an empty javascript code block properly", () => {
+             const result = analyzeCodeBlock("/* Empty comments shouldn't crash it */");
+             expect(result.isValid).toBe(true);
+        });
+
+        it("should handle multiline template literals with newlines in extractCodeBlocks", () => {
+             const result = extractCodeBlocks("Here is \n```javascript\nconst a = `multi\nline`;\n```\n");
+             expect(result).toHaveLength(1);
+        });
+    });
 });
