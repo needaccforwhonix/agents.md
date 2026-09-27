@@ -9,6 +9,22 @@ describe("AST Module", () => {
             expect(result.errors).toHaveLength(0);
         });
 
+        it("should catch empty functions with spaces/newlines", () => {
+            const result1 = analyzeCodeBlock("function myEmpty (   ) { \n  }");
+            expect(result1.isValid).toBe(false);
+            expect(result1.errors).toContain("Optimization Error: Empty function 'myEmpty' detected. Avoid empty implementations.");
+
+            const result2 = analyzeCodeBlock("const x = () => {   }");
+            expect(result2.isValid).toBe(false);
+            expect(result2.errors).toContain("Optimization Error: Empty function 'Anonymous function' detected. Avoid empty implementations.");
+        });
+
+        it("should parse invalid syntax gracefully", () => {
+            // ts.createSourceFile should not crash on syntax errors, but create an AST nonetheless (perhaps with some missing nodes)
+            const result = analyzeCodeBlock("function this is not valid { {{{ ");
+            expect(result).toBeDefined();
+        });
+
         it("should catch eval()", () => {
             const result = analyzeCodeBlock("eval('something');");
             expect(result.isValid).toBe(false);

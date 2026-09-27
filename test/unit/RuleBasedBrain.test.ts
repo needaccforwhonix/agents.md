@@ -218,4 +218,22 @@ describe("RuleBasedBrain", () => {
     }
     expect(handled).toBe(true);
   });
+
+  it('should explicitly drop message if fallback responsiveness (0.5) is not met', async () => {
+    const brain = new RuleBasedBrain();
+    const validMsg: Message = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
+    const context: AgentContext = {
+      id: "agent-test", name: "Test Agent", role: "Role", history: [], parameters: undefined as unknown as AgentParameters
+    };
+
+    const originalRandom = Math.random;
+    // Mock Math.random to return 0.9. Fallback is 0.5, so 0.9 > 0.5 -> should drop
+    Math.random = () => 0.9;
+    try {
+      const response = await brain.decide(validMsg, context);
+      expect(response).toBeNull();
+    } finally {
+      Math.random = originalRandom;
+    }
+  });
 });

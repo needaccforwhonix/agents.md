@@ -51,4 +51,25 @@ describe("AlphaEvolve Module", () => {
     expect(alphaEvolve(null as unknown as AgentParameters)).toEqual({});
     expect(alphaEvolve(undefined as unknown as AgentParameters)).toEqual({});
   });
+
+  it('should handle negative generation correctly', () => {
+    const params: AgentParameters = {
+      creativity: 0.5,
+      generation: -1
+    };
+
+    const evolved = alphaEvolve(params, 0.1);
+    expect(evolved.generation).toBe(0);
+  });
+
+  it('should clamp values at 0 even for extreme mutation rates', () => {
+    const params: AgentParameters = {
+      creativity: 0.5,
+      detailOrientation: 0.5
+    };
+
+    const evolved = alphaEvolve(params, 1000.0); // Extreme mutation
+    expect(evolved.creativity).toBeGreaterThanOrEqual(0);
+    expect(evolved.detailOrientation).toBeGreaterThanOrEqual(0);
+  });
 });
