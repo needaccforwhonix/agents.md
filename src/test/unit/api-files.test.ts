@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { getFileStructure } from "../../pages/api/files";
+import handler, { getFileStructure } from "../../pages/api/files";
 import path from "path";
 import fs from "fs";
 
@@ -10,7 +10,6 @@ describe("api/files", () => {
   });
 
   it("should respect maxDepth parameter", () => {
-    // Create a temporary deep structure
     const tempDir = fs.mkdtempSync("test-depth-");
     const subDir1 = path.join(tempDir, "sub1");
     const subDir2 = path.join(subDir1, "sub2");
@@ -20,17 +19,9 @@ describe("api/files", () => {
       fs.mkdirSync(subDir2);
       fs.writeFileSync(path.join(subDir2, "test.txt"), "hello");
 
-      // maxDepth = 0: Should not see sub1
       const res0 = getFileStructure(tempDir, tempDir, 0);
-      expect(res0.length).toBe(1); // just sub1 directory node itself, but let's see. Wait, at depth 0, it reads dir.
-      // Actually, depth logic in getFileStructure:
-      // if currentDepth > maxDepth return [].
-      // When currentDepth=0, it lists files in tempDir -> ["sub1"]. It pushes {sub1, isDirectory:true}, then calls getFileStructure(..., currentDepth + 1).
-      // When currentDepth=1 (which is > maxDepth of 0), it returns [].
-      // So res0 should just contain { path: 'sub1', name: 'sub1', isDirectory: true }.
       expect(res0).toEqual([{ path: "sub1", name: "sub1", isDirectory: true }]);
 
-      // maxDepth = 1: Should see sub1, and inside sub1 it sees sub2 (so sub2 directory node is added)
       const res1 = getFileStructure(tempDir, tempDir, 1);
       expect(res1).toEqual([
         { path: "sub1", name: "sub1", isDirectory: true },
@@ -55,5 +46,55 @@ describe("api/files", () => {
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
+  });
+
+  it("should return empty array if fs.readdirSync throws an error", () => {
+    const readdirSpy = vi.spyOn(fs, "readdirSync").mockImplementation(() => {
+      throw new Error("Simulated readdirSync error");
+    });
+
+    const result = getFileStructure("/some/path");
+    expect(result).toEqual([]);
+
+    readdirSpy.mockRestore();
+  });
+
+  it("should ignore files if fs.statSync throws an error", () => {
+    const tempDir = fs.mkdtempSync("test-stat-");
+    const file1 = path.join(tempDir, "file1.txt");
+    const file2 = path.join(tempDir, "file2.txt");
+
+    try {
+      fs.writeFileSync(file1, "hello");
+      fs.writeFileSync(file2, "world");
+
+      const statSpy = vi.spyOn(fs, "statSync").mockImplementation((p) => {
+        if (p === file1) {
+          throw new Error("Simulated statSync error");
+        }
+        return { isDirectory: () => false } as any;
+      });
+
+      const res = getFileStructure(tempDir, tempDir);
+      expect(res.length).toBe(1);
+      expect(res[0].name).toBe("file2.txt");
+
+      statSpy.mockRestore();
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("should handle the NextApiRequest correctly", () => {
+    const req = {} as any;
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn()
+    } as any;
+
+    handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalled();
   });
 });

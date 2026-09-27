@@ -308,4 +308,24 @@ describe('MeshVisualizer Component', () => {
 
     getItemSpy.mockRestore();
   });
+
+  it('should handle invalid JSON from localStorage gracefully', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+      } as unknown as Response)
+    );
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue("invalid-json");
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    render(<MeshVisualizer />);
+
+    await waitFor(() => {
+      expect(getItemSpy).toHaveBeenCalledWith('agentMeshState');
+      expect(consoleWarnSpy).toHaveBeenCalledWith("Failed to load mesh state from localStorage:", expect.any(Error));
+    });
+
+    getItemSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
+  });
 });
