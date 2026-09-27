@@ -50,6 +50,7 @@ export class Mesh {
 
     const queue: Message[] = [initialMessage];
     let processedCount = 0;
+    const agentsList = Array.from(this.agents.values());
 
     while (queue.length > 0) {
       if (processedCount >= this.messageLimit) {
@@ -84,7 +85,7 @@ export class Mesh {
       if (!isMessageValid) continue;
 
       // All agents receive every output as input asynchronously
-      const responsePromises = Array.from(this.agents.values()).map(async (agent) => {
+      const responsePromises = agentsList.map(async (agent) => {
         try {
           const response = await agent.receiveMessage(message);
           if (response) {
