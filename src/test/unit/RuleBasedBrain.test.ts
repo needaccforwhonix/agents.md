@@ -73,7 +73,7 @@ describe("RuleBasedBrain", () => {
 
         const msg: Message = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
 
-        // Mock Math.random to always allow response (return 0)
+        // Spy Math.random to always allow response (return 0)
         const originalRandom = Math.random;
         Math.random = () => 0.1;
 
@@ -137,16 +137,16 @@ describe("RuleBasedBrain", () => {
     });
   it('should gracefully handle empty or invalid inputs', async () => {
     const brain = new RuleBasedBrain();
-    const mockContext: AgentContext = {
+    const testContext: AgentContext = {
       id: "agent-1", name: "Test Agent", role: "Role", history: [], parameters: {}
     };
 
 
-    let response = await brain.decide(null as unknown as Message, mockContext);
+    let response = await brain.decide(null as unknown as Message, testContext);
     expect(response).toBeNull();
 
 
-    response = await brain.decide(undefined as unknown as Message, mockContext);
+    response = await brain.decide(undefined as unknown as Message, testContext);
     expect(response).toBeNull();
 
     const validMsg = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" } as unknown as Message;
@@ -227,7 +227,7 @@ describe("RuleBasedBrain", () => {
     };
 
     const originalRandom = Math.random;
-    // Mock Math.random to return 0.9. Fallback is 0.5, so 0.9 > 0.5 -> should drop
+    // Spy Math.random to return 0.9. Fallback is 0.5, so 0.9 > 0.5 -> should drop
     Math.random = () => 0.9;
     try {
       const response = await brain.decide(validMsg, context);
