@@ -272,6 +272,24 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages().length).toBe(1);
   });
 
+  it('should explicitly verify setMessages completely overwrites the message queue', () => {
+    const mesh = new Mesh(10);
+    const initialMessages: Message[] = [
+      { id: "old1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" }
+    ];
+    mesh.setMessages(initialMessages);
+    expect(mesh.getMessages()).toEqual(initialMessages);
+
+    const newMessages: Message[] = [
+      { id: "new1", senderId: "sys", timestamp: 2, what: "x", where: "y", how: "z", reasoning: "a" },
+      { id: "new2", senderId: "sys", timestamp: 3, what: "x2", where: "y2", how: "z2", reasoning: "a2" }
+    ];
+    mesh.setMessages(newMessages);
+    expect(mesh.getMessages()).toEqual(newMessages);
+    expect(mesh.getMessages().length).toBe(2);
+    expect(mesh.getMessages().find(m => m.id === "old1")).toBeUndefined();
+  });
+
   it('should allow setting messages directly', () => {
     const mesh = new Mesh(10);
     const messages: Message[] = [
@@ -279,6 +297,29 @@ describe('Mesh Unit Tests', () => {
     ];
     mesh.setMessages(messages);
     expect(mesh.getMessages()).toEqual(messages);
+  });
+
+  it('should handle an explicit message with undefined reasoning without crashing and store it accurately', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent = new Agent("agent-1", "Test", "Role", brain, { responsiveness: 0 }); // ensure it doesn't respond
+    mesh.registerAgent(agent);
+
+    const msgWithoutReasoning = {
+      id: "no-reasoning-msg-explicit",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how",
+      reasoning: undefined as unknown as string
+    };
+
+    await mesh.broadcast(msgWithoutReasoning);
+
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("no-reasoning-msg-explicit");
+    expect(mesh.getMessages()[0].reasoning).toBeUndefined();
   });
 
   it('should handle messages with undefined reasoning properly', async () => {

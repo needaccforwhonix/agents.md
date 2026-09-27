@@ -74,6 +74,29 @@ describe("AlphaEvolve Module", () => {
   });
 
   describe("AlphaEvolve edge cases", () => {
+    it("should handle parameters that are exactly 0 with a 0.0 mutation rate without changing them", () => {
+      const params: AgentParameters = {
+        creativity: 0,
+        detailOrientation: 0,
+        generation: 1
+      };
+      const evolved = alphaEvolve(params, 0.0);
+      expect(evolved.creativity).toBe(0);
+      expect(evolved.detailOrientation).toBe(0);
+      expect(evolved.generation).toBe(2);
+    });
+
+    it("should safely handle Infinity and NaN values without throwing an exception", () => {
+      const params: AgentParameters = {
+        creativity: Infinity,
+        detailOrientation: NaN,
+        generation: 1
+      };
+      const evolved = alphaEvolve(params, 0.1);
+      expect(typeof evolved.creativity).toBe('number');
+      expect(Number.isNaN(evolved.detailOrientation)).toBe(true);
+    });
+
     it("should handle mutation rate of 0.0 with no changes to params", () => {
       const params: AgentParameters = {
         creativity: 0.5,
