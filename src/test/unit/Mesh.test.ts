@@ -193,7 +193,7 @@ describe('Mesh Unit Tests', () => {
       timestamp: Date.now(),
       what: "what",
       where: "where",
-      how: "how \n```ts\nconst x = 1;\n```\n ```ts\nlet y: any;\n```",
+      how: "how \n```ts\nconst x = 1;\n```\n ```ts\n@ts-expect-error We are intentionally generating invalid code with the any keyword to test the AST parser rejecting it.\nlet y: any;\n```",
       reasoning: "reasoning",
     };
 

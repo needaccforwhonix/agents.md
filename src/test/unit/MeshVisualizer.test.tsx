@@ -71,8 +71,8 @@ describe('MeshVisualizer Component', () => {
           id: 'agent-1',
           name: 'DevBot',
           role: 'Developer',
-          history: [],
-          parameters: { responsiveness: 0.99 }
+          history: [{ id: 'old-msg', senderId: 'user', timestamp: 1, what: 'w', where: 'w', how: 'h', reasoning: 'r' }],
+          parameters: { responsiveness: 0.99, customStringVal: "string-value" }
         }
       }]
     };
@@ -87,10 +87,103 @@ describe('MeshVisualizer Component', () => {
       expect(screen.getByText(/TestSender/i)).toBeDefined();
       expect(screen.getByText(/test-what/i)).toBeDefined();
       expect(screen.getByText(/test-reasoning/i)).toBeDefined();
+      expect(screen.getByText(/string-value/i)).toBeDefined();
     });
 
     getItemSpy.mockRestore();
     setItemSpy.mockRestore();
+  });
+
+  it('should handle agents data with missing history during hydration', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+      } as unknown as Response)
+    );
+    const mockState = {
+      messages: "not-an-array", // Cover line 73 falsy array check
+      agents: "not-an-array" // Cover line 78 falsy array check
+    };
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+
+    render(<MeshVisualizer />);
+
+    await waitFor(() => {
+      expect(getItemSpy).toHaveBeenCalledWith('agentMeshState');
+    });
+
+    getItemSpy.mockRestore();
+  });
+
+  it('should handle agents data context hydration without history', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+      } as unknown as Response)
+    );
+    const mockState = {
+      messages: [],
+      agents: [{
+        id: 'agent-2',
+        context: {
+          id: 'agent-2',
+          name: 'SecBot',
+          role: 'Security Analyst',
+          parameters: { responsiveness: 0.05 }
+          // history intentionally omitted to trigger fallback logic line 86
+        }
+      }]
+    };
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+
+    render(<MeshVisualizer />);
+
+    await waitFor(() => {
+      expect(getItemSpy).toHaveBeenCalledWith('agentMeshState');
+    });
+
+    getItemSpy.mockRestore();
+  });
+
+  it('should ignore simulation start if already simulating', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
+      } as unknown as Response)
+    );
+
+    let resolveBroadcast: (value: void | PromiseLike<void>) => void;
+    const mockBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
+      () => new Promise((resolve) => {
+        resolveBroadcast = resolve;
+      })
+    );
+
+    render(<MeshVisualizer />);
+
+    await waitFor(() => {
+      const btns = screen.getAllByRole('button', { name: /Start Simulation/i });
+      expect((btns[0] as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    const activeBtn = screen.getAllByRole('button', { name: /Start Simulation/i })[0] as HTMLButtonElement;
+
+    // First click
+    fireEvent.click(activeBtn);
+
+    // Attempt second click while simulating
+    fireEvent.click(activeBtn);
+
+    expect(mockBroadcast).toHaveBeenCalledTimes(1);
+
+    // Resolve broadcast
+    resolveBroadcast!();
+
+    await waitFor(() => {
+      expect((activeBtn as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    mockBroadcast.mockRestore();
   });
 
   it('should handle invalid localStorage state gracefully without crashing', async () => {
