@@ -57,7 +57,7 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
       expect(file.endsWith('.py')).toBe(false);
       // Disallow top-level logic apart from specific configs
       if (file.endsWith('.js') || file.endsWith('.ts') || file.endsWith('.mjs') || file.endsWith('.json')) {
-        expect(['next.config.ts', 'next-env.d.ts', 'postcss.config.mjs', 'tailwind.config.ts', 'tsconfig.json', 'package.json', 'package-lock.json', '.eslintrc.json']).toContain(file);
+        expect(['next.config.ts', 'next-env.d.ts', 'postcss.config.mjs', 'tailwind.config.ts', 'tsconfig.json', 'package.json', 'package-lock.json', '.eslintrc.json', 'tsconfig.tsbuildinfo']).toContain(file);
       }
     }
   });

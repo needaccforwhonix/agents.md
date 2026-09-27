@@ -134,6 +134,9 @@ describe("RuleBasedBrain", () => {
         expect(resp).not.toBeNull();
         expect(resp!.what.length).toBeLessThan(10000); // 4000 + additional wrapper text
         expect(resp!.what.includes("...")).toBe(true);
+        expect(resp!.where.includes("...")).toBe(true);
+        expect(resp!.how.includes("...")).toBe(true);
+        expect(resp!.reasoning.includes("...")).toBe(true);
     });
   it('should gracefully handle empty or invalid inputs', async () => {
     const brain = new RuleBasedBrain();
