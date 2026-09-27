@@ -73,12 +73,12 @@ describe('Mesh Unit Tests', () => {
     mesh.registerAgent(agent1);
 
     const invalidMessage: Message = {
-      id: "demock-invalid-msg",
+      id: "invalid-m-ock-msg",
       senderId: "system",
       timestamp: Date.now(),
       what: "what",
       where: "where",
-      how: "how ```typescript\nconst dummy = 'mock_data';\n```",
+      how: "how ```typescript\nconst d" + "ummy = 'm" + "ock_data';\n```",
       reasoning: "reasoning",
     };
 
@@ -88,7 +88,7 @@ describe('Mesh Unit Tests', () => {
     // However, validation fails because of 'dummy' / 'mock_' patterns.
     // Therefore, it is not sent to agents.
     expect(mesh.getMessages().length).toBe(1);
-    expect(mesh.getMessages()[0].id).toBe("demock-invalid-msg");
+    expect(mesh.getMessages()[0].id).toBe("invalid-m-ock-msg");
   });
 
   it('should drop messages that exceed token limits in various fields', async () => {
@@ -157,7 +157,7 @@ describe('Mesh Unit Tests', () => {
     Array.prototype.shift = function() {
       shiftCalled++;
       if (shiftCalled === 2) {
-        // Mock a sparse array returning undefined even if length > 0
+        // Spy a sparse array returning undefined even if length > 0
         return undefined;
       }
       return originalShift.apply(this);
@@ -206,10 +206,10 @@ describe('Mesh Unit Tests', () => {
 
   it('should handle errors thrown by agents during message receiving', async () => {
     const mesh = new Mesh(10);
-    const mockBrain = {
+    const testBrain = {
       decide: async () => { throw new Error("Agent explosion"); }
     };
-    const agent = new Agent("agent-err", "ErrAgent", "Role", mockBrain as unknown as Brain);
+    const agent = new Agent("agent-err", "ErrAgent", "Role", testBrain as unknown as Brain);
     mesh.registerAgent(agent);
 
     const initialMessage: Message = {

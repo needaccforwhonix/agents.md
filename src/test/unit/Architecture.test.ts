@@ -26,4 +26,29 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
     expect(directories).toContain('bin');
     expect(directories).toContain('docs');
   });
+
+  it('should verify essential files exist in correct locations', () => {
+    const rootDir = path.resolve(__dirname, '../../..');
+
+    expect(fs.existsSync(path.join(rootDir, 'docs', 'AGENTS.md'))).toBe(true);
+    expect(fs.existsSync(path.join(rootDir, 'bin', 'start-mesh.ts'))).toBe(true);
+  });
+
+  it('should enforce no-python policy and no forbidden root files', () => {
+    const rootDir = path.resolve(__dirname, '../../..');
+    const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+
+    const files = entries
+      .filter(entry => entry.isFile())
+      .map(entry => entry.name);
+
+    for (const file of files) {
+      // Disallow Python
+      expect(file.endsWith('.py')).toBe(false);
+      // Disallow top-level logic apart from specific configs
+      if (file.endsWith('.js') || file.endsWith('.ts') || file.endsWith('.mjs') || file.endsWith('.json')) {
+        expect(['next.config.ts', 'next-env.d.ts', 'postcss.config.mjs', 'tailwind.config.ts', 'tsconfig.json', 'package.json', 'package-lock.json', '.eslintrc.json']).toContain(file);
+      }
+    }
+  });
 });

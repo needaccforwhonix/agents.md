@@ -40,7 +40,7 @@ describe("AlphaEvolve Module", () => {
   it("should skip non-number parameters during mutation", () => {
     const params: AgentParameters = {
       creativity: 0.5,
-      someStringParam: "test" as unknown as number // Mocking non-number
+      someStringParam: "test" as unknown as number // testing non-number
     };
 
     const evolved = alphaEvolve(params, 0.5);

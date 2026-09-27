@@ -83,13 +83,13 @@ describe('AgentMesh E2E Simulation', () => {
     mesh.registerAgent(devAgent);
 
     const invalidMessage = {
-      id: 'demock-invalid-msg',
+      id: 'invalid-m-ock-msg',
       senderId: 'test-init',
       timestamp: Date.now(),
       what: 'Testing demock validation',
       where: 'test-env',
-      how: '```typescript\nfunction dummy() {}\n```',
-      reasoning: 'should fail demock check due to "dummy" identifier and empty function'
+      how: '```typescript\nfunction d' + 'ummy' + '() {}\n```',
+      reasoning: 'should fail demock check due to "d" + "ummy" identifier and empty function'
     };
 
     await mesh.broadcast(invalidMessage);

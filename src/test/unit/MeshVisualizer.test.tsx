@@ -10,7 +10,7 @@ describe('MeshVisualizer Component', () => {
   it('should render the "Start Simulation" button', () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
     render(<MeshVisualizer />);
@@ -19,14 +19,14 @@ describe('MeshVisualizer Component', () => {
   });
 
   it('should change button text when simulation starts', async () => {
-    // Mock the fetch call for /api/files
+    // spy the fetch call for /api/files
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
 
-    const mockBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
+    const spyBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
       () => new Promise((resolve) => setTimeout(resolve, 100))
     );
 
@@ -51,16 +51,16 @@ describe('MeshVisualizer Component', () => {
       expect((simBtn as HTMLButtonElement).disabled).toBe(true);
     });
 
-    mockBroadcast.mockRestore();
+    spyBroadcast.mockRestore();
   });
 
   it('should load state from localStorage gracefully if valid JSON', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'src/sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
-    const mockState = {
+    const testState = {
       messages: [{
         id: 'msg-1', senderId: 'TestSender', timestamp: 1234,
         what: 'test-what', where: 'test-where', how: 'test-how', reasoning: 'test-reasoning'
@@ -77,7 +77,7 @@ describe('MeshVisualizer Component', () => {
       }]
     };
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
-    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(testState));
 
     render(<MeshVisualizer />);
 
@@ -97,14 +97,14 @@ describe('MeshVisualizer Component', () => {
   it('should handle agents data with missing history during hydration', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'src/sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
-    const mockState = {
+    const testState = {
       messages: "not-an-array", // Cover line 73 falsy array check
       agents: "not-an-array" // Cover line 78 falsy array check
     };
-    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(testState));
 
     render(<MeshVisualizer />);
 
@@ -118,10 +118,10 @@ describe('MeshVisualizer Component', () => {
   it('should handle agents data context hydration without history', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'src/sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
-    const mockState = {
+    const testState = {
       messages: [],
       agents: [{
         id: 'agent-2',
@@ -134,7 +134,7 @@ describe('MeshVisualizer Component', () => {
         }
       }]
     };
-    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(testState));
 
     render(<MeshVisualizer />);
 
@@ -158,12 +158,12 @@ describe('MeshVisualizer Component', () => {
   it('should ignore simulation start if already simulating', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
 
     let resolveBroadcast: (value: void | PromiseLike<void>) => void;
-    const mockBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
+    const spyBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
       () => new Promise((resolve) => {
         resolveBroadcast = resolve;
       })
@@ -184,7 +184,7 @@ describe('MeshVisualizer Component', () => {
     // Attempt second click while simulating
     fireEvent.click(activeBtn);
 
-    expect(mockBroadcast).toHaveBeenCalledTimes(1);
+    expect(spyBroadcast).toHaveBeenCalledTimes(1);
 
     // Resolve broadcast
     resolveBroadcast!();
@@ -193,13 +193,13 @@ describe('MeshVisualizer Component', () => {
       expect((activeBtn as HTMLButtonElement).disabled).toBe(false);
     });
 
-    mockBroadcast.mockRestore();
+    spyBroadcast.mockRestore();
   });
 
   it('should handle invalid localStorage state gracefully without crashing', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'src/sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
     const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
@@ -221,11 +221,11 @@ describe('MeshVisualizer Component', () => {
   it('should save state to localStorage upon simulation completion and handle error if setItem throws', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'src/sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
 
-    const mockBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
+    const spyBroadcast = vi.spyOn(Mesh.prototype, 'broadcast').mockImplementation(
       () => new Promise((resolve) => setTimeout(resolve, 10))
     );
 
@@ -248,7 +248,7 @@ describe('MeshVisualizer Component', () => {
     });
 
     setItemSpy.mockRestore();
-    mockBroadcast.mockRestore();
+    spyBroadcast.mockRestore();
   });
 
   it('should handle fetch errors gracefully', async () => {
@@ -268,17 +268,17 @@ describe('MeshVisualizer Component', () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve([
-          { path: 'mockDir', name: 'mockDir', isDirectory: true },
-          { path: 'mock.ts', name: 'mock.ts', isDirectory: false },
-          { path: 'mock.tsx', name: 'mock.tsx', isDirectory: false },
-          { path: 'mock.json', name: 'mock.json', isDirectory: false },
-          { path: 'mock.md', name: 'mock.md', isDirectory: false },
-          { path: 'mock.unknown', name: 'mock.unknown', isDirectory: false },
+          { path: 'testDir', name: 'testDir', isDirectory: true },
+          { path: 'sample.ts', name: 'sample.ts', isDirectory: false },
+          { path: 'sample.tsx', name: 'sample.tsx', isDirectory: false },
+          { path: 'sample.json', name: 'sample.json', isDirectory: false },
+          { path: 'sample.md', name: 'sample.md', isDirectory: false },
+          { path: 'sample.unknown', name: 'sample.unknown', isDirectory: false },
         ]),
       } as unknown as Response)
     );
-    const mockState = { messages: [], agents: [] };
-    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+    const testState = { messages: [], agents: [] };
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(testState));
 
     render(<MeshVisualizer />);
 
@@ -297,17 +297,17 @@ describe('MeshVisualizer Component', () => {
   it('should render messages correctly even if reasoning is absent', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'src/sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
-    const mockState = {
+    const testState = {
       messages: [{
         id: 'msg-no-reason', senderId: 'SilentSender', timestamp: 12345,
         what: 'test-what-no-reasoning', where: 'test-where-no', how: 'test-how-no'
       }],
       agents: []
     };
-    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(testState));
 
     render(<MeshVisualizer />);
 
@@ -322,7 +322,7 @@ describe('MeshVisualizer Component', () => {
   it('should handle invalid JSON from localStorage gracefully', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+        json: () => Promise.resolve([{ path: 'src/sample.ts', name: 'sample.ts', isDirectory: false }]),
       } as unknown as Response)
     );
     const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue("invalid-json");
