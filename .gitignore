@@ -111,3 +111,9 @@ yarn-error.log*
 .agent_states.json
 mesh_output.log
 .agent_mesh.db
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+.agent_mesh.db
