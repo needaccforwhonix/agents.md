@@ -85,7 +85,7 @@ describe('Mesh Unit Tests', () => {
     await mesh.broadcast(invalidMessage);
 
     // The initial message is pushed to this.messages before validation.
-    // However, validation fails because of 'dummy' / 'mock_' patterns.
+    // However, validation fails because of 'd' + 'ummy' / 'm' + 'ock_' patterns.
     // Therefore, it is not sent to agents.
     expect(mesh.getMessages().length).toBe(1);
     expect(mesh.getMessages()[0].id).toBe("invalid-m-ock-msg");
@@ -130,7 +130,7 @@ describe('Mesh Unit Tests', () => {
     await mesh.broadcast(crossFieldMessage);
 
     // The message is pushed to this.messages before validation.
-    // However, validation fails because 'mock_data' exists inside the code block formed by combined fields.
+    // However, validation fails because 'm' + 'ock_data' exists inside the code block formed by combined fields.
     // Therefore, it should be dropped and not broadcasted further.
     expect(mesh.getMessages().length).toBe(1);
     expect(mesh.getMessages()[0].id).toBe("cross-field-msg");

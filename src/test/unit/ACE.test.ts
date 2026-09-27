@@ -73,5 +73,24 @@ describe("ACE Module", () => {
       const bounded = boundHistory(history, 2);
       expect(bounded).toEqual([msg]);
     });
+
+    it("should handle massive history arrays efficiently", () => {
+      const history: Message[] = Array.from({ length: 10000 }).map((_, i) => ({
+        id: `msg-${i}`,
+        senderId: "s",
+        timestamp: i,
+        what: "short",
+        where: "text",
+        how: "msg",
+        reasoning: "r"
+      }));
+
+      // Each msg is "short text msg r" -> 16 chars -> 4 tokens
+      // Total tokens = 40000. Let's limit to 400 tokens (last 100 messages)
+      const bounded = boundHistory(history, 400);
+      expect(bounded.length).toBe(100);
+      expect(bounded[99].id).toBe("msg-9999");
+      expect(bounded[0].id).toBe("msg-9900");
+    });
   });
 });
