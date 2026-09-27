@@ -15,16 +15,6 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getAgents()[0].context.id).toBe("agent-1");
   });
 
-  it('should silently ignore registering invalid agents', () => {
-    const mesh = new Mesh(100);
-
-    mesh.registerAgent(null as unknown as Agent);
-    expect(mesh.getAgents().length).toBe(0);
-
-
-    mesh.registerAgent({} as Agent);
-    expect(mesh.getAgents().length).toBe(0);
-  });
 
   it('should broadcast message and correctly throttle processing via messageLimit', async () => {
     const mesh = new Mesh(2); // Very low limit to test throttle
@@ -54,16 +44,12 @@ describe('Mesh Unit Tests', () => {
     expect(messages.length).toBeLessThanOrEqual(2);
   });
 
-  it('should gracefully handle empty or null broadcast', async () => {
+  it.each([
+    { name: "null message", val: null as unknown as Message },
+    { name: "undefined message", val: undefined as unknown as Message }
+  ])("should throw error for $name in broadcast", async ({ val }) => {
     const mesh = new Mesh(10);
-
-    // We cast via `any` equivalent to test runtime bounds handling
-    await mesh.broadcast(null as unknown as Message);
-    expect(mesh.getMessages().length).toBe(0);
-
-
-    await mesh.broadcast(undefined as unknown as Message);
-    expect(mesh.getMessages().length).toBe(0);
+    await expect(mesh.broadcast(val)).rejects.toThrow("Invalid Message: Message cannot be null or undefined.");
   });
 
   it('should reject messages with invalid Demock patterns based on AST Demock validation', async () => {
@@ -136,50 +122,46 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages()[0].id).toBe("cross-field-msg");
   });
 
-  it('should drop messages that exceed token limits in various fields', async () => {
+  it.each([
+    {
+      field: 'what',
+      message: {
+        id: "oversized-what", senderId: "system", timestamp: Date.now(),
+        what: "a".repeat(20000), where: "where", how: "how", reasoning: "reasoning",
+      }
+    },
+    {
+      field: 'where',
+      message: {
+        id: "oversized-where", senderId: "system", timestamp: Date.now(),
+        what: "what", where: "a".repeat(20000), how: "how", reasoning: "reasoning",
+      }
+    },
+    {
+      field: 'how',
+      message: {
+        id: "oversized-how", senderId: "system", timestamp: Date.now(),
+        what: "what", where: "where", how: "a".repeat(20000), reasoning: "reasoning",
+      }
+    },
+    {
+      field: 'reasoning',
+      message: {
+        id: "oversized-reasoning", senderId: "system", timestamp: Date.now(),
+        what: "what", where: "where", how: "how", reasoning: "a".repeat(20000),
+      }
+    }
+  ])('should drop messages that exceed token limits in $field field', async ({ message }) => {
     const mesh = new Mesh(10);
     const brain = new RuleBasedBrain();
     const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 1.0 });
     mesh.registerAgent(agent1);
 
-    const oversizedWhat: Message = {
-      id: "oversized-what", senderId: "system", timestamp: Date.now(),
-      what: "a".repeat(20000), where: "where", how: "how", reasoning: "reasoning",
-    };
-    await mesh.broadcast(oversizedWhat);
-
-    const oversizedWhere: Message = {
-      id: "oversized-where", senderId: "system", timestamp: Date.now(),
-      what: "what", where: "a".repeat(20000), how: "how", reasoning: "reasoning",
-    };
-    await mesh.broadcast(oversizedWhere);
-
-    const oversizedHow: Message = {
-      id: "oversized-how", senderId: "system", timestamp: Date.now(),
-      what: "what", where: "where", how: "a".repeat(20000), reasoning: "reasoning",
-    };
-    await mesh.broadcast(oversizedHow);
-
-    const oversizedReasoning: Message = {
-      id: "oversized-reasoning", senderId: "system", timestamp: Date.now(),
-      what: "what", where: "where", how: "how", reasoning: "a".repeat(20000),
-    };
-    await mesh.broadcast(oversizedReasoning);
+    await mesh.broadcast(message);
 
     // The initial messages are pushed to this.messages before validation.
-    expect(mesh.getMessages().length).toBe(4);
-    expect(mesh.getMessages()[0].id).toBe("oversized-what");
-    expect(mesh.getMessages()[1].id).toBe("oversized-where");
-    expect(mesh.getMessages()[2].id).toBe("oversized-how");
-    expect(mesh.getMessages()[3].id).toBe("oversized-reasoning");
-  });
-
-  it('should gracefully handle empty or undefined broadcasts', async () => {
-    const mesh = new Mesh(10);
-    // Passing undefined directly to test the initial boundary defensive check
-    await mesh.broadcast(undefined as unknown as Message);
-
-    expect(mesh.getMessages().length).toBe(0);
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe(message.id);
   });
 
   it('should continue loop gracefully if an undefined message is shifted from the queue', async () => {
@@ -279,6 +261,25 @@ describe('Mesh Unit Tests', () => {
     ];
     mesh.setMessages(messages);
     expect(mesh.getMessages()).toEqual(messages);
+  });
+
+  it.each([
+    { name: 'null array', val: null },
+    { name: 'undefined array', val: undefined },
+    { name: 'not an array', val: {} }
+  ])('should throw error for $name in setMessages', ({ val }) => {
+    const mesh = new Mesh(10);
+    expect(() => mesh.setMessages(val as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+  });
+
+  it.each([
+    { name: 'null agent', agent: null },
+    { name: 'undefined agent', agent: undefined },
+    { name: 'agent with no context', agent: { receiveMessage: async () => undefined } },
+    { name: 'agent with no id', agent: { context: { name: 'test' } } }
+  ])('should throw error for $name in registerAgent', ({ agent }) => {
+    const mesh = new Mesh(10);
+    expect(() => mesh.registerAgent(agent as unknown as Agent)).toThrow("Invalid Agent: Agent and Agent Context must be fully defined.");
   });
 
   it('should handle messages with undefined reasoning properly', async () => {

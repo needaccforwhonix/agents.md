@@ -9,14 +9,17 @@ describe("AST Module", () => {
             expect(result.errors).toHaveLength(0);
         });
 
-        it("should catch empty functions with spaces/newlines", () => {
-            const result1 = analyzeCodeBlock("function myEmpty (   ) { \n  }");
-            expect(result1.isValid).toBe(false);
-            expect(result1.errors).toContain("Optimization Error: Empty function 'myEmpty' detected. Avoid empty implementations.");
-
-            const result2 = analyzeCodeBlock("const x = () => {   }");
-            expect(result2.isValid).toBe(false);
-            expect(result2.errors).toContain("Optimization Error: Empty function 'Anonymous function' detected. Avoid empty implementations.");
+        it.each([
+            { code: "function myEmpty (   ) { \n  }", name: "myEmpty" },
+            { code: "const x = () => {   }", name: "Anonymous function" },
+            { code: "function myEmpty() {}", name: "myEmpty" },
+            { code: "const f = () => {}", name: "Anonymous function" },
+            { code: "class A { myMethod() {} }", name: "myMethod" },
+            { code: "function outer() { const inner = () => {}; }", name: "Anonymous function" }
+        ])("should catch empty functions: $name", ({ code, name }) => {
+            const result = analyzeCodeBlock(code);
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain(`Optimization Error: Empty function '${name}' detected. Avoid empty implementations.`);
         });
 
         it("should parse invalid syntax gracefully", () => {
@@ -42,24 +45,16 @@ describe("AST Module", () => {
             expect(result.warnings).toContain("Optimization Warning: Usage of console.log() detected. Remove console.log calls in production code.");
         });
 
-        it("should catch 'd' + 'ummy' or 'm' + 'ock_' in strings/identifiers", () => {
-            const result1 = analyzeCodeBlock("const d" + "ummyVar = 1;");
-            expect(result1.isValid).toBe(false);
-            expect(result1.errors[0]).toContain("d" + "ummyVar");
-
-            const result2 = analyzeCodeBlock("const x = 'm" + "ock_data';");
-            expect(result2.isValid).toBe(false);
-            expect(result2.errors[0]).toContain("m" + "ock_data");
-        });
-
-        it("should catch test identifiers within destructured objects/arrays", () => {
-            const result1 = analyzeCodeBlock("const { m" + "ock_id } = obj;");
-            expect(result1.isValid).toBe(false);
-            expect(result1.errors[0]).toContain("m" + "ock_id");
-
-            const result2 = analyzeCodeBlock("const [d" + "ummy_val] = arr;");
-            expect(result2.isValid).toBe(false);
-            expect(result2.errors[0]).toContain("d" + "ummy_val");
+        it.each([
+            { code: "const d" + "ummyVar = 1;", match: "d" + "ummyVar" },
+            { code: "const x = 'm" + "ock_data';", match: "m" + "ock_data" },
+            { code: "const { m" + "ock_id } = obj;", match: "m" + "ock_id" },
+            { code: "const [d" + "ummy_val] = arr;", match: "d" + "ummy_val" },
+            { code: "const tpl = `some text with m" + "ock_data inside`;", match: "m" + "ock_data" }
+        ])("should catch dummy and mock patterns in $match", ({ code, match }) => {
+            const result = analyzeCodeBlock(code);
+            expect(result.isValid).toBe(false);
+            expect(result.errors[0]).toContain(match);
         });
 
         it("should suggest for 'TODO'", () => {
@@ -67,54 +62,15 @@ describe("AST Module", () => {
             expect(result.suggestions[0]).toContain("TODO: something");
         });
 
-        it("should catch empty function declaration", () => {
-            const result = analyzeCodeBlock("function myEmpty() {}");
-            expect(result.isValid).toBe(false);
-            expect(result.errors).toContain("Optimization Error: Empty function 'myEmpty' detected. Avoid empty implementations.");
-        });
-
-        it("should catch empty arrow function", () => {
-            const result = analyzeCodeBlock("const f = () => {}");
-            expect(result.isValid).toBe(false);
-            expect(result.errors).toContain("Optimization Error: Empty function 'Anonymous function' detected. Avoid empty implementations.");
-        });
-
-        it("should catch empty method declaration", () => {
-            const result = analyzeCodeBlock("class A { myMethod() {} }");
-            expect(result.isValid).toBe(false);
-            expect(result.errors).toContain("Optimization Error: Empty function 'myMethod' detected. Avoid empty implementations.");
-        });
-
-        it("should catch nested empty functions", () => {
-            const result = analyzeCodeBlock("function outer() { const inner = () => {}; }");
-            expect(result.isValid).toBe(false);
-            expect(result.errors).toContain("Optimization Error: Empty function 'Anonymous function' detected. Avoid empty implementations.");
-        });
-
-        it("should catch invalid patterns in multiline comments", () => {
-            // ts parses comments; they are not inherently strings/identifiers in AST unless attached.
-            // However, the rule mentions dummy patterns. Let's see if we catch it inside actual template literals.
-            const result = analyzeCodeBlock("const tpl = `some text with m" + "ock_data inside`;");
-            expect(result.isValid).toBe(false);
-            expect(result.errors[0]).toContain("m" + "ock_data");
-        });
-
-        it("should safely ignore empty code", () => {
-            const result = analyzeCodeBlock(undefined as unknown as string);
+        it.each([
+            { name: "undefined", val: undefined as unknown as string },
+            { name: "null", val: null as unknown as string },
+            { name: "empty string", val: "" },
+            { name: "whitespace", val: "   \n\t  " }
+        ])("should safely ignore empty code: $name", ({ val }) => {
+            const result = analyzeCodeBlock(val);
             expect(result.isValid).toBe(true);
             expect(result.errors).toHaveLength(0);
-
-            const result2 = analyzeCodeBlock(null as unknown as string);
-            expect(result2.isValid).toBe(true);
-            expect(result2.errors).toHaveLength(0);
-
-            const result3 = analyzeCodeBlock("");
-            expect(result3.isValid).toBe(true);
-            expect(result3.errors).toHaveLength(0);
-
-            const result4 = analyzeCodeBlock("   \n\t  ");
-            expect(result4.isValid).toBe(true);
-            expect(result4.errors).toHaveLength(0);
         });
 
         it("should handle unexpected property access gracefully", () => {
