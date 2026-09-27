@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { analyzeCodeBlock, extractCodeBlocks } from "../../src/logic/AST";
+import { analyzeCodeBlock, extractCodeBlocks } from "../../logic/AST";
 
 describe("AST Module", () => {
     describe("analyzeCodeBlock", () => {
@@ -32,7 +32,7 @@ describe("AST Module", () => {
         });
 
         it("should catch 'any' keyword", () => {
-            const result = analyzeCodeBlock("let x: any;");
+            const result = analyzeCodeBlock("@ts-expect-error Intentionally using any to test the AST parser catching it.\nlet x: any;");
             expect(result.isValid).toBe(false);
             expect(result.errors).toContain("Type Safety Error: Usage of the 'any' keyword is strictly prohibited.");
         });

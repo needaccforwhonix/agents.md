@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { RuleBasedBrain } from "../../src/logic/RuleBasedBrain";
-import { Message, AgentContext, AgentParameters } from "../../src/logic/Types";
+import { RuleBasedBrain } from "../../logic/RuleBasedBrain";
+import { Message, AgentContext, AgentParameters } from "../../logic/Types";
 
 describe("RuleBasedBrain", () => {
     it("should cover different roles", async () => {

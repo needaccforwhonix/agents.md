@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { DBPersistence } from "../../bin/DBPersistence";
-import { Message, AgentContext } from "../../src/logic/Types";
+import { DBPersistence } from "../../../bin/DBPersistence";
+import { Message, AgentContext } from "../../logic/Types";
 import fs from "fs";
 
 describe("DBPersistence", () => {

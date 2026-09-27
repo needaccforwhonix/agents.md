@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { alphaEvolve } from '../../src/logic/AlphaEvolve';
-import { AgentParameters } from '../../src/logic/Types';
+import { alphaEvolve } from '../../logic/AlphaEvolve';
+import { AgentParameters } from '../../logic/Types';
 
 describe('AlphaEvolve Hyperparameter Tuning', () => {
   it('should maintain stable parameters over 1000 generations with a low mutation rate', () => {
