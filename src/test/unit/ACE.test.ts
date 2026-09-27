@@ -93,4 +93,11 @@ describe("ACE Module", () => {
       expect(bounded[0].id).toBe("msg-9900");
     });
   });
+
+  describe("Edge cases for token counting", () => {
+    it("should handle strings with non-ASCII characters", () => {
+      expect(countTokens("🌟")).toBe(1); // Length is 2, 2/4 = 0.5 -> ceil(0.5) = 1
+      expect(countTokens("こんにちは")).toBe(2); // Length 5, 5/4 = 1.25 -> ceil(1.25) = 2
+    });
+  });
 });
