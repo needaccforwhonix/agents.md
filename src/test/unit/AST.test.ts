@@ -154,5 +154,18 @@ describe("AST Module", () => {
              const result = extractCodeBlocks("```ts   \nconst x = 1;\n```");
              expect(result).toEqual(["const x = 1;"]);
         });
+
+        it("should correctly handle extremely nested brackets and parentheses", () => {
+             const code = "function a() { return (function b() { return [{ value: (function c() { })() }]; })(); }";
+             const result = analyzeCodeBlock(code);
+             expect(result.isValid).toBe(false);
+             expect(result.errors).toContain("Optimization Error: Empty function 'c' detected. Avoid empty implementations.");
+        });
+
+        it("should parse multiple consecutive code blocks without trailing newlines", () => {
+             const messageContent = "```ts\nconst x = 1;\n```\n```ts\nconst y = 2;\n```";
+             const blocks = extractCodeBlocks(messageContent);
+             expect(blocks).toEqual(["const x = 1;", "const y = 2;"]);
+        });
     });
 });

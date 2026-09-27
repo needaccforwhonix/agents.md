@@ -131,7 +131,6 @@ export const getStaticProps: GetStaticProps<LandingPageProps> = async () => {
         }
       } catch {
         // ignore errors, keep fallback
-        console.error(`Error fetching contributors for ${fullName}`);
       }
 
       contributorsByRepo[fullName] = {
@@ -139,7 +138,6 @@ export const getStaticProps: GetStaticProps<LandingPageProps> = async () => {
         total,
       };
     } catch {
-      console.error(`Error fetching contributors for ${fullName}`);
       contributorsByRepo[fullName] = { avatars: [], total: 0 };
     }
   }

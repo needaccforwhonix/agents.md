@@ -77,12 +77,15 @@ export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
     if (
       (ts.isFunctionDeclaration(node) && node.body && node.body.statements.length === 0) ||
       (ts.isArrowFunction(node) && ts.isBlock(node.body) && node.body.statements.length === 0) ||
-      (ts.isMethodDeclaration(node) && node.body && node.body.statements.length === 0)
+      (ts.isMethodDeclaration(node) && node.body && node.body.statements.length === 0) ||
+      (ts.isFunctionExpression(node) && node.body && node.body.statements.length === 0)
     ) {
       let functionName = "Anonymous function";
       if (ts.isFunctionDeclaration(node) && node.name) {
         functionName = node.name.getText(sourceFile);
       } else if (ts.isMethodDeclaration(node) && node.name) {
+        functionName = node.name.getText(sourceFile);
+      } else if (ts.isFunctionExpression(node) && node.name) {
         functionName = node.name.getText(sourceFile);
       }
       errors.push(`Optimization Error: Empty function '${functionName}' detected. Avoid empty implementations.`);
