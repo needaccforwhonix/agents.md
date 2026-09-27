@@ -115,6 +115,30 @@ describe('MeshVisualizer Component', () => {
     getItemSpy.mockRestore();
   });
 
+  it('should handle agents data with missing context gracefully', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve([{ path: 'src/mock.ts', name: 'mock.ts', isDirectory: false }]),
+      } as unknown as Response)
+    );
+    const mockState = {
+      messages: [],
+      agents: [{
+        id: 'agent-1'
+        // context intentionally omitted to hit the else/skip branch on line 83
+      }]
+    };
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(JSON.stringify(mockState));
+
+    render(<MeshVisualizer />);
+
+    await waitFor(() => {
+      expect(getItemSpy).toHaveBeenCalledWith('agentMeshState');
+    });
+
+    getItemSpy.mockRestore();
+  });
+
   it('should handle agents data context hydration without history', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
