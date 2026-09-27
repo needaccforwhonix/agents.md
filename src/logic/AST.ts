@@ -64,7 +64,7 @@ export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
       const expressionText = node.expression.getText(sourceFile);
       const nameText = node.name.getText(sourceFile);
       if (expressionText === "console" && nameText === "log") {
-        warnings.push("Optimization Warning: Usage of console.log() detected. Remove console.log calls in production code.");
+        errors.push("Optimization Error: Usage of console.log() detected. Remove console.log calls in production code to enforce Zero-Mockup policy.");
       }
     }
 

@@ -42,7 +42,8 @@ describe("AST Module", () => {
 
         it("should catch console.log", () => {
             const result = analyzeCodeBlock("console.log('hi');");
-            expect(result.warnings).toContain("Optimization Warning: Usage of console.log() detected. Remove console.log calls in production code.");
+            expect(result.errors).toContain("Optimization Error: Usage of console.log() detected. Remove console.log calls in production code to enforce Zero-Mockup policy.");
+            expect(result.isValid).toBe(false);
         });
 
         it.each([
