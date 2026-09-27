@@ -1,0 +1,84 @@
+<<<<<<< SEARCH
+<<<<<<< HEAD
+  it('should handle an explicit message with undefined reasoning without crashing and store it accurately', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent = new Agent("agent-1", "Test", "Role", brain, { responsiveness: 0 }); // ensure it doesn't respond
+    mesh.registerAgent(agent);
+
+    const msgWithoutReasoning = {
+      id: "no-reasoning-msg-explicit",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how",
+      reasoning: undefined as unknown as string
+    };
+
+    await mesh.broadcast(msgWithoutReasoning);
+
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("no-reasoning-msg-explicit");
+    expect(mesh.getMessages()[0].reasoning).toBeUndefined();
+=======
+  it.each([
+    { name: 'null array', val: null },
+    { name: 'undefined array', val: undefined },
+    { name: 'not an array', val: {} }
+  ])('should throw error for $name in setMessages', ({ val }) => {
+    const mesh = new Mesh(10);
+    expect(() => mesh.setMessages(val as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+  });
+
+  it.each([
+    { name: 'null agent', agent: null },
+    { name: 'undefined agent', agent: undefined },
+    { name: 'agent with no context', agent: { receiveMessage: async () => undefined } },
+    { name: 'agent with no id', agent: { context: { name: 'test' } } }
+  ])('should throw error for $name in registerAgent', ({ agent }) => {
+    const mesh = new Mesh(10);
+    expect(() => mesh.registerAgent(agent as unknown as Agent)).toThrow("Invalid Agent: Agent and Agent Context must be fully defined.");
+>>>>>>> origin/main
+=======
+  it('should handle an explicit message with undefined reasoning without crashing and store it accurately', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent = new Agent("agent-1", "Test", "Role", brain, { responsiveness: 0 }); // ensure it doesn't respond
+    mesh.registerAgent(agent);
+
+    const msgWithoutReasoning = {
+      id: "no-reasoning-msg-explicit",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how",
+      reasoning: undefined as unknown as string
+    };
+
+    await mesh.broadcast(msgWithoutReasoning);
+
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("no-reasoning-msg-explicit");
+    expect(mesh.getMessages()[0].reasoning).toBeUndefined();
+  });
+
+  it.each([
+    { name: 'null array', val: null },
+    { name: 'undefined array', val: undefined },
+    { name: 'not an array', val: {} }
+  ])('should throw error for $name in setMessages', ({ val }) => {
+    const mesh = new Mesh(10);
+    expect(() => mesh.setMessages(val as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+  });
+
+  it.each([
+    { name: 'null agent', agent: null },
+    { name: 'undefined agent', agent: undefined },
+    { name: 'agent with no context', agent: { receiveMessage: async () => undefined } },
+    { name: 'agent with no id', agent: { context: { name: 'test' } } }
+  ])('should throw error for $name in registerAgent', ({ agent }) => {
+    const mesh = new Mesh(10);
+    expect(() => mesh.registerAgent(agent as unknown as Agent)).toThrow("Invalid Agent: Agent and Agent Context must be fully defined.");
+>>>>>>> REPLACE

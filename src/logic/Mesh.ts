@@ -33,7 +33,7 @@ export class Mesh {
 
   public registerAgent(agent: Agent) {
     if (!agent || !agent.context || !agent.context.id) {
-      return;
+      throw new Error("Invalid Agent: Agent and Agent Context must be fully defined.");
     }
     this.agents.set(agent.context.id, agent);
   }
@@ -45,7 +45,7 @@ export class Mesh {
    */
   public async broadcast(initialMessage: Message): Promise<void> {
     if (!initialMessage) {
-      return;
+      throw new Error("Invalid Message: Message cannot be null or undefined.");
     }
 
     const queue: Message[] = [initialMessage];
@@ -114,6 +114,9 @@ export class Mesh {
    * Helper to set messages directly (useful for hydration).
    */
   public setMessages(messages: Message[]): void {
+    if (!messages || !Array.isArray(messages)) {
+      throw new Error("Invalid Messages: Messages must be a valid array.");
+    }
     this.messages = messages;
   }
 }
