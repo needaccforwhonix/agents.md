@@ -148,5 +148,10 @@ describe("AST Module", () => {
              const result = extractCodeBlocks("Here is \n```javascript\nconst a = `multi\nline`;\n```\n");
              expect(result).toHaveLength(1);
         });
+
+        it("should handle code blocks with trailing spaces before the newline correctly", () => {
+             const result = extractCodeBlocks("```ts   \nconst x = 1;\n```");
+             expect(result).toEqual(["const x = 1;"]);
+        });
     });
 });
