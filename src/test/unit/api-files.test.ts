@@ -72,7 +72,7 @@ describe("api/files", () => {
         if (p === file1) {
           throw new Error("Simulated statSync error");
         }
-        return { isDirectory: () => false } as any;
+        return { isDirectory: () => false } as unknown as ReturnType<typeof fs.statSync>;
       });
 
       const res = getFileStructure(tempDir, tempDir);
@@ -86,11 +86,11 @@ describe("api/files", () => {
   });
 
   it("should handle the NextApiRequest correctly", () => {
-    const req = {} as any;
+    const req = {} as unknown as import("next").NextApiRequest;
     const res = {
       status: vi.fn().mockReturnThis(),
       json: vi.fn()
-    } as any;
+    } as unknown as import("next").NextApiResponse;
 
     handler(req, res);
 

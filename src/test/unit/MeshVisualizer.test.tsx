@@ -145,6 +145,16 @@ describe('MeshVisualizer Component', () => {
     getItemSpy.mockRestore();
   });
 
+  it("should not start simulation if meshRef is null", async () => {
+    // This will trigger the check `if (!meshRef || isSimulating) return;` since meshRef is null.
+    render(<MeshVisualizer />);
+    const startButton = screen.getAllByRole("button", { name: /Start Simulation/i })[0];
+    fireEvent.click(startButton);
+    await waitFor(() => {
+      expect((startButton as HTMLButtonElement).disabled).toBe(true);
+    });
+  });
+
   it('should ignore simulation start if already simulating', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
