@@ -77,6 +77,22 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages()[0].id).toBe("invalid-m-ock-msg");
   });
 
+  it('should successfully process a message where all string fields are completely empty (0 tokens)', async () => {
+    const mesh = new Mesh(10);
+    const brain = new RuleBasedBrain();
+    const agent1 = new Agent("agent-1", "Agent 1", "Role", brain, { responsiveness: 0 }); // no response to avoid loop
+    mesh.registerAgent(agent1);
+
+    const emptyMsg: Message = {
+      id: "empty-msg-what", senderId: "system", timestamp: Date.now(),
+      what: "", where: "", how: "", reasoning: "",
+    };
+    await mesh.broadcast(emptyMsg);
+
+    expect(mesh.getMessages().length).toBe(1);
+    expect(mesh.getMessages()[0].id).toBe("empty-msg-what");
+  });
+
   it('should allow messages that are exactly at the token limit', async () => {
     // limit is default 4000
     // countTokens in ACE.ts uses Math.ceil(text.length / 4).

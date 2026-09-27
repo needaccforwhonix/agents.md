@@ -73,6 +73,14 @@ describe("AlphaEvolve Module", () => {
     expect(evolved.detailOrientation).toBeGreaterThanOrEqual(0);
   });
 
+  it('should not mutate the generation parameter if it is set to 0, but it should still increment it by 1', () => {
+    const params: AgentParameters = { generation: 0, analyticalDepth: 0.5 };
+    const result = alphaEvolve(params, 0.1);
+    expect(result.generation).toBe(1);
+    // Since generation is skipped for random mutation, it explicitly skips the variation calculation
+    // and then strictly increments by 1 at the end of alphaEvolve.
+  });
+
   describe("AlphaEvolve edge cases", () => {
     it("should handle parameters that are exactly 0 with a 0.0 mutation rate without changing them", () => {
       const params: AgentParameters = {
