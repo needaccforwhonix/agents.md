@@ -4,6 +4,7 @@ import { Agent } from "../logic/Agent";
 import { RuleBasedBrain } from "../logic/RuleBasedBrain";
 import { Message } from "../logic/Types";
 import type { FileNode } from "../pages/api/files";
+import { createDynamicAgent } from "../logic/DynamicAgentRegistry";
 
 export const MeshVisualizer: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -47,20 +48,7 @@ export const MeshVisualizer: React.FC = () => {
 
     // Dynamically register an agent for every file and directory
     fileStructure.forEach((node) => {
-      let role = "File Manager";
-      if (node.isDirectory) {
-        role = "Directory Manager";
-      } else if (node.name.endsWith(".ts")) {
-        role = "TypeScript File Manager";
-      } else if (node.name.endsWith(".tsx")) {
-        role = "React Component Manager";
-      } else if (node.name.endsWith(".json")) {
-        role = "JSON Config Manager";
-      } else if (node.name.endsWith(".md")) {
-        role = "Markdown Documenter";
-      }
-
-      const agent = new Agent(`dynamic-${node.path}`, node.path, role, brain, { responsiveness: 0.01 });
+      const agent = createDynamicAgent(`dynamic-${node.path}`, node.path, node.isDirectory, node.name, brain, 0.01);
       mesh.registerAgent(agent);
     });
 
@@ -106,7 +94,7 @@ export const MeshVisualizer: React.FC = () => {
       id: crypto.randomUUID(),
       senderId: "user-init",
       timestamp: Date.now(),
-      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements.",
+      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Funktions-Löschungen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Dokumentationen - Todos Creation + Implementierungen + Improvements.",
       where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
       how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext.",
       reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht.",

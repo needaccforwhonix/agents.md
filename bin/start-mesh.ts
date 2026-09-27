@@ -4,6 +4,7 @@ import { Mesh } from "../src/logic/Mesh";
 import { Agent } from "../src/logic/Agent";
 import { RuleBasedBrain } from "../src/logic/RuleBasedBrain";
 import { Message } from "../src/logic/Types";
+import { createDynamicAgent } from "../src/logic/DynamicAgentRegistry";
 
 function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
   const ignored = new Set(["node_modules", ".git", ".next", "test-results", "public", ".github", "pnpm-lock.yaml"]);
@@ -16,22 +17,11 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
     const stats = fs.statSync(fullPath);
 
     if (stats.isDirectory()) {
-      const agent = new Agent(`dir-${fullPath}`, fullPath, "Directory Manager", brain, { responsiveness: 0.05 });
+      const agent = createDynamicAgent(`dir-${fullPath}`, fullPath, true, file, brain, 0.05);
       mesh.registerAgent(agent);
       registerDynamicAgents(fullPath, mesh, brain);
     } else {
-      let role = "File Manager";
-      if (file.endsWith(".ts")) {
-        role = "TypeScript File Manager";
-      } else if (file.endsWith(".tsx")) {
-        role = "React Component Manager";
-      } else if (file.endsWith(".json")) {
-        role = "JSON Config Manager";
-      } else if (file.endsWith(".md")) {
-        role = "Markdown Documenter";
-      }
-
-      const agent = new Agent(`file-${fullPath}`, fullPath, role, brain, { responsiveness: 0.05 });
+      const agent = createDynamicAgent(`file-${fullPath}`, fullPath, false, file, brain, 0.05);
       mesh.registerAgent(agent);
     }
   }
@@ -135,9 +125,9 @@ async function startBackgroundMesh() {
     id: crypto.randomUUID(),
     senderId: "system-cron",
     timestamp: Date.now(),
-    what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style documentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Führe eine kontinuierliche Hintergrundoptimierung und ein Refactoring in der Agent2Agent-Struktur durch, bei der jede Domäne, jedes Verzeichnis und jede Datei einen eigenen dedizierten Agenten erhält.",
+    what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Funktions-Löschungen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Dokumentationen - Todos Creation + Implementierungen + Improvements. Führe eine kontinuierliche Hintergrundoptimierung und ein Refactoring in der Agent2Agent-Struktur durch, bei der jede Domäne, jedes Verzeichnis und jede Datei einen eigenen dedizierten Agenten erhält.",
     where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt. Zielorte müssen eindeutig spezifiziert werden, inklusive Aktualisierung aller Dateien sowie Projektordner-Cleanup, um Sauberkeit und Ordnung beizubehalten.",
-    how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll. Definiere genau, was, wo und wie. Stelle sicher, dass alle Änderungen additiv und nicht destruktiv sind. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Function Deletionen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Documentationen - Todo´s Creation + Implementationen + Improvements. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements].",
+    how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll. Definiere genau, was, wo und wie. Stelle sicher, dass alle Änderungen additiv und nicht destruktiv sind. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Funktions-Löschungen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Dokumentationen - Todos Creation + Implementierungen + Improvements. Format analysis for Jules exactly as: @jules [Root Cause Analysis des Problems (Include your CoT here)] + [Actionable Code-Fix] + [Quality/Performance Improvements].",
     reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben. Alle Agents erhalten jeden Output als Input und können frei entscheiden, wie sie reagieren. Optimierung dieser prompt und deren Umsetzung und Verbesserung.",
   };
 
