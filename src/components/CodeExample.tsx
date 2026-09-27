@@ -137,8 +137,8 @@ export default function CodeExample({
       await navigator.clipboard.writeText(md);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
+    } catch {
+      // Silently fail if clipboard write fails
     }
   };
 

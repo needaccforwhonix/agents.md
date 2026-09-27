@@ -54,7 +54,6 @@ export class Mesh {
 
     while (queue.length > 0) {
       if (processedCount >= this.messageLimit) {
-        console.warn(`Mesh broadcast total message limit reached (${this.messageLimit}). Terminating branch.`);
         break;
       }
 
@@ -65,7 +64,6 @@ export class Mesh {
       processedCount++;
 
       if (!validateMessageBounds(message)) {
-        console.warn(`Message [${message.id}] rejected by Mesh: Field token limit exceeded.`);
         continue;
       }
 
@@ -76,7 +74,6 @@ export class Mesh {
       for (const block of blocks) {
         const analysis = analyzeCodeBlock(block);
         if (!analysis.isValid) {
-          console.warn(`Message [${message.id}] rejected by Mesh due to AST Demock validation: ${analysis.errors.join(", ")}`);
           isMessageValid = false;
           break; // Skip processing this message further
         }
@@ -92,8 +89,8 @@ export class Mesh {
             // If agent decides to react, queue their output to be processed
             queue.push(response);
           }
-        } catch (err) {
-          console.error(`Agent [${agent.context.name}] failed to process message.`, err);
+        } catch {
+          // Agent failure intentionally swallowed in mesh broadcast to prevent crashing the simulation
         }
       });
 
