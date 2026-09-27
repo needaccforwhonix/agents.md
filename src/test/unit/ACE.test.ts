@@ -55,6 +55,14 @@ describe("ACE Module", () => {
       expect(boundHistory(undefined as unknown as Message[], 1000)).toEqual([]);
     });
 
+    it("should safely handle Message objects with undefined fields", () => {
+      const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: undefined as unknown as string, where: undefined as unknown as string, how: undefined as unknown as string, reasoning: undefined as unknown as string };
+      const history = [msg];
+      const bounded = boundHistory(history, 10);
+      expect(bounded).toEqual([msg]);
+      expect(countTokens(msg.what)).toBe(0);
+    });
+
     it("should include messages when token limit is exactly met", () => {
       const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: "1234", where: "1234", how: "1234", reasoning: "1234" }; // length 19 (incl spaces) -> 5 tokens
       const msg2: Message = { id: "2", senderId: "s", timestamp: 2, what: "123", where: "1", how: "1", reasoning: "1" }; // length 10 (incl spaces) -> 3 tokens
