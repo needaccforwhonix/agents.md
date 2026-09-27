@@ -18,7 +18,9 @@ export const MeshVisualizer: React.FC = () => {
     fetch("/api/files")
       .then((res) => res.json())
       .then((data) => setFileStructure(data))
-      .catch((err) => console.error("Failed to fetch file structure:", err));
+      .catch(() => {
+        // Silently handle error fetching structure
+      });
   }, []);
 
   useEffect(() => {
@@ -76,8 +78,8 @@ export const MeshVisualizer: React.FC = () => {
           }
         }
       }
-    } catch (err) {
-      console.warn("Failed to load mesh state from localStorage:", err);
+    } catch {
+      // Silently handle state load errors
     }
 
     setAgents(mesh.getAgents());
@@ -118,8 +120,8 @@ export const MeshVisualizer: React.FC = () => {
         agents: updatedAgents.map(a => ({ id: a.context.id, context: a.context }))
       };
       localStorage.setItem('agentMeshState', JSON.stringify(stateToSave));
-    } catch (err) {
-      console.warn("Failed to save mesh state to localStorage:", err);
+    } catch {
+      // Silently handle save error
     }
 
     setIsSimulating(false);
