@@ -100,7 +100,7 @@ async function startBackgroundMesh() {
   console.log("Registering dynamic agents for all files and directories...");
   registerDynamicAgents(process.cwd(), mesh, brain);
 
-  const { DBPersistence } = await import("./DBPersistence");
+  const { DBPersistence } = await import("../src/logic/DBPersistence");
   const dbPersistence = new DBPersistence();
 
   let hasHydratedState = false;

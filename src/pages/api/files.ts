@@ -8,7 +8,7 @@ export type FileNode = {
   isDirectory: boolean;
 };
 
-function getFileStructure(dir: string, baseDir: string = dir, maxDepth = 4, currentDepth = 0): FileNode[] {
+export function getFileStructure(dir: string, baseDir: string = dir, maxDepth = 4, currentDepth = 0): FileNode[] {
   if (currentDepth > maxDepth) return [];
 
   const ignored = new Set(["node_modules", ".git", ".next", "test-results", "public", ".github", "pnpm-lock.yaml"]);
