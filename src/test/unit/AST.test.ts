@@ -89,6 +89,18 @@ describe("AST Module", () => {
             const result = analyzeCodeBlock(undefined as unknown as string);
             expect(result.isValid).toBe(true);
             expect(result.errors).toHaveLength(0);
+
+            const result2 = analyzeCodeBlock(null as unknown as string);
+            expect(result2.isValid).toBe(true);
+            expect(result2.errors).toHaveLength(0);
+
+            const result3 = analyzeCodeBlock("");
+            expect(result3.isValid).toBe(true);
+            expect(result3.errors).toHaveLength(0);
+
+            const result4 = analyzeCodeBlock("   \n\t  ");
+            expect(result4.isValid).toBe(true);
+            expect(result4.errors).toHaveLength(0);
         });
 
         it("should handle unexpected property access gracefully", () => {
