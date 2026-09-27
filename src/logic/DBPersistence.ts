@@ -1,6 +1,5 @@
 import Database from "better-sqlite3";
 import { Message, AgentContext } from "./Types";
-import fs from "fs";
 
 export class DBPersistence {
   private db: Database.Database;

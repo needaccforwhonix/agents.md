@@ -78,7 +78,7 @@ describe('Mesh Unit Tests', () => {
       timestamp: Date.now(),
       what: "what",
       where: "where",
-      how: "how ```typescript\nconst dummy = 'mock_' + 'data';\n```",
+      how: "how ```typescript\nconst dummy = 'mock_data';\n```",
       reasoning: "reasoning",
     };
 

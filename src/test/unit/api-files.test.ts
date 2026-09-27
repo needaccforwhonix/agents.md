@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import handler, { getFileStructure, FileNode } from "../../pages/api/files";
-import type { NextApiRequest, NextApiResponse } from "next";
+import handler, { getFileStructure } from "../../pages/api/files";
 import path from "path";
 import fs from "fs";
 
@@ -73,7 +72,7 @@ describe("api/files", () => {
         if (p === file1) {
           throw new Error("Simulated statSync error");
         }
-        return { isDirectory: () => false } as unknown as fs.Stats;
+        return { isDirectory: () => false } as unknown as ReturnType<typeof fs.statSync>;
       });
 
       const res = getFileStructure(tempDir, tempDir);
@@ -87,11 +86,11 @@ describe("api/files", () => {
   });
 
   it("should handle the NextApiRequest correctly", () => {
-    const req = {} as unknown as NextApiRequest;
+    const req = {} as unknown as import("next").NextApiRequest;
     const res = {
       status: vi.fn().mockReturnThis(),
       json: vi.fn()
-    } as unknown as NextApiResponse<FileNode[]>;
+    } as unknown as import("next").NextApiResponse;
 
     handler(req, res);
 

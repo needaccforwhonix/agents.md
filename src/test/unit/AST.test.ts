@@ -47,9 +47,9 @@ describe("AST Module", () => {
             expect(result1.isValid).toBe(false);
             expect(result1.errors[0]).toContain("dummyVar");
 
-            const result2 = analyzeCodeBlock("const x = 'mock_" + "data';");
+            const result2 = analyzeCodeBlock("const x = 'mock_data';");
             expect(result2.isValid).toBe(false);
-            expect(result2.errors[0]).toContain("mock_" + "data");
+            expect(result2.errors[0]).toContain("mock_data");
         });
 
         it("should catch mock identifiers within destructured objects/arrays", () => {
