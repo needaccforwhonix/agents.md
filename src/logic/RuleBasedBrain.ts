@@ -16,7 +16,7 @@ export class RuleBasedBrain implements Brain {
     }
 
     // Determine basic response strategy based on agent role
-    const parameters = context.parameters || {} as Record<string, number | undefined>;
+    const parameters = context.parameters || {};
     const chanceToRespond = parameters.responsiveness !== undefined ? parameters.responsiveness : 0.5;
 
     // Simulate recursive response throttling / basic chance

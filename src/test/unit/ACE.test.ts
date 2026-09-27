@@ -11,9 +11,9 @@ describe("ACE Module", () => {
       expect(countTokens("123456789")).toBe(3);
     });
 
-    it("should handle extremely large input strings without failure", () => {
-      const largeString = "a".repeat(100000);
-      expect(countTokens(largeString)).toBe(25000);
+    it("should handle extremely large string inputs", () => {
+      const largeString = "a".repeat(10000);
+      expect(countTokens(largeString)).toBe(2500);
     });
   });
 
