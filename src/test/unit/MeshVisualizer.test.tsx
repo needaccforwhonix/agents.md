@@ -2,9 +2,9 @@ import React from 'react';
 // @vitest-environment jsdom
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { MeshVisualizer } from '../../src/ui/MeshVisualizer';
+import { MeshVisualizer } from '../../ui/MeshVisualizer';
 
-import { Mesh } from '../../src/logic/Mesh';
+import { Mesh } from '../../logic/Mesh';
 
 describe('MeshVisualizer Component', () => {
   it('should render the "Start Simulation" button', () => {

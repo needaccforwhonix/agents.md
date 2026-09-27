@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { Mesh } from '../../src/logic/Mesh';
-import { Agent } from '../../src/logic/Agent';
-import { RuleBasedBrain } from '../../src/logic/RuleBasedBrain';
-import { Message, Brain } from '../../src/logic/Types';
+import { Mesh } from '../../logic/Mesh';
+import { Agent } from '../../logic/Agent';
+import { RuleBasedBrain } from '../../logic/RuleBasedBrain';
+import { Message, Brain } from '../../logic/Types';
 
 describe('Mesh Unit Tests', () => {
   it('should register an agent correctly', () => {
