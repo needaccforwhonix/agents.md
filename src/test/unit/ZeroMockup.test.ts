@@ -35,6 +35,11 @@ describe('Zero-Mockup Policy Enforcement', () => {
          expect(content).not.toMatch(/mock/i);
       }
 
+      // Explicitly reject console.log to enforce production-readiness programmatically
+      if (file !== 'AST.ts') {
+         expect(content).not.toMatch(/console\.log/);
+      }
+
       // Checking for the "any" keyword in typescript (basic regex for full word 'any')
       if (file !== 'AST.ts') {
         const lines = content.split('\n');
