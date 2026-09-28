@@ -76,6 +76,46 @@ describe("DBPersistence", () => {
     expect(loaded[0].parameters.responsiveness).toBe(0.8);
   });
 
+  it("should not fail when saving identical message twice (INSERT OR IGNORE)", () => {
+    const msg: Message = {
+      id: "msg_duplicate",
+      senderId: "agent1",
+      timestamp: 1000,
+      what: "test what",
+      where: "test where",
+      how: "test how",
+      reasoning: "test reasoning"
+    };
+
+    db.saveMessage(msg);
+    // Saving again should not throw an error
+    expect(() => db.saveMessage(msg)).not.toThrow();
+
+    const loaded = db.loadMessages();
+    expect(loaded.length).toBe(1);
+  });
+
+  it("should overwrite existing agent state correctly (INSERT OR REPLACE)", () => {
+    const context: AgentContext = {
+      id: "agent_replace",
+      name: "Test Agent",
+      role: "Test Role",
+      history: [],
+      parameters: { responsiveness: 0.8, generation: 1 }
+    };
+
+    db.saveAgentState(context);
+
+    // Modify and save again
+    context.parameters.responsiveness = 0.9;
+    db.saveAgentState(context);
+
+    const loaded = db.loadAgentStates();
+    expect(loaded.length).toBe(1);
+    expect(loaded[0].id).toBe("agent_replace");
+    expect(loaded[0].parameters.responsiveness).toBe(0.9);
+  });
+
   it("should respect the limit parameter when loading messages", () => {
     for (let i = 0; i < 5; i++) {
       db.saveMessage({
