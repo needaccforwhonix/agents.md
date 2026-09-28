@@ -1,0 +1,93 @@
+diff --git a/src/test/unit/AlphaEvolve.test.ts b/src/test/unit/AlphaEvolve.test.ts
+index bd43fb8..6cfdfee 100644
+--- a/src/test/unit/AlphaEvolve.test.ts
++++ b/src/test/unit/AlphaEvolve.test.ts
+@@ -82,6 +82,29 @@ describe("AlphaEvolve Module", () => {
+   });
+
+   describe("AlphaEvolve edge cases", () => {
++    it("should handle parameters that are exactly 0 with a 0.0 mutation rate without changing them", () => {
++      const params: AgentParameters = {
++        creativity: 0,
++        detailOrientation: 0,
++        generation: 1
++      };
++      const evolved = alphaEvolve(params, 0.0);
++      expect(evolved.creativity).toBe(0);
++      expect(evolved.detailOrientation).toBe(0);
++      expect(evolved.generation).toBe(2);
++    });
++
++    it("should safely handle Infinity and NaN values without throwing an exception", () => {
++      const params: AgentParameters = {
++        creativity: Infinity,
++        detailOrientation: NaN,
++        generation: 1
++      };
++      const evolved = alphaEvolve(params, 0.1);
++      expect(typeof evolved.creativity).toBe('number');
++      expect(Number.isNaN(evolved.detailOrientation)).toBe(true);
++    });
++
+     it("should handle mutation rate of 0.0 with no changes to params", () => {
+       const params: AgentParameters = {
+         creativity: 0.5,
+diff --git a/src/test/unit/Mesh.test.ts b/src/test/unit/Mesh.test.ts
+index bc6e5a8..0a3b83c 100644
+--- a/src/test/unit/Mesh.test.ts
++++ b/src/test/unit/Mesh.test.ts
+@@ -270,6 +270,24 @@ describe('Mesh Unit Tests', () => {
+     expect(mesh.getMessages().length).toBe(1);
+   });
+
++  it('should explicitly verify setMessages completely overwrites the message queue', () => {
++    const mesh = new Mesh(10);
++    const initialMessages: Message[] = [
++      { id: "old1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" }
++    ];
++    mesh.setMessages(initialMessages);
++    expect(mesh.getMessages()).toEqual(initialMessages);
++
++    const newMessages: Message[] = [
++      { id: "new1", senderId: "sys", timestamp: 2, what: "x", where: "y", how: "z", reasoning: "a" },
++      { id: "new2", senderId: "sys", timestamp: 3, what: "x2", where: "y2", how: "z2", reasoning: "a2" }
++    ];
++    mesh.setMessages(newMessages);
++    expect(mesh.getMessages()).toEqual(newMessages);
++    expect(mesh.getMessages().length).toBe(2);
++    expect(mesh.getMessages().find(m => m.id === "old1")).toBeUndefined();
++  });
++
+   it('should allow setting messages directly', () => {
+     const mesh = new Mesh(10);
+     const messages: Message[] = [
+@@ -279,6 +297,29 @@ describe('Mesh Unit Tests', () => {
+     expect(mesh.getMessages()).toEqual(messages);
+   });
+
++  it('should handle an explicit message with undefined reasoning without crashing and store it accurately', async () => {
++    const mesh = new Mesh(10);
++    const brain = new RuleBasedBrain();
++    const agent = new Agent("agent-1", "Test", "Role", brain, { responsiveness: 0 }); // ensure it doesn't respond
++    mesh.registerAgent(agent);
++
++    const msgWithoutReasoning = {
++      id: "no-reasoning-msg-explicit",
++      senderId: "system",
++      timestamp: Date.now(),
++      what: "what",
++      where: "where",
++      how: "how",
++      reasoning: undefined as unknown as string
++    };
++
++    await mesh.broadcast(msgWithoutReasoning);
++
++    expect(mesh.getMessages().length).toBe(1);
++    expect(mesh.getMessages()[0].id).toBe("no-reasoning-msg-explicit");
++    expect(mesh.getMessages()[0].reasoning).toBeUndefined();
++  });
++
+   it.each([
+     { name: 'null array', val: null },
+     { name: 'undefined array', val: undefined },
