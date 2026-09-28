@@ -319,4 +319,27 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages()[0].id).toBe("no-reasoning-msg");
   });
 
+  it('should handle a large burst of concurrent broadcasts without dropping valid messages up to the limit', async () => {
+    const mesh = new Mesh(100);
+    const brain = new RuleBasedBrain();
+
+    // We register an agent that does not respond to keep the test predictable and avoid recursive explosion
+    const agent = new Agent("stress-agent-1", "Test", "Role", brain, { responsiveness: 0 });
+    mesh.registerAgent(agent);
+
+    const concurrentMessages: Message[] = Array.from({ length: 50 }).map((_, i) => ({
+      id: `burst-msg-${i}`,
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "what",
+      where: "where",
+      how: "how",
+      reasoning: "reasoning"
+    }));
+
+    await Promise.all(concurrentMessages.map(msg => mesh.broadcast(msg)));
+
+    expect(mesh.getMessages().length).toBe(50);
+  });
+
 });
