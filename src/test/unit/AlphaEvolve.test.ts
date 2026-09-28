@@ -117,6 +117,16 @@ describe("AlphaEvolve Module", () => {
       expect(evolved.generation).toBe(2);
     });
 
+    it("should safely handle NaN mutation rate", () => {
+      const params: AgentParameters = {
+        creativity: 0.5,
+        generation: 1
+      };
+      const evolved = alphaEvolve(params, NaN);
+      expect(Number.isNaN(evolved.creativity)).toBe(true);
+      expect(evolved.generation).toBe(2);
+    });
+
     it("should safely handle Infinity and NaN within parameters", () => {
       const params: AgentParameters = {
         creativity: Infinity,

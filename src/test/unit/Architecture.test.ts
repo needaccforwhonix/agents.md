@@ -34,6 +34,19 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
     expect(fs.existsSync(path.join(rootDir, 'bin', 'start-mesh.ts'))).toBe(true);
   });
 
+  it('should verify AGENTS.md explicitly details RULE_Ordnerstruktur definitions', () => {
+    const rootDir = path.resolve(__dirname, '../../..');
+    const agentsMdContent = fs.readFileSync(path.join(rootDir, 'docs', 'AGENTS.md'), 'utf8');
+
+    // Explicitly check for RULE_Ordnerstruktur string
+    expect(agentsMdContent).toContain('RULE_Ordnerstruktur');
+
+    // Ensure the required directory paths are explicitly outlined in the agents.md file
+    expect(agentsMdContent).toContain('`/src`: Core logic and agent implementations.');
+    expect(agentsMdContent).toContain('`/bin`: Compiled artifacts and internal CLI tools.');
+    expect(agentsMdContent).toContain('`/docs`: Architectural ADRs and the `agents.md` specification.');
+  });
+
   it('should explicitly fail if any core interface in Types.ts has been deleted or renamed (WORM Immutability Policy)', () => {
     const rootDir = path.resolve(__dirname, '../../..');
     const typesContent = fs.readFileSync(path.join(rootDir, 'src', 'logic', 'Types.ts'), 'utf8');
