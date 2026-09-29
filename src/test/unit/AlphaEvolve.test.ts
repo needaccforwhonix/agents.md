@@ -47,9 +47,9 @@ describe("AlphaEvolve Module", () => {
     expect(evolved.someStringParam).toBe("test");
   });
 
-  it('should return empty object for null or undefined input', () => {
-    expect(alphaEvolve(null as unknown as AgentParameters)).toEqual({});
-    expect(alphaEvolve(undefined as unknown as AgentParameters)).toEqual({});
+  it('should throw an error for null or undefined input', () => {
+    expect(() => alphaEvolve(null as unknown as AgentParameters)).toThrow("Parameters cannot be null or undefined");
+    expect(() => alphaEvolve(undefined as unknown as AgentParameters)).toThrow("Parameters cannot be null or undefined");
   });
 
   it('should handle negative generation correctly', () => {

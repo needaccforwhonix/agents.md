@@ -159,4 +159,20 @@ describe("DBPersistence", () => {
     const loaded = db.loadMessages(limit);
     expect(loaded.length).toBe(expectedCount);
   });
+
+  describe("Table-Driven Boundary and Nil Checks (Zero-Mockup / Fail-Fast)", () => {
+    it.each([
+      { name: "null message", val: null },
+      { name: "undefined message", val: undefined },
+    ])("should throw error for $name in saveMessage", ({ val }) => {
+      expect(() => db.saveMessage(val as unknown as Message)).toThrow("Message cannot be null or undefined");
+    });
+
+    it.each([
+      { name: "null context", val: null },
+      { name: "undefined context", val: undefined },
+    ])("should throw error for $name in saveAgentState", ({ val }) => {
+      expect(() => db.saveAgentState(val as unknown as AgentContext)).toThrow("Agent context cannot be null or undefined");
+    });
+  });
 });

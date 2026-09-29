@@ -33,6 +33,9 @@ export class DBPersistence {
   }
 
   public saveMessage(message: Message) {
+    if (!message) {
+      throw new Error("Message cannot be null or undefined");
+    }
     const stmt = this.db.prepare(`
       INSERT OR IGNORE INTO messages (id, senderId, timestamp, what, where_field, how, reasoning)
       VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -49,6 +52,9 @@ export class DBPersistence {
   }
 
   public saveAgentState(context: AgentContext) {
+    if (!context) {
+      throw new Error("Agent context cannot be null or undefined");
+    }
     const stmt = this.db.prepare(`
       INSERT OR REPLACE INTO agents (id, name, role, parameters)
       VALUES (?, ?, ?, ?)
