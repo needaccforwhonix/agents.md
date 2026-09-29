@@ -18,11 +18,15 @@ export interface ASTAnalysisResultV2 {
  * to enforce code quality, security, and structure.
  */
 export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
+  if (code === null || code === undefined) {
+    throw new Error("Input cannot be null or undefined");
+  }
+
   const errors: string[] = [];
   const warnings: string[] = [];
   const suggestions: string[] = [];
 
-  if (!code || code.trim() === "") {
+  if (code.trim() === "") {
     return {
       isValid: true,
       errors,
@@ -113,6 +117,9 @@ export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
  * Extracts TypeScript code blocks from a message string.
  */
 export function extractCodeBlocks(messageContent: string): string[] {
+  if (messageContent === null || messageContent === undefined) {
+    throw new Error("Input cannot be null or undefined");
+  }
   if (!messageContent) return [];
   const codeBlockRegex = /```(?:typescript|ts|javascript|js)?\s*\n([\s\S]*?)```/g;
   const blocks: string[] = [];

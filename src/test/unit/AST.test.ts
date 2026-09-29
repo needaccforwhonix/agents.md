@@ -64,14 +64,19 @@ describe("AST Module", () => {
         });
 
         it.each([
-            { name: "undefined", val: undefined as unknown as string },
-            { name: "null", val: null as unknown as string },
             { name: "empty string", val: "" },
             { name: "whitespace", val: "   \n\t  " }
         ])("should safely ignore empty code: $name", ({ val }) => {
             const result = analyzeCodeBlock(val);
             expect(result.isValid).toBe(true);
             expect(result.errors).toHaveLength(0);
+        });
+
+        it.each([
+            { name: "undefined", val: undefined as unknown as string },
+            { name: "null", val: null as unknown as string }
+        ])("should throw error on null or undefined code: $name", ({ val }) => {
+            expect(() => analyzeCodeBlock(val)).toThrow("Input cannot be null or undefined");
         });
 
         it("should handle unexpected property access gracefully", () => {
@@ -145,11 +150,16 @@ describe("AST Module", () => {
         });
 
         it.each([
-            { name: "null", val: null as unknown as string },
-            { name: "undefined", val: undefined as unknown as string },
             { name: "empty string", val: "" }
         ])("should return empty array for $name input", ({ val }) => {
             expect(extractCodeBlocks(val)).toEqual([]);
+        });
+
+        it.each([
+            { name: "null", val: null as unknown as string },
+            { name: "undefined", val: undefined as unknown as string }
+        ])("should throw error on null or undefined input: $name", ({ val }) => {
+            expect(() => extractCodeBlocks(val)).toThrow("Input cannot be null or undefined");
         });
     });
 

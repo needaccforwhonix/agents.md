@@ -3,10 +3,9 @@ import { LLMBrain } from '../../logic/LLMBrain';
 import { AgentContext, Message } from '../../logic/Types';
 
 describe('LLMBrain', () => {
-  it('should return null if message or context is undefined', async () => {
+  it('should throw error if message or context is undefined', async () => {
     const brain = new LLMBrain();
-    const result = await brain.decide(null as unknown as Message, {} as AgentContext);
-    expect(result).toBeNull();
+    await expect(brain.decide(null as unknown as Message, {} as AgentContext)).rejects.toThrow("Input message cannot be null or undefined");
   });
 
   it('should return null if sender is the same as context id', async () => {
@@ -92,19 +91,19 @@ describe('LLMBrain', () => {
         name: 'empty inputs - null message',
         msg: null as unknown as Message,
         ctx: defaultContext,
-        expected: null
+        expected: 'error-msg'
       },
       {
         name: 'empty inputs - undefined message',
         msg: undefined as unknown as Message,
         ctx: defaultContext,
-        expected: null
+        expected: 'error-msg'
       },
       {
         name: 'empty inputs - null context',
         msg: defaultMsg,
         ctx: null as unknown as AgentContext,
-        expected: null
+        expected: 'error-ctx'
       },
       {
         name: 'maximum token limits - very long message fields',
@@ -142,17 +141,23 @@ describe('LLMBrain', () => {
            global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
         }
 
-        const result = await brain.decide(testCase.msg, testCase.ctx);
+        if (testCase.expected === 'error-msg') {
+          await expect(brain.decide(testCase.msg, testCase.ctx)).rejects.toThrow("Input message cannot be null or undefined");
+        } else if (testCase.expected === 'error-ctx') {
+          await expect(brain.decide(testCase.msg, testCase.ctx)).rejects.toThrow("Input context cannot be null or undefined");
+        } else {
+          const result = await brain.decide(testCase.msg, testCase.ctx);
 
-        if (testCase.expected === null) {
-          expect(result).toBeNull();
-        } else if (testCase.expected === 'truncate') {
-          expect(result).not.toBeNull();
-          expect(global.fetch).toHaveBeenCalled();
-          const callArgs = vi.mocked(global.fetch).mock.calls[0];
-          const requestBody = JSON.parse(callArgs[1]?.body as string);
-          expect(requestBody.prompt).not.toContain('a'.repeat(5000));
-          expect(requestBody.prompt).toContain('a'.repeat(4000) + '...');
+          if (testCase.expected === null) {
+            expect(result).toBeNull();
+          } else if (testCase.expected === 'truncate') {
+            expect(result).not.toBeNull();
+            expect(global.fetch).toHaveBeenCalled();
+            const callArgs = vi.mocked(global.fetch).mock.calls[0];
+            const requestBody = JSON.parse(callArgs[1]?.body as string);
+            expect(requestBody.prompt).not.toContain('a'.repeat(5000));
+            expect(requestBody.prompt).toContain('a'.repeat(4000) + '...');
+          }
         }
       });
     }
