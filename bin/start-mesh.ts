@@ -3,6 +3,7 @@ import path from "path";
 import { Mesh } from "../src/logic/Mesh";
 import { Agent } from "../src/logic/Agent";
 import { RuleBasedBrain } from "../src/logic/RuleBasedBrain";
+import { LLMBrain } from "../src/logic/LLMBrain";
 import { Message } from "../src/logic/Types";
 import { createDynamicAgent } from "../src/logic/DynamicAgentRegistry";
 
@@ -31,7 +32,7 @@ async function startBackgroundMesh() {
   console.log("Initializing Agent2Agent Background Mesh...");
 
   const mesh = new Mesh(100000); // Higher message limit for longer simulation
-  const brain = new RuleBasedBrain();
+  const brain = new LLMBrain();
 
   // Increased responsiveness for background to ensure a deeper, longer-running AgentMesh simulation
   const devAgent = new Agent("bg-agent-1", "SysDevBot", "System Developer", brain, { responsiveness: 0.5 });

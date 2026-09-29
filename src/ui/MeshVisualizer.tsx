@@ -1,7 +1,8 @@
+import { LLMBrain } from "../logic/LLMBrain";
 import React, { useEffect, useState } from "react";
 import { Mesh } from "../logic/Mesh";
 import { Agent } from "../logic/Agent";
-import { RuleBasedBrain } from "../logic/RuleBasedBrain";
+
 import { Message } from "../logic/Types";
 import type { FileNode } from "../pages/api/files";
 import { createDynamicAgent } from "../logic/DynamicAgentRegistry";
@@ -30,7 +31,8 @@ export const MeshVisualizer: React.FC = () => {
     const mesh = new Mesh();
 
     // 2. Create decoupled autonomous agents
-    const brain = new RuleBasedBrain();
+    const brain = new LLMBrain();
+    // Note: For frontend browser environment LLMBrain would hit an API wrapper, falling back to RuleBasedBrain if needed.
     const developerAgent = new Agent("agent-1", "DevBot", "Developer", brain, { responsiveness: 0.1 });
     const securityAgent = new Agent("agent-2", "SecBot", "Security Analyst", brain, { responsiveness: 0.05 });
     const qaAgent = new Agent("agent-3", "QABot", "Quality Assurance", brain, { responsiveness: 0.05 });
