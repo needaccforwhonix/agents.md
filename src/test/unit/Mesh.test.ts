@@ -342,4 +342,48 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages().length).toBe(50);
   });
 
+  describe('Table-Driven Mesh Boundary Checks', () => {
+    const mesh = new Mesh(10);
+
+    const boundaryCases = [
+      {
+        name: 'null message',
+        msg: null as unknown as Message,
+        shouldThrow: true
+      },
+      {
+        name: 'undefined message',
+        msg: undefined as unknown as Message,
+        shouldThrow: true
+      },
+      {
+        name: 'empty string fields',
+        msg: {
+          id: "msg-empty",
+          senderId: "sys",
+          timestamp: 0,
+          what: "",
+          where: "",
+          how: "",
+          reasoning: ""
+        },
+        shouldThrow: false
+      }
+    ];
+
+    it.each(boundaryCases)('broadcast with $name', async ({ msg, shouldThrow }) => {
+      if (shouldThrow) {
+        await expect(mesh.broadcast(msg)).rejects.toThrow("Invalid Message: Message cannot be null or undefined.");
+      } else {
+        await mesh.broadcast(msg);
+        expect(mesh.getMessages().some(m => m.id === msg.id)).toBe(true);
+      }
+    });
+
+    it('should throw when setting invalid messages via setMessages', () => {
+      expect(() => mesh.setMessages(null as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+      expect(() => mesh.setMessages(undefined as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+    });
+  });
+
 });
