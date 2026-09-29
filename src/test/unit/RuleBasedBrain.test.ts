@@ -110,12 +110,12 @@ describe("RuleBasedBrain", () => {
         expect(resp!.how).toContain("Apply Agentic Context Engineering");
     });
 
-    it("should return null for invalid inputs", async () => {
+    it("should throw error for invalid inputs", async () => {
         const brain = new RuleBasedBrain();
-        expect(await brain.decide(null as unknown as Message, null as unknown as AgentContext)).toBeNull();
+        await expect(brain.decide(null as unknown as Message, null as unknown as AgentContext)).rejects.toThrow("Input message cannot be null or undefined");
     });
 
-    it("should return null if sender is self", async () => {
+    it("should return null if sender matches context id (drop message)", async () => {
         const brain = new RuleBasedBrain();
         const context: AgentContext = { id: "1", name: "n", role: "r", history: [], parameters: undefined as unknown as AgentParameters };
         const msg: Message = { id: "m", senderId: "1", timestamp: 1, what: "", where: "", how: "", reasoning: "" };
@@ -138,24 +138,19 @@ describe("RuleBasedBrain", () => {
         expect(resp!.how.includes("...")).toBe(true);
         expect(resp!.reasoning.includes("...")).toBe(true);
     });
-  it('should gracefully handle empty or invalid inputs', async () => {
+  it('should throw error for empty or invalid inputs', async () => {
     const brain = new RuleBasedBrain();
     const testContext: AgentContext = {
       id: "agent-1", name: "Test Agent", role: "Role", history: [], parameters: {}
     };
 
-
-    let response = await brain.decide(null as unknown as Message, testContext);
-    expect(response).toBeNull();
-
-
-    response = await brain.decide(undefined as unknown as Message, testContext);
-    expect(response).toBeNull();
+    await expect(brain.decide(null as unknown as Message, testContext)).rejects.toThrow("Input message cannot be null or undefined");
+    await expect(brain.decide(undefined as unknown as Message, testContext)).rejects.toThrow("Input message cannot be null or undefined");
 
     const validMsg = { id: "1", senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" } as unknown as Message;
 
-    response = await brain.decide(validMsg, null as unknown as AgentContext);
-    expect(response).toBeNull();
+    await expect(brain.decide(validMsg, null as unknown as AgentContext)).rejects.toThrow("Input context cannot be null or undefined");
+    await expect(brain.decide(validMsg, undefined as unknown as AgentContext)).rejects.toThrow("Input context cannot be null or undefined");
   });
 
   it('should set appropriate roleSpecificHow for all known roles', async () => {
@@ -291,25 +286,25 @@ describe("RuleBasedBrain", () => {
         name: 'empty inputs - null message',
         msg: null as unknown as Message,
         ctx: defaultContext,
-        expected: null
+        expected: 'error-msg'
       },
       {
         name: 'empty inputs - undefined message',
         msg: undefined as unknown as Message,
         ctx: defaultContext,
-        expected: null
+        expected: 'error-msg'
       },
       {
         name: 'empty inputs - null context',
         msg: defaultMsg,
         ctx: null as unknown as AgentContext,
-        expected: null
+        expected: 'error-ctx'
       },
       {
         name: 'empty inputs - undefined context',
         msg: defaultMsg,
         ctx: undefined as unknown as AgentContext,
-        expected: null
+        expected: 'error-ctx'
       },
       {
         name: 'sender matches context id (drop message)',
@@ -350,17 +345,23 @@ describe("RuleBasedBrain", () => {
         }
 
         try {
-          const result = await brain.decide(testCase.msg, testCase.ctx);
+          if (testCase.expected === 'error-msg') {
+            await expect(brain.decide(testCase.msg, testCase.ctx)).rejects.toThrow("Input message cannot be null or undefined");
+          } else if (testCase.expected === 'error-ctx') {
+            await expect(brain.decide(testCase.msg, testCase.ctx)).rejects.toThrow("Input context cannot be null or undefined");
+          } else {
+            const result = await brain.decide(testCase.msg, testCase.ctx);
 
-          if (testCase.expected === null) {
-            expect(result).toBeNull();
-          } else if (testCase.expected === 'truncate') {
-            expect(result).not.toBeNull();
-            expect(result!.what).not.toContain('a'.repeat(4001));
-            expect(result!.what).toContain('a'.repeat(4000) + '...');
-          } else if (testCase.expected === 'accept') {
-            expect(result).not.toBeNull();
-            expect(result!.what).toContain('(WAS)');
+            if (testCase.expected === null) {
+              expect(result).toBeNull();
+            } else if (testCase.expected === 'truncate') {
+              expect(result).not.toBeNull();
+              expect(result!.what).not.toContain('a'.repeat(4001));
+              expect(result!.what).toContain('a'.repeat(4000) + '...');
+            } else if (testCase.expected === 'accept') {
+              expect(result).not.toBeNull();
+              expect(result!.what).toContain('(WAS)');
+            }
           }
         } finally {
           if (originalRandom) {

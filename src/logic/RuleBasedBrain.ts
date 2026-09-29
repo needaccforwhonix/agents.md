@@ -6,8 +6,11 @@ import { Brain, Message, AgentContext } from "./Types";
  */
 export class RuleBasedBrain implements Brain {
   async decide(message: Message, context: AgentContext): Promise<Message | null> {
-    if (!message || !context) {
-      return null;
+    if (message === null || message === undefined) {
+      throw new Error("Input message cannot be null or undefined");
+    }
+    if (context === null || context === undefined) {
+      throw new Error("Input context cannot be null or undefined");
     }
 
     // Avoid responding to own messages

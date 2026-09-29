@@ -120,3 +120,9 @@ We maintain a strictly immutable-evolution philosophy regarding the repository s
     *   `/src`: Core logic and agent implementations.
     *   `/bin`: Compiled artifacts and internal CLI tools.
     *   `/docs`: Architectural ADRs and the `agents.md` specification.
+
+### 4. Zero-Mockup Policy
+The project enforces a strict "Zero-Mockup Policy" to guarantee 100% production readiness.
+*   **Zero Compiler Warnings:** All code must compile cleanly without warnings.
+*   **No Explicit Any Types:** The strict elimination of explicit `any` types is required. Use `@ts-expect-error` with descriptive reasons instead of `@ts-ignore` where bypassing is absolutely necessary (e.g., in test boundaries).
+*   **No Dummy/Mock Patterns:** Hardcoded dummy patterns, `mock_data`, and empty function declarations (e.g., `() => {}`) are strictly prohibited and will be rejected by AST validation. All properties and logic must be purely deterministic and functional.
