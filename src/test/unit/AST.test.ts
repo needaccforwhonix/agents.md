@@ -28,10 +28,21 @@ describe("AST Module", () => {
             expect(result).toBeDefined();
         });
 
+        it("should parse empty variable declarations without initialization gracefully", () => {
+            const result = analyzeCodeBlock("let x; var y;");
+            expect(result.isValid).toBe(true);
+            expect(result.errors).toHaveLength(0);
+        });
+
         it("should catch eval()", () => {
             const result = analyzeCodeBlock("eval('something');");
             expect(result.isValid).toBe(false);
             expect(result.errors).toContain("Security Warning: Usage of eval() is not allowed in agent outputs.");
+        });
+
+        it("should not flag eval inside a template literal or string as CallExpression", () => {
+            const result = analyzeCodeBlock("const str = `eval('test')`; const str2 = 'eval(\\'test\\')';");
+            expect(result.errors).not.toContain("Security Warning: Usage of eval() is not allowed in agent outputs.");
         });
 
         it("should catch 'any' keyword", () => {

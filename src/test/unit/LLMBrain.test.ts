@@ -62,6 +62,22 @@ describe('LLMBrain', () => {
     expect(result).toBeNull();
   });
 
+  it('should return null when response.ok is false', async () => {
+    const brain = new LLMBrain('http://test.local');
+    const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
+    const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
+
+    const mockResponse = {
+      ok: false,
+      status: 500,
+    };
+
+    global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
+
+    const result = await brain.decide(msg, context);
+    expect(result).toBeNull();
+  });
+
   it('should include Authorization header if apiKey is provided', async () => {
     const brain = new LLMBrain('http://test.local', 'test-api-key');
     const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
