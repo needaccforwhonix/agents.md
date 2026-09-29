@@ -161,7 +161,7 @@ describe('LLMBrain', () => {
   describe('Uncovered branches in LLMBrain', () => {
     it('should default chanceToRespond to 0.5 if parameters are undefined', async () => {
       const brain = new LLMBrain('http://test.local');
-      const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: undefined as unknown as any };
+      const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: undefined as unknown as Record<string, number> };
       const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
 
       vi.spyOn(Math, 'random').mockReturnValue(0.4); // Less than 0.5, so it responds
@@ -216,7 +216,7 @@ describe('LLMBrain', () => {
     it('should use default reasoning if message reasoning is missing', async () => {
       const brain = new LLMBrain('http://test.local');
       const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
-      const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: undefined as unknown as any };
+      const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: undefined as unknown as string };
 
       const mockResponse = {
         ok: true,
