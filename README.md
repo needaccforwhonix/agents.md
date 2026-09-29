@@ -63,7 +63,7 @@ Cleanliness, Order, Optimization. And directories are managed separately
 
 ### Running the background simulation
 ```bash
-npx tsx scripts/start-mesh.ts
+npx tsx bin/start-mesh.ts
 ```
 
 ### Advanced Features

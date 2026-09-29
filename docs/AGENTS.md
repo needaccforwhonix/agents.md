@@ -45,7 +45,7 @@ When modifying the Agent2Agent mesh:
 * Token bounds are strictly enforced (via `validateMessageBounds`). Do not output large binary strings or context dumps inside properties.
 * Ensure code generated adheres to strictly "democked" AST evaluations. Do not create placeholder variables like `"dummy_data"` or leave `function myFunc() {}` empty. Always attempt to provide real, typing-centric structures.
 * Ensure domain specific bots (e.g. `SysSecBot`, `SysPerfBot`) and directory specific bots (`SysGithubBot`, `SysPublicBot`) are handled correctly.
-* Run `npx tsx scripts/start-mesh.ts` to test background processing changes.
+* Run `npx tsx bin/start-mesh.ts` to test background processing changes.
 
 Following these practices ensures that the agent-assisted development workflow stays
 fast and dependable.  When in doubt, restart the dev server rather than running the
