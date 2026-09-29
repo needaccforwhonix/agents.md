@@ -50,9 +50,12 @@ describe("ACE Module", () => {
       expect(bounded).toEqual([]);
     });
 
-    it("should safely handle null or undefined history array", () => {
-      expect(boundHistory(null as unknown as Message[], 1000)).toEqual([]);
-      expect(boundHistory(undefined as unknown as Message[], 1000)).toEqual([]);
+    it.each([
+      { name: "null", val: null as unknown as Message[] },
+      { name: "undefined", val: undefined as unknown as Message[] },
+      { name: "empty array", val: [] }
+    ])("should safely handle $name history array", ({ val }) => {
+      expect(boundHistory(val, 1000)).toEqual([]);
     });
 
     it("should safely handle Message objects with undefined fields", () => {
@@ -111,9 +114,14 @@ describe("ACE Module", () => {
   });
 
   describe("Edge cases for token counting", () => {
-    it("should handle strings with non-ASCII characters", () => {
-      expect(countTokens("🌟")).toBe(1); // Length is 2, 2/4 = 0.5 -> ceil(0.5) = 1
-      expect(countTokens("こんにちは")).toBe(2); // Length 5, 5/4 = 1.25 -> ceil(1.25) = 2
+    it.each([
+      { name: "emoji", val: "🌟", expected: 1 },
+      { name: "kanji", val: "こんにちは", expected: 2 },
+      { name: "whitespace only", val: "    ", expected: 1 },
+      { name: "empty string", val: "", expected: 0 },
+      { name: "single character", val: "a", expected: 1 }
+    ])("should handle $name correctly", ({ val, expected }) => {
+      expect(countTokens(val)).toBe(expected);
     });
   });
 });
