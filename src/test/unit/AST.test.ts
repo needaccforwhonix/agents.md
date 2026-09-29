@@ -144,9 +144,12 @@ describe("AST Module", () => {
             expect(blocks).toEqual([]); // match[1] is an empty string, so `if(match[1])` is false in our implementation.
         });
 
-        it("should return empty array for null or undefined input", () => {
-            expect(extractCodeBlocks(null as unknown as string)).toEqual([]);
-            expect(extractCodeBlocks(undefined as unknown as string)).toEqual([]);
+        it.each([
+            { name: "null", val: null as unknown as string },
+            { name: "undefined", val: undefined as unknown as string },
+            { name: "empty string", val: "" }
+        ])("should return empty array for $name input", ({ val }) => {
+            expect(extractCodeBlocks(val)).toEqual([]);
         });
     });
 
