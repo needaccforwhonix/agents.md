@@ -58,8 +58,6 @@ describe('Agent Unit Tests', () => {
     const brain = new RuleBasedBrain();
     const agent = new Agent("agent-1", "Test Agent", "Test Role", brain);
 
-
-
     const message: Message = {
       id: "msg-1",
       senderId: "system",
@@ -74,5 +72,92 @@ describe('Agent Unit Tests', () => {
 
     expect(agent.context.parameters.responsiveness).toBeDefined();
     // In AlphaEvolve it mutates by a small factor, so it shouldn't be exactly the same or could be slightly modified
+  });
+
+  describe('Table-Driven Edge Cases for Agent Parameters & Initialization', () => {
+    const edgeCases = [
+      {
+        name: 'undefined parameters should fallback to defaults',
+        params: undefined,
+        verify: (agent: Agent) => {
+          expect(agent.context.parameters.responsiveness).toBe(0.6);
+          expect(agent.context.parameters.generation).toBe(1);
+        }
+      },
+      {
+        name: 'NaN parameters should be preserved natively',
+        params: { responsiveness: NaN },
+        verify: (agent: Agent) => {
+          expect(Number.isNaN(agent.context.parameters.responsiveness)).toBe(true);
+          expect(agent.context.parameters.generation).toBe(1);
+        }
+      },
+      {
+        name: 'empty object parameters should fallback to defaults',
+        params: {},
+        verify: (agent: Agent) => {
+          expect(agent.context.parameters.responsiveness).toBe(0.6);
+          expect(agent.context.parameters.analyticalDepth).toBe(0.5);
+        }
+      },
+      {
+        name: 'extreme numbers should initialize properly',
+        params: { contextRetention: Infinity, generation: 100 },
+        verify: (agent: Agent) => {
+          expect(agent.context.parameters.contextRetention).toBe(Infinity);
+          expect(agent.context.parameters.generation).toBe(100);
+        }
+      }
+    ];
+
+    it.each(edgeCases)('should safely handle $name', ({ params, verify }) => {
+      const brain = new RuleBasedBrain();
+      const agent = new Agent("agent-1", "Test Agent", "Test Role", brain, params);
+      verify(agent);
+    });
+  });
+
+  describe('Table-Driven Message Handling Boundary Checks', () => {
+    const mockBrainResponse: Message = {
+      id: "response-1",
+      senderId: "agent-1",
+      timestamp: Date.now(),
+      what: "res",
+      where: "res",
+      how: "res",
+      reasoning: "res"
+    };
+
+    const mockBrain = new RuleBasedBrain();
+    // Deterministically return a response
+    mockBrain.decide = async () => mockBrainResponse;
+
+    const agent = new Agent("agent-1", "Test Agent", "Test Role", mockBrain);
+
+    const receiveCases = [
+      {
+        name: 'undefined message',
+        msg: undefined as unknown as Message,
+        expectedResponse: null
+      },
+      {
+        name: 'valid generic message',
+        msg: {
+          id: "msg-1",
+          senderId: "system",
+          timestamp: Date.now(),
+          what: "w",
+          where: "w",
+          how: "h",
+          reasoning: "r",
+        },
+        expectedResponse: mockBrainResponse
+      }
+    ];
+
+    it.each(receiveCases)('should process $name safely', async ({ msg, expectedResponse }) => {
+      const response = await agent.receiveMessage(msg);
+      expect(response).toEqual(expectedResponse);
+    });
   });
 });
