@@ -111,12 +111,57 @@ describe("AlphaEvolve Module", () => {
         generation: 1
       };
       const evolved = alphaEvolve(params, 0.1);
-      // In JavaScript: Infinity * 0.1 * (random) can be NaN if random ends up affecting the operation,
-      // but actually Math.random()*2-1 is in [-1, 1]. Infinity * non-zero is Infinity or -Infinity.
-      // Infinity + Infinity is Infinity. Infinity - Infinity is NaN.
-      // Let's just verify it safely handles it without crashing and we don't strictly assert the exact mathematical floating point artifact unless it's NaN.
       expect(typeof evolved.creativity).toBe('number');
       expect(Number.isNaN(evolved.detailOrientation)).toBe(true);
+    });
+  });
+
+  describe('Table-Driven Logic Gate Verification', () => {
+    const baseParams: AgentParameters = { creativity: 0.5, detailOrientation: 0.5, generation: 1 };
+
+    const edgeCases = [
+      {
+        name: 'negative mutation rate',
+        params: baseParams,
+        rate: -0.5,
+        verify: (evolved: AgentParameters) => {
+          expect(evolved.generation).toBe(2);
+          expect(evolved.creativity).toBeGreaterThanOrEqual(0);
+        }
+      },
+      {
+        name: 'exactly zero mutation rate',
+        params: baseParams,
+        rate: 0.0,
+        verify: (evolved: AgentParameters) => {
+          expect(evolved.generation).toBe(2);
+          expect(evolved.creativity).toBe(0.5);
+          expect(evolved.detailOrientation).toBe(0.5);
+        }
+      },
+      {
+        name: 'undefined mutation rate (uses default)',
+        params: baseParams,
+        rate: undefined,
+        verify: (evolved: AgentParameters) => {
+          expect(evolved.generation).toBe(2);
+          expect(evolved.creativity).toBeDefined();
+        }
+      },
+      {
+        name: 'NaN mutation rate',
+        params: baseParams,
+        rate: NaN,
+        verify: (evolved: AgentParameters) => {
+          expect(evolved.generation).toBe(2);
+          expect(Number.isNaN(evolved.creativity)).toBe(true);
+        }
+      }
+    ];
+
+    it.each(edgeCases)('should safely handle $name', ({ params, rate, verify }) => {
+      const evolved = alphaEvolve(params, rate);
+      verify(evolved);
     });
   });
 });
