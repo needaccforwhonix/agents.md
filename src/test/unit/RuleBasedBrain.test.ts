@@ -281,4 +281,93 @@ describe("RuleBasedBrain", () => {
     expect(response).not.toBeNull();
     expect(response!.reasoning).toContain("AlphaEvolve");
   });
+
+  describe('Table-Driven Logic Gate Verification', () => {
+    const defaultContext: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
+    const defaultMsg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
+
+    const logicGates = [
+      {
+        name: 'empty inputs - null message',
+        msg: null as unknown as Message,
+        ctx: defaultContext,
+        expected: null
+      },
+      {
+        name: 'empty inputs - undefined message',
+        msg: undefined as unknown as Message,
+        ctx: defaultContext,
+        expected: null
+      },
+      {
+        name: 'empty inputs - null context',
+        msg: defaultMsg,
+        ctx: null as unknown as AgentContext,
+        expected: null
+      },
+      {
+        name: 'empty inputs - undefined context',
+        msg: defaultMsg,
+        ctx: undefined as unknown as AgentContext,
+        expected: null
+      },
+      {
+        name: 'sender matches context id (drop message)',
+        msg: { ...defaultMsg, senderId: 'agent-1' },
+        ctx: defaultContext,
+        expected: null
+      },
+      {
+        name: 'maximum token limits - fields over 4000 chars are truncated',
+        msg: { ...defaultMsg, what: 'a'.repeat(5000), where: 'b'.repeat(5000), how: 'c'.repeat(5000), reasoning: 'd'.repeat(5000) },
+        ctx: defaultContext,
+        expected: 'truncate'
+      },
+      {
+        name: 'responsiveness drop - random above threshold',
+        msg: defaultMsg,
+        ctx: { ...defaultContext, parameters: { responsiveness: 0.1 } },
+        setupRandom: () => 0.9,
+        expected: null
+      },
+      {
+        name: 'responsiveness accept - random below threshold',
+        msg: defaultMsg,
+        ctx: { ...defaultContext, parameters: { responsiveness: 0.9 } },
+        setupRandom: () => 0.1,
+        expected: 'accept'
+      }
+    ];
+
+    for (const testCase of logicGates) {
+      it(`should handle ${testCase.name}`, async () => {
+        const brain = new RuleBasedBrain();
+        let originalRandom: typeof Math.random | null = null;
+
+        if (testCase.setupRandom) {
+          originalRandom = Math.random;
+          Math.random = testCase.setupRandom;
+        }
+
+        try {
+          const result = await brain.decide(testCase.msg, testCase.ctx);
+
+          if (testCase.expected === null) {
+            expect(result).toBeNull();
+          } else if (testCase.expected === 'truncate') {
+            expect(result).not.toBeNull();
+            expect(result!.what).not.toContain('a'.repeat(4001));
+            expect(result!.what).toContain('a'.repeat(4000) + '...');
+          } else if (testCase.expected === 'accept') {
+            expect(result).not.toBeNull();
+            expect(result!.what).toContain('(WAS)');
+          }
+        } finally {
+          if (originalRandom) {
+            Math.random = originalRandom;
+          }
+        }
+      });
+    }
+  });
 });
