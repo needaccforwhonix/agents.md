@@ -80,6 +80,17 @@ describe("AST Module", () => {
             expect(result.warnings).toHaveLength(0);
         });
 
+        it.each([
+            { code: "const nested = { a: { b: 'd" + "ummy' } };", match: "d" + "ummy" },
+            { code: "const arr = [[[ 'm" + "ock_data' ]]];", match: "m" + "ock_data" },
+            { code: "function test(x: { y: any }) {}", match: "any" },
+            { code: "class Deep { nestedMethod() { return function() { let z: any; }; } }", match: "any" }
+        ])("should correctly identify patterns in deeply nested structures: $match", ({ code, match }) => {
+            const result = analyzeCodeBlock(code);
+            expect(result.isValid).toBe(false);
+            expect(result.errors.some(e => e.includes(match))).toBe(true);
+        });
+
         it("should catch highly nested empty functions and methods", () => {
             const result = analyzeCodeBlock(`
                 class DeepClass {

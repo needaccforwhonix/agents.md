@@ -139,4 +139,24 @@ describe("DBPersistence", () => {
     expect(loadedLimited[0].id).toBe("msg-3");
     expect(loadedLimited[1].id).toBe("msg-4");
   });
+
+  it.each([
+    { limit: 0, expectedCount: 0 },
+    { limit: -1, expectedCount: 5 }
+  ])("should handle limit parameter edge cases for loadMessages ($limit)", ({ limit, expectedCount }) => {
+    for (let i = 0; i < 5; i++) {
+      db.saveMessage({
+        id: `msg-edge-${i}`,
+        senderId: "agent1",
+        timestamp: 1000 + i,
+        what: "test what",
+        where: "test where",
+        how: "test how",
+        reasoning: "test reasoning"
+      });
+    }
+
+    const loaded = db.loadMessages(limit);
+    expect(loaded.length).toBe(expectedCount);
+  });
 });
