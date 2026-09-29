@@ -157,4 +157,113 @@ describe('LLMBrain', () => {
       });
     }
   });
+
+  describe('Uncovered branches in LLMBrain', () => {
+    it('should default chanceToRespond to 0.5 if parameters are undefined', async () => {
+      const brain = new LLMBrain('http://test.local');
+      const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: undefined as unknown as any };
+      const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.4); // Less than 0.5, so it responds
+
+      const mockResponse = {
+        ok: true,
+        json: async () => ({
+          response: JSON.stringify({
+            what: 'test what',
+            where: 'test where',
+            how: 'test how',
+            reasoning: 'test reasoning'
+          })
+        })
+      };
+
+      global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
+
+      const result = await brain.decide(msg, context);
+      expect(result).not.toBeNull();
+
+      vi.restoreAllMocks();
+    });
+
+    it('should default chanceToRespond to 0.5 if responsiveness is undefined', async () => {
+      const brain = new LLMBrain('http://test.local');
+      const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: {} };
+      const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.4); // Less than 0.5, so it responds
+
+      const mockResponse = {
+        ok: true,
+        json: async () => ({
+          response: JSON.stringify({
+            what: 'test what',
+            where: 'test where',
+            how: 'test how',
+            reasoning: 'test reasoning'
+          })
+        })
+      };
+
+      global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
+
+      const result = await brain.decide(msg, context);
+      expect(result).not.toBeNull();
+
+      vi.restoreAllMocks();
+    });
+
+    it('should use default reasoning if message reasoning is missing', async () => {
+      const brain = new LLMBrain('http://test.local');
+      const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
+      const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: undefined as unknown as any };
+
+      const mockResponse = {
+        ok: true,
+        json: async () => ({
+          response: JSON.stringify({
+            what: 'test what',
+            where: 'test where',
+            how: 'test how',
+            reasoning: 'test reasoning'
+          })
+        })
+      };
+
+      global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
+
+      const result = await brain.decide(msg, context);
+      expect(result).not.toBeNull();
+
+      const callArgs = vi.mocked(global.fetch).mock.calls[0];
+      const requestBody = JSON.parse(callArgs[1]?.body as string);
+      expect(requestBody.prompt).toContain('Reasoning: \n');
+
+      vi.restoreAllMocks();
+    });
+
+    it('should use default values for parsed JSON fields if they are missing', async () => {
+      const brain = new LLMBrain('http://test.local');
+      const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
+      const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'test-what', where: 'test-where', how: 'test-how', reasoning: 'test-reasoning' };
+
+      const mockResponse = {
+        ok: true,
+        json: async () => ({
+          response: JSON.stringify({}) // Missing fields
+        })
+      };
+
+      global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
+
+      const result = await brain.decide(msg, context);
+      expect(result).not.toBeNull();
+      expect(result?.what).toContain('(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [test-what]');
+      expect(result?.where).toContain('(WO) Context: Agent 1 verarbeitet Aufgabe basierend auf [test-where]');
+      expect(result?.how).toContain('(WIE) Reagiert auf vorherige Aktion [test-how]');
+      expect(result?.reasoning).toContain('(WARUM) Als Role muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [test-reasoning]');
+
+      vi.restoreAllMocks();
+    });
+  });
 });
