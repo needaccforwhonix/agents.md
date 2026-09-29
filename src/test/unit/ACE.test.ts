@@ -53,9 +53,12 @@ describe("ACE Module", () => {
     it.each([
       { name: "null", val: null as unknown as Message[] },
       { name: "undefined", val: undefined as unknown as Message[] },
-      { name: "empty array", val: [] }
-    ])("should safely handle $name history array", ({ val }) => {
-      expect(boundHistory(val, 1000)).toEqual([]);
+    ])("should throw error for $name history array", ({ val }) => {
+      expect(() => boundHistory(val, 1000)).toThrow("History must be a valid array");
+    });
+
+    it("should safely handle empty array history", () => {
+      expect(boundHistory([], 1000)).toEqual([]);
     });
 
     it("should safely handle Message objects with undefined fields", () => {
