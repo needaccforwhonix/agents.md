@@ -62,4 +62,24 @@ describe('LLMBrain', () => {
     const result = await brain.decide(msg, context);
     expect(result).toBeNull();
   });
+
+  it('should include Authorization header if apiKey is provided', async () => {
+    const brain = new LLMBrain('http://test.local', 'test-api-key');
+    const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
+    const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
+
+    const mockResponse = {
+      ok: false,
+    };
+
+    global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
+
+    await brain.decide(msg, context);
+
+    expect(global.fetch).toHaveBeenCalledWith('http://test.local', expect.objectContaining({
+      headers: expect.objectContaining({
+        'Authorization': 'Bearer test-api-key',
+      }),
+    }));
+  });
 });
