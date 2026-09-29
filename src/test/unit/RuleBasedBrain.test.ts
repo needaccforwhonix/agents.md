@@ -263,4 +263,22 @@ describe("RuleBasedBrain", () => {
     expect(response).not.toBeNull();
     expect(response!.how).toContain("Identify obsolete mock patterns, remove unused imports, and consolidate logic.");
   });
+
+  it('should handle rapid sequential duplicate inputs gracefully by truncating history in context (if implemented) or correctly evaluating roleSpecificHow based on repetitive context', async () => {
+    const brain = new RuleBasedBrain();
+    const context: AgentContext = {
+      id: "agent-test", name: "Test Agent", role: "System Developer", history: [], parameters: { responsiveness: 1.0 }
+    };
+
+    const duplicateMsg: Message = { id: "2", senderId: "sys", timestamp: 1, what: "duplicate", where: "w", how: "h", reasoning: "r" };
+
+    // Simulate history accumulating
+    for(let i = 0; i < 20; i++) {
+        context.history.push({ ...duplicateMsg, id: `hist-${i}` });
+    }
+
+    const response = await brain.decide(duplicateMsg, context);
+    expect(response).not.toBeNull();
+    expect(response!.reasoning).toContain("AlphaEvolve");
+  });
 });
