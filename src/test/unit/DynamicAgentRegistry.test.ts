@@ -4,34 +4,25 @@ import { RuleBasedBrain } from "../../logic/RuleBasedBrain";
 
 describe("DynamicAgentRegistry", () => {
   describe("determineRoleFromFileNode", () => {
-    it("should return 'Directory Manager' if node is a directory", () => {
-      const role = determineRoleFromFileNode(true, "src");
-      expect(role).toBe("Directory Manager");
-    });
-
-    it("should return 'TypeScript File Manager' for .ts files", () => {
-      const role = determineRoleFromFileNode(false, "index.ts");
-      expect(role).toBe("TypeScript File Manager");
-    });
-
-    it("should return 'React Component Manager' for .tsx files", () => {
-      const role = determineRoleFromFileNode(false, "App.tsx");
-      expect(role).toBe("React Component Manager");
-    });
-
-    it("should return 'JSON Config Manager' for .json files", () => {
-      const role = determineRoleFromFileNode(false, "package.json");
-      expect(role).toBe("JSON Config Manager");
-    });
-
-    it("should return 'Markdown Documenter' for .md files", () => {
-      const role = determineRoleFromFileNode(false, "README.md");
-      expect(role).toBe("Markdown Documenter");
-    });
-
-    it("should return 'File Manager' for other files", () => {
-      const role = determineRoleFromFileNode(false, "styles.css");
-      expect(role).toBe("File Manager");
+    it.each([
+      { isDir: true, name: "src", expected: "Directory Manager" },
+      { isDir: true, name: "components", expected: "Directory Manager" },
+      { isDir: false, name: "index.ts", expected: "TypeScript File Manager" },
+      { isDir: false, name: "logic.ts", expected: "TypeScript File Manager" },
+      { isDir: false, name: "App.tsx", expected: "React Component Manager" },
+      { isDir: false, name: "Button.tsx", expected: "React Component Manager" },
+      { isDir: false, name: "package.json", expected: "JSON Config Manager" },
+      { isDir: false, name: "tsconfig.json", expected: "JSON Config Manager" },
+      { isDir: false, name: "README.md", expected: "Markdown Documenter" },
+      { isDir: false, name: "docs.md", expected: "Markdown Documenter" },
+      { isDir: false, name: "styles.css", expected: "File Manager" },
+      { isDir: false, name: "script.js", expected: "File Manager" },
+      { isDir: false, name: "image.png", expected: "File Manager" },
+      { isDir: false, name: "", expected: "File Manager" },
+      { isDir: true, name: "", expected: "Directory Manager" },
+    ])("should determine role correctly for isDir=$isDir, name='$name'", ({ isDir, name, expected }) => {
+      const role = determineRoleFromFileNode(isDir, name);
+      expect(role).toBe(expected);
     });
   });
 

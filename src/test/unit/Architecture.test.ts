@@ -47,6 +47,17 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
     expect(agentsMdContent).toContain('`/docs`: Architectural ADRs and the `agents.md` specification.');
   });
 
+  it('should explicitly confirm the domain specific bots and directory bots are instantiated in start-mesh.ts (docs/AGENTS.md Agent Mesh Directives)', () => {
+    const rootDir = path.resolve(__dirname, '../../..');
+    const startMeshContent = fs.readFileSync(path.join(rootDir, 'bin', 'start-mesh.ts'), 'utf8');
+
+    // Verifying specific bots documented in AGENTS.md exist
+    expect(startMeshContent).toContain('SysSecBot');
+    expect(startMeshContent).toContain('SysPerfBot');
+    expect(startMeshContent).toContain('SysGithubBot');
+    expect(startMeshContent).toContain('SysPublicBot');
+  });
+
   it('should explicitly fail if any core interface in Types.ts has been deleted or renamed (WORM Immutability Policy)', () => {
     const rootDir = path.resolve(__dirname, '../../..');
     const typesContent = fs.readFileSync(path.join(rootDir, 'src', 'logic', 'Types.ts'), 'utf8');
