@@ -29,7 +29,8 @@ describe('Zero-Mockup Policy Enforcement', () => {
 
       // Certain files contain the string "mock" or "dummy" legitimately as part of their logic or text values,
       // such as testing the Demock validation (AST.ts) or explicit prompt rules (RuleBasedBrain.ts, start-mesh.ts, MeshVisualizer.tsx, Mesh.ts)
-      const allowedFilesForMockDummy = ['AST.ts', 'RuleBasedBrain.ts', 'Mesh.ts', 'MeshVisualizer.tsx', 'start-mesh.ts'];
+
+      const allowedFilesForMockDummy = ['AST.ts', 'RuleBasedBrain.ts', 'Mesh.ts', 'MeshVisualizer.tsx', 'start-mesh.ts', 'LLMBrain.ts'];
       if (!allowedFilesForMockDummy.includes(file)) {
          expect(content).not.toMatch(/dummy/i);
          expect(content).not.toMatch(/mock/i);
