@@ -386,4 +386,24 @@ describe('Mesh Unit Tests', () => {
     });
   });
 
+  describe('Table-Driven Boundary and Nil Checks', () => {
+    it('should throw Error for null/undefined agent in registerAgent', () => {
+      const mesh = new Mesh();
+      expect(() => mesh.registerAgent(null as unknown as Agent)).toThrow("Invalid Agent: Agent and Agent Context must be fully defined.");
+      expect(() => mesh.registerAgent(undefined as unknown as Agent)).toThrow("Invalid Agent: Agent and Agent Context must be fully defined.");
+    });
+
+    it('should throw Error for null/undefined message in broadcast', async () => {
+      const mesh = new Mesh();
+      await expect(mesh.broadcast(null as unknown as Message)).rejects.toThrow("Invalid Message: Message cannot be null or undefined.");
+      await expect(mesh.broadcast(undefined as unknown as Message)).rejects.toThrow("Invalid Message: Message cannot be null or undefined.");
+    });
+
+    it('should throw Error for invalid messages array in setMessages', () => {
+      const mesh = new Mesh();
+      expect(() => mesh.setMessages(null as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+      expect(() => mesh.setMessages(undefined as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+      expect(() => mesh.setMessages({} as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+    });
+  });
 });

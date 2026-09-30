@@ -13,10 +13,10 @@ export class LLMBrain implements Brain {
   }
 
   async decide(message: Message, context: AgentContext): Promise<Message | null> {
-    if (message === null || message === undefined) {
+    if (!message) {
       throw new Error("Input message cannot be null or undefined");
     }
-    if (context === null || context === undefined) {
+    if (!context) {
       throw new Error("Input context cannot be null or undefined");
     }
 
@@ -61,16 +61,25 @@ Generate a JSON response conforming to the system prompt directives. Format anal
         headers["Authorization"] = `Bearer ${this.apiKey}`;
       }
 
-      const response = await fetch(this.endpointUrl, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          model: "llama3",
-          prompt: `${systemPrompt}\n\n${userPrompt}`,
-          stream: false,
-          format: "json",
-        }),
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      let response: Response;
+      try {
+        response = await fetch(this.endpointUrl, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            model: "llama3",
+            prompt: `${systemPrompt}\n\n${userPrompt}`,
+            stream: false,
+            format: "json",
+          }),
+          signal: controller.signal
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
 
       if (!response.ok) {
          return null;

@@ -287,4 +287,102 @@ describe('LLMBrain', () => {
       vi.restoreAllMocks();
     });
   });
+  describe('Table-Driven Edge Case and Boundary Validation', () => {
+    const defaultContext: AgentContext = { id: 'agent-llm', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
+    const defaultMsg: Message = { id: 'msg-llm', senderId: 'agent-other', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
+
+    const edgeCases = [
+      {
+        name: 'null message throws error',
+        msg: null as unknown as Message,
+        ctx: defaultContext,
+        expectedError: 'Input message cannot be null or undefined'
+      },
+      {
+        name: 'undefined message throws error',
+        msg: undefined as unknown as Message,
+        ctx: defaultContext,
+        expectedError: 'Input message cannot be null or undefined'
+      },
+      {
+        name: 'null context throws error',
+        msg: defaultMsg,
+        ctx: null as unknown as AgentContext,
+        expectedError: 'Input context cannot be null or undefined'
+      },
+      {
+        name: 'undefined context throws error',
+        msg: defaultMsg,
+        ctx: undefined as unknown as AgentContext,
+        expectedError: 'Input context cannot be null or undefined'
+      }
+    ];
+
+    for (const testCase of edgeCases) {
+      it(`should handle ${testCase.name}`, async () => {
+        const brain = new LLMBrain();
+        await expect(brain.decide(testCase.msg, testCase.ctx)).rejects.toThrow(testCase.expectedError);
+      });
+    }
+
+    it('should gracefully handle network timeouts using AbortController', async () => {
+      const brain = new LLMBrain();
+      global.fetch = vi.fn().mockImplementation(async (url, init) => {
+        return new Promise((_, reject) => {
+          // Instead of rejecting immediately, we simulate a very slow request
+          // that will trigger the controller.abort() which will fire the abort event
+          const timeout = setTimeout(() => { /* slow response */ }, 20000);
+
+          if (init?.signal) {
+             init.signal.addEventListener('abort', () => {
+               clearTimeout(timeout);
+               reject(new Error('AbortError'));
+             });
+
+             // If we want to simulate the timeout without waiting 10s we could override setTimeout
+             // However, vitest useFakeTimers is not enabled here so we just rely on LLMBrain.ts's logic
+             // Wait, since we are returning a slow promise, LLMBrain will wait 10s and then abort.
+             // To prevent a 10s delay in the test suite, we'll manually fire the abort signal immediately from the mock.
+             // Actually, since the AbortController is created inside LLMBrain.ts, we can't easily advance time unless we use vi.useFakeTimers.
+          }
+        });
+      });
+
+      vi.useFakeTimers();
+      const originalRandom = Math.random;
+      Math.random = () => 0.1; // Ensure it passes responsiveness
+      try {
+        const decidePromise = brain.decide(defaultMsg, defaultContext);
+
+        // Fast-forward time to trigger the 10-second timeout inside LLMBrain.ts
+        vi.advanceTimersByTime(11000);
+
+        const result = await decidePromise;
+        expect(result).toBeNull();
+      } finally {
+        Math.random = originalRandom;
+        vi.useRealTimers();
+      }
+    });
+
+    it('should inject Authorization header when apiKey is present', async () => {
+       const brain = new LLMBrain("http://localhost", "secret-key-123");
+       let usedHeaders: any;
+       global.fetch = vi.fn().mockImplementation(async (url, init) => {
+           usedHeaders = init.headers;
+           return {
+               ok: true,
+               json: async () => ({ response: JSON.stringify({ what: 'w', where: 'w', how: 'h', reasoning: 'r' }) })
+           };
+       });
+       const originalRandom = Math.random;
+       Math.random = () => 0.1; // Ensure it passes responsiveness
+       try {
+           await brain.decide(defaultMsg, defaultContext);
+           expect(usedHeaders).toHaveProperty('Authorization', 'Bearer secret-key-123');
+       } finally {
+           Math.random = originalRandom;
+       }
+    });
+  });
 });
