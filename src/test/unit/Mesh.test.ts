@@ -383,6 +383,44 @@ describe('Mesh Unit Tests', () => {
     it('should throw when setting invalid messages via setMessages', () => {
       expect(() => mesh.setMessages(null as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
       expect(() => mesh.setMessages(undefined as unknown as Message[])).toThrow("Invalid Messages: Messages must be a valid array.");
+  });
+
+  it("should handle large broadcast loops and limit processing gracefully to prevent unbounded recursion", async () => {
+    // A smaller limit to test if bounds hit correctly under load
+    const limitMesh = new Mesh(10);
+    const mockBrain: Brain = {
+      process: async (agent, messages) => ({
+        id: crypto.randomUUID(),
+        senderId: agent.context.id,
+        timestamp: Date.now(),
+        what: `response to ${messages.length}`,
+        where: "any",
+        how: "valid code\n```ts\nconst valid = true;\n```",
+        reasoning: "none"
+      })
+    };
+
+    // Register 5 agents that will each broadcast a message
+    for(let i=0; i<5; i++) {
+        limitMesh.registerAgent(new Agent(`agent-${i}`, "Bot", "Desc", mockBrain));
+    }
+
+    const startMsg: Message = {
+      id: crypto.randomUUID(),
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "start loop",
+      where: "any",
+      how: "```ts\nconst x = 1;\n```",
+      reasoning: "none"
+    };
+
+    await limitMesh.broadcast(startMsg);
+
+    const msgs = limitMesh.getMessages();
+    // Verify it doesn't exceed the recursion limits and returns cleanly.
+    // It should hit the 10 message limit and stop gracefully.
+    expect(msgs.length).toBeLessThanOrEqual(10 + 1); // 1 initial + up to 10 processed depending on parallel resolution race
     });
   });
 

@@ -371,4 +371,37 @@ describe("RuleBasedBrain", () => {
       });
     }
   });
+
+  describe("RuleBasedBrain extreme bounds and payload tests", () => {
+    it("should handle extremely large string payloads efficiently without crashing (truncate validation)", async () => {
+      const hugeString = "x".repeat(50000);
+      const brain = new RuleBasedBrain();
+      const agentContext: AgentContext = {
+        id: "massive-agent",
+        name: "MassiveBot",
+        role: "Stress Tester",
+        parameters: { generation: 1, analyticalDepth: 0.9 },
+        history: []
+      };
+
+      const messages: Message[] = [
+        {
+          id: "m1",
+          senderId: "system",
+          timestamp: Date.now(),
+          what: hugeString,
+          where: "root",
+          how: hugeString,
+          reasoning: "Stress test reasoning"
+        }
+      ];
+
+      const response = await brain.decide(messages[0], agentContext);
+      expect(response).toBeDefined();
+      if(response) {
+        expect(response.what.length).toBeLessThan(5000); // Because it truncates to 4000 then adds fixed template text
+        expect(response.what).toContain("..."); // It truncates and adds '...'
+      }
+    });
+  });
 });
