@@ -35,6 +35,12 @@ describe('Zero-Mockup Policy Enforcement', () => {
          expect(content).not.toMatch(/mock/i);
       }
 
+      // Strict string validation for mock dummy patterns
+      if (file !== 'AST.ts' && file !== 'start-mesh.ts' && file !== 'Mesh.ts') {
+         expect(content).not.toMatch(/["'`]mock_?[^"'`]*["'`]/i);
+         expect(content).not.toMatch(/["'`]dummy_?[^"'`]*["'`]/i);
+      }
+
       // Explicitly reject console.log to enforce production-readiness programmatically
       if (file !== 'AST.ts') {
          expect(content).not.toMatch(/console\.log/);
