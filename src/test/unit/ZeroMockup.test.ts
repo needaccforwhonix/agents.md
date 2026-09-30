@@ -18,9 +18,13 @@ function walkDir(dir: string): string[] {
 }
 
 describe('Zero-Mockup Policy Enforcement', () => {
-  it('should verify that all src files contain no mock or dummy patterns (excluding tests)', () => {
+  it('should verify that all src and bin files contain no mock or dummy patterns (excluding tests)', () => {
     const srcDir = path.resolve(__dirname, '../../');
-    const files = walkDir(srcDir).filter(file => file.endsWith('.ts') || file.endsWith('.tsx'));
+    const binDir = path.resolve(__dirname, '../../../bin');
+    const files = [
+      ...walkDir(srcDir).filter(file => file.endsWith('.ts') || file.endsWith('.tsx')),
+      ...walkDir(binDir).filter(file => file.endsWith('.ts') || file.endsWith('.tsx'))
+    ];
 
     for (const filePath of files) {
       const file = path.basename(filePath);
@@ -35,9 +39,11 @@ describe('Zero-Mockup Policy Enforcement', () => {
          expect(content).not.toMatch(/mock/i);
       }
 
-      // Explicitly reject console.log to enforce production-readiness programmatically
+      // Explicitly reject console.* to enforce production-readiness programmatically
       if (file !== 'AST.ts') {
          expect(content).not.toMatch(/console\.log/);
+         expect(content).not.toMatch(/console\.warn/);
+         expect(content).not.toMatch(/console\.error/);
       }
 
       // Checking for the "any" keyword in typescript (basic regex for full word 'any')

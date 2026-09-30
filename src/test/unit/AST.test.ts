@@ -203,4 +203,31 @@ describe("AST Module", () => {
              expect(blocks).toEqual(["const x = 1;", "const y = 2;"]);
         });
     });
+
+    describe("Extreme Edge cases for AST generation and analysis", () => {
+        it("should parse an extremely deep nested object without crashing", () => {
+            // TypeScript AST parser hits max call stack size around ~1000 depth.
+            // Let's use a safe depth that still tests deep nesting but won't crash V8.
+            let code = "const obj = {";
+            for(let i=0; i<50; i++) {
+                code += ` a${i}: {`;
+            }
+            code += " 'mock_data': 1 ";
+            for(let i=0; i<50; i++) {
+                code += "}";
+            }
+            code += "};";
+
+            const result = analyzeCodeBlock(code);
+            expect(result.isValid).toBe(false);
+            expect(result.errors.some(e => e.includes("mock_data"))).toBe(true);
+        });
+
+        it("should safely analyze infinite loops structurally (no execution)", () => {
+            const code = "while(true) { while(1) { for(;;) {} } }";
+            const result = analyzeCodeBlock(code);
+            // Infinite loops are not currently blocked by AST Demock rules, so it should be valid structurally
+            expect(result.isValid).toBe(true);
+        });
+    });
 });
