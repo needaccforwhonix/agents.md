@@ -4,6 +4,19 @@ import { Message } from "../../logic/Types";
 
 describe("ACE Module", () => {
   describe("countTokens", () => {
+    it.each([
+      { name: "number", val: 123 as unknown as string },
+      { name: "object", val: {} as unknown as string },
+      { name: "array", val: [] as unknown as string },
+    ])("should throw error for $name input", ({ val }) => {
+      expect(() => countTokens(val)).toThrow("Invalid input: text must be a string");
+    });
+
+    it("should return 0 for undefined or null input", () => {
+      expect(countTokens(undefined as unknown as string)).toBe(0);
+      expect(countTokens(null as unknown as string)).toBe(0);
+    });
+
     it("should correctly count tokens (approximate string length / 4)", () => {
       expect(countTokens("")).toBe(0);
       expect(countTokens("1234")).toBe(1);
