@@ -44,13 +44,11 @@ describe('Agent Unit Tests', () => {
     }
   });
 
-  it('should gracefully handle empty or null messages without crashing', async () => {
+  it('should throw error for null messages', async () => {
     const brain = new RuleBasedBrain();
     const agent = new Agent("agent-1", "Test Agent", "Test Role", brain);
 
-
-    const response = await agent.receiveMessage(null as unknown as Message);
-    expect(response).toBeNull();
+    await expect(agent.receiveMessage(null as unknown as Message)).rejects.toThrow("Invalid Message: missing required fields.");
     expect(agent.context.history.length).toBe(0);
   });
 
@@ -138,7 +136,17 @@ describe('Agent Unit Tests', () => {
       {
         name: 'undefined message',
         msg: undefined as unknown as Message,
-        expectedResponse: null
+        shouldThrow: true
+      },
+      {
+        name: 'message missing id',
+        msg: { senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" } as unknown as Message,
+        shouldThrow: true
+      },
+      {
+        name: 'message missing what',
+        msg: { id: "1", senderId: "sys", timestamp: 1, where: "w", how: "h" } as unknown as Message,
+        shouldThrow: true
       },
       {
         name: 'valid generic message',
@@ -151,13 +159,18 @@ describe('Agent Unit Tests', () => {
           how: "h",
           reasoning: "r",
         },
-        expectedResponse: mockBrainResponse
+        expectedResponse: mockBrainResponse,
+        shouldThrow: false
       }
     ];
 
-    it.each(receiveCases)('should process $name safely', async ({ msg, expectedResponse }) => {
-      const response = await agent.receiveMessage(msg);
-      expect(response).toEqual(expectedResponse);
+    it.each(receiveCases)('should process $name safely', async ({ msg, expectedResponse, shouldThrow }) => {
+      if (shouldThrow) {
+        await expect(agent.receiveMessage(msg)).rejects.toThrow("Invalid Message: missing required fields.");
+      } else {
+        const response = await agent.receiveMessage(msg);
+        expect(response).toEqual(expectedResponse);
+      }
     });
   });
 });

@@ -35,8 +35,8 @@ export class Agent {
    * Modifies context and uses Brain to optionally decide on a response.
    */
   async receiveMessage(message: Message): Promise<Message | null> {
-    if (!message) {
-      return null;
+    if (!message || !message.id || typeof message.what !== 'string' || typeof message.where !== 'string' || typeof message.how !== 'string') {
+      throw new Error("Invalid Message: missing required fields.");
     }
 
     // 1. Add to context history

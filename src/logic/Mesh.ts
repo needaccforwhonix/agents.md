@@ -44,7 +44,7 @@ export class Mesh {
    * Uses a queue-based loop to prevent OOM errors.
    */
   public async broadcast(initialMessage: Message): Promise<void> {
-    if (!initialMessage) {
+    if (!initialMessage || !initialMessage.id || typeof initialMessage.what !== 'string' || typeof initialMessage.where !== 'string' || typeof initialMessage.how !== 'string') {
       throw new Error("Invalid Message: Message cannot be null or undefined.");
     }
 

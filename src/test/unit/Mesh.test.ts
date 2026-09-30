@@ -357,6 +357,16 @@ describe('Mesh Unit Tests', () => {
         shouldThrow: true
       },
       {
+        name: 'missing id',
+        msg: { senderId: "sys", timestamp: 1, what: "w", where: "w", how: "h" } as unknown as Message,
+        shouldThrow: true
+      },
+      {
+        name: 'missing what',
+        msg: { id: "1", senderId: "sys", timestamp: 1, where: "w", how: "h" } as unknown as Message,
+        shouldThrow: true
+      },
+      {
         name: 'empty string fields',
         msg: {
           id: "msg-empty",

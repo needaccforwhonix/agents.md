@@ -5,6 +5,14 @@ import { RuleBasedBrain } from "../../logic/RuleBasedBrain";
 describe("DynamicAgentRegistry", () => {
   describe("determineRoleFromFileNode", () => {
     it.each([
+      { isDir: false, name: null as unknown as string, expectedError: "Invalid name: must be a string" },
+      { isDir: false, name: undefined as unknown as string, expectedError: "Invalid name: must be a string" },
+      { isDir: false, name: 123 as unknown as string, expectedError: "Invalid name: must be a string" },
+    ])("should throw error for invalid name: $name", ({ isDir, name, expectedError }) => {
+      expect(() => determineRoleFromFileNode(isDir, name)).toThrow(expectedError);
+    });
+
+    it.each([
       { isDir: true, name: "src", expected: "Directory Manager" },
       { isDir: true, name: "components", expected: "Directory Manager" },
       { isDir: false, name: "index.ts", expected: "TypeScript File Manager" },
@@ -27,6 +35,16 @@ describe("DynamicAgentRegistry", () => {
   });
 
   describe("createDynamicAgent", () => {
+    it.each([
+      { nodeId: null, nodePath: "/src", isDir: true, name: "src", brain: new RuleBasedBrain() },
+      { nodeId: "1", nodePath: null, isDir: true, name: "src", brain: new RuleBasedBrain() },
+      { nodeId: "1", nodePath: "/src", isDir: true, name: null, brain: new RuleBasedBrain() },
+      { nodeId: "1", nodePath: "/src", isDir: true, name: "src", brain: null },
+    ])("should throw error for missing arguments", ({ nodeId, nodePath, isDir, name, brain }) => {
+      // @ts-expect-error Intentionally testing invalid arguments missing required properties
+      expect(() => createDynamicAgent(nodeId, nodePath, isDir, name, brain)).toThrow("Missing required arguments for dynamic agent");
+    });
+
     it("should correctly instantiate an Agent with the determined role and responsiveness", () => {
       const brain = new RuleBasedBrain();
       const agent = createDynamicAgent("agent-id-1", "/src/index.ts", false, "index.ts", brain, 0.1);

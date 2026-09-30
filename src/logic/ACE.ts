@@ -7,6 +7,10 @@ import { Message } from "./Types";
 
 // Simulated token counting based on string length (approximate)
 export function countTokens(text: string): number {
+  if (text === undefined || text === null) return 0;
+  if (typeof text !== 'string') {
+    throw new Error("Invalid input: text must be a string");
+  }
   if (!text) return 0;
   return Math.ceil(text.length / 4);
 }
