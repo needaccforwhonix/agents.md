@@ -51,7 +51,7 @@ describe('LLMBrain', () => {
     expect(result?.reasoning).toBe('test reasoning');
   });
 
-  it('should return null if fetch throws', async () => {
+  it('should fallback to RuleBasedBrain if fetch throws', async () => {
     const brain = new LLMBrain('http://test.local');
     const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
     const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
@@ -59,10 +59,11 @@ describe('LLMBrain', () => {
     global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
     const result = await brain.decide(msg, context);
-    expect(result).toBeNull();
+    expect(result).not.toBeNull();
+    expect(result?.what).toContain('(WAS) Analysiere');
   });
 
-  it('should return null when response.ok is false', async () => {
+  it('should fallback to RuleBasedBrain when response.ok is false', async () => {
     const brain = new LLMBrain('http://test.local');
     const context: AgentContext = { id: 'agent-1', name: 'Agent 1', role: 'Role', history: [], parameters: { responsiveness: 1.0 } };
     const msg: Message = { id: 'msg-1', senderId: 'agent-2', timestamp: Date.now(), what: 'w', where: 'w', how: 'h', reasoning: 'r' };
@@ -75,7 +76,8 @@ describe('LLMBrain', () => {
     global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
 
     const result = await brain.decide(msg, context);
-    expect(result).toBeNull();
+    expect(result).not.toBeNull();
+    expect(result?.what).toContain('(WAS) Analysiere');
   });
 
   it('should include Authorization header if apiKey is provided', async () => {
@@ -132,7 +134,7 @@ describe('LLMBrain', () => {
         msg: defaultMsg,
         ctx: defaultContext,
         setupFetch: () => vi.fn().mockRejectedValue(new Error('Network timeout')),
-        expected: null
+        expected: 'fallback'
       }
     ];
 
@@ -166,6 +168,9 @@ describe('LLMBrain', () => {
 
           if (testCase.expected === null) {
             expect(result).toBeNull();
+          } else if (testCase.expected === 'fallback') {
+            expect(result).not.toBeNull();
+            expect(result?.what).toContain('(WAS) Analysiere');
           } else if (testCase.expected === 'truncate') {
             expect(result).not.toBeNull();
             expect(global.fetch).toHaveBeenCalled();
