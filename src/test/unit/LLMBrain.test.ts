@@ -122,6 +122,12 @@ describe('LLMBrain', () => {
         expected: 'error-ctx'
       },
       {
+        name: 'empty inputs - undefined context',
+        msg: defaultMsg,
+        ctx: undefined as unknown as AgentContext,
+        expected: 'error-ctx'
+      },
+      {
         name: 'maximum token limits - very long message fields',
         msg: { ...defaultMsg, what: 'a'.repeat(10000), where: 'b'.repeat(10000), how: 'c'.repeat(10000), reasoning: 'd'.repeat(10000) },
         ctx: defaultContext,
