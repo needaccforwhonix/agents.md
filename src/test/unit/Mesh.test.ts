@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Mesh } from '../../logic/Mesh';
+import { Mesh, validateMessageBounds } from '../../logic/Mesh';
 import { Agent } from '../../logic/Agent';
 import { RuleBasedBrain } from '../../logic/RuleBasedBrain';
 import { Message, Brain } from '../../logic/Types';
@@ -340,6 +340,74 @@ describe('Mesh Unit Tests', () => {
     await Promise.all(concurrentMessages.map(msg => mesh.broadcast(msg)));
 
     expect(mesh.getMessages().length).toBe(50);
+  });
+
+  describe('validateMessageBounds Table-Driven Edge Case Testing', () => {
+    const defaultValidMsg = {
+      id: "valid-msg", senderId: "sys", timestamp: 1,
+      what: "w", where: "w", how: "h", reasoning: "r"
+    };
+
+    const edgeCases = [
+      {
+        name: 'valid short message',
+        msg: defaultValidMsg,
+        limit: 4000,
+        expected: true
+      },
+      {
+        name: 'what field exactly at default limit',
+        msg: { ...defaultValidMsg, what: "w".repeat(16000) }, // "w".repeat(16000) is exactly 4000 tokens (16000/4)
+        limit: 4000,
+        expected: true
+      },
+      {
+        name: 'what field exceeding limit by 1 token',
+        msg: { ...defaultValidMsg, what: "w".repeat(16001) }, // 16001/4 = 4000.25 -> 4001 tokens
+        limit: 4000,
+        expected: false
+      },
+      {
+        name: 'where field exceeding limit by 1 token',
+        msg: { ...defaultValidMsg, where: "w".repeat(16001) },
+        limit: 4000,
+        expected: false
+      },
+      {
+        name: 'how field exceeding limit by 1 token',
+        msg: { ...defaultValidMsg, how: "w".repeat(16001) },
+        limit: 4000,
+        expected: false
+      },
+      {
+        name: 'reasoning field exceeding limit by 1 token',
+        msg: { ...defaultValidMsg, reasoning: "w".repeat(16001) },
+        limit: 4000,
+        expected: false
+      },
+      {
+        name: 'custom limit with all fields passing',
+        msg: { ...defaultValidMsg, what: "w".repeat(400) }, // 400/4 = 100 tokens
+        limit: 100,
+        expected: true
+      },
+      {
+        name: 'custom limit with one field failing',
+        msg: { ...defaultValidMsg, what: "w".repeat(401) }, // 401/4 -> 101 tokens
+        limit: 100,
+        expected: false
+      },
+      {
+        name: 'message with undefined reasoning falls back to empty string and passes',
+        msg: { ...defaultValidMsg, reasoning: undefined as unknown as string },
+        limit: 4000,
+        expected: true
+      }
+    ];
+
+    it.each(edgeCases)('should return $expected for $name', ({ msg, limit, expected }) => {
+      expect(validateMessageBounds(msg, limit)).toBe(expected);
+    });
   });
 
   describe('Table-Driven Mesh Boundary Checks', () => {

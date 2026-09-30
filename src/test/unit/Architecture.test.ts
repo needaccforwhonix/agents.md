@@ -47,6 +47,15 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
     expect(agentsMdContent).toContain('`/docs`: Architectural ADRs and the `agents.md` specification.');
   });
 
+  it('should verify WORM Immutability policy documentation in AGENTS.md', () => {
+    const rootDir = path.resolve(__dirname, '../../..');
+    const agentsMdContent = fs.readFileSync(path.join(rootDir, 'docs', 'AGENTS.md'), 'utf8');
+
+    expect(agentsMdContent).toContain('WORM Immutability (Write Once, Read Many)');
+    expect(agentsMdContent).toContain('You are strictly prohibited from deleting existing features');
+    expect(agentsMdContent).toContain('mark it as `// Deprecated` rather than removing');
+  });
+
   it('should explicitly confirm the domain specific bots and directory bots are instantiated in start-mesh.ts (docs/AGENTS.md Agent Mesh Directives)', () => {
     const rootDir = path.resolve(__dirname, '../../..');
     const startMeshContent = fs.readFileSync(path.join(rootDir, 'bin', 'start-mesh.ts'), 'utf8');
