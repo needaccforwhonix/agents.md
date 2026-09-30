@@ -25,6 +25,20 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
     expect(directories).toContain('src');
     expect(directories).toContain('bin');
     expect(directories).toContain('docs');
+
+    // Explicitly verify nested directories in src
+    const srcDir = path.join(rootDir, 'src');
+    const srcEntries = fs.readdirSync(srcDir, { withFileTypes: true });
+    const srcDirectories = srcEntries
+      .filter(entry => entry.isDirectory())
+      .map(entry => entry.name);
+
+    const allowedSrcDirectories = [
+      "components", "logic", "pages", "styles", "test", "ui"
+    ];
+    for (const dir of srcDirectories) {
+      expect(allowedSrcDirectories).toContain(dir);
+    }
   });
 
   it('should verify essential files exist in correct locations', () => {
