@@ -27,6 +27,25 @@ describe('Architectural Audit - RULE_Ordnerstruktur', () => {
     expect(directories).toContain('docs');
   });
 
+  it('should explicitly enforce RULE_Ordnerstruktur on the src/ directory', () => {
+    const srcDir = path.resolve(__dirname, '../../..', 'src');
+    const entries = fs.readdirSync(srcDir, { withFileTypes: true });
+
+    const directories = entries
+      .filter(entry => entry.isDirectory())
+      .map(entry => entry.name)
+      .filter(name => !name.startsWith('.')); // Ignore hidden folders
+
+    // Enforce that ONLY allowed domain directories exist in src/
+    const allowedSrcDirectories = [
+      "components", "logic", "pages", "styles", "test", "ui"
+    ];
+
+    for (const dir of directories) {
+      expect(allowedSrcDirectories).toContain(dir);
+    }
+  });
+
   it('should verify essential files exist in correct locations', () => {
     const rootDir = path.resolve(__dirname, '../../..');
 
