@@ -156,6 +156,36 @@ describe("AlphaEvolve Module", () => {
           expect(evolved.generation).toBe(2);
           expect(Number.isNaN(evolved.creativity)).toBe(true);
         }
+      },
+      {
+        name: 'Number.MAX_VALUE properties',
+        params: { creativity: Number.MAX_VALUE, detailOrientation: 0, generation: 1 },
+        rate: 0.1,
+        verify: (evolved: AgentParameters) => {
+          expect(evolved.generation).toBe(2);
+          // Due to precision, mutating MAX_VALUE might result in Infinity or stay MAX_VALUE
+          expect(evolved.creativity).toBeGreaterThanOrEqual(0);
+        }
+      },
+      {
+        name: 'Number.MIN_VALUE properties',
+        params: { creativity: Number.MIN_VALUE, detailOrientation: 0, generation: 1 },
+        rate: 0.1,
+        verify: (evolved: AgentParameters) => {
+          expect(evolved.generation).toBe(2);
+          expect(evolved.creativity).toBeGreaterThanOrEqual(0);
+        }
+      },
+      {
+        name: 'Very large mutation rate (Infinity)',
+        params: baseParams,
+        rate: Infinity,
+        verify: (evolved: AgentParameters) => {
+          expect(evolved.generation).toBe(2);
+          // Infinity * (Math.random() * 2 - 1) could be Infinity, -Infinity, or NaN (if random is exactly 0.5 resulting in 0 multiplier)
+          // Just verify it doesn't crash and returns a number/NaN
+          expect(typeof evolved.creativity).toBe('number');
+        }
       }
     ];
 

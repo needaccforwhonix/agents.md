@@ -126,5 +126,33 @@ describe("ACE Module", () => {
     ])("should handle $name correctly", ({ val, expected }) => {
       expect(countTokens(val)).toBe(expected);
     });
+
+    it("should handle null or undefined safely if they leak in (typescript safety check)", () => {
+        expect(countTokens(null as unknown as string)).toBe(0);
+        expect(countTokens(undefined as unknown as string)).toBe(0);
+    });
+  });
+
+  describe("boundHistory extreme edge cases", () => {
+    it("should handle maxTokens being infinity safely", () => {
+      const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: "1234", where: "", how: "", reasoning: "" };
+      const history = [msg];
+      const bounded = boundHistory(history, Infinity);
+      expect(bounded).toEqual(history);
+    });
+
+    it("should handle negative maxTokens by returning empty array", () => {
+      const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: "1234", where: "", how: "", reasoning: "" };
+      const history = [msg];
+      const bounded = boundHistory(history, -100);
+      expect(bounded).toEqual([]);
+    });
+
+    it("should handle history array with null/undefined elements safely", () => {
+      const msg: Message = { id: "1", senderId: "s", timestamp: 1, what: "1234", where: "", how: "", reasoning: "" };
+      const history = [msg, null as unknown as Message, undefined as unknown as Message];
+      const bounded = boundHistory(history, 100);
+      expect(bounded).toEqual([msg]);
+    });
   });
 });
