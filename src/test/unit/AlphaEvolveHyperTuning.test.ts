@@ -43,4 +43,23 @@ describe('AlphaEvolve Hyperparameter Tuning', () => {
 
     expect(successCount).toBeGreaterThan(5); // Majority of runs should show higher variance
   });
+
+  it('should not allow values to become NaN or negative under extreme mutation rates over 100 generations', () => {
+    let params: AgentParameters = { generation: 1, analyticalDepth: 0.5, responsiveness: 0.5 };
+    const mutationRate = 10.0; // Extreme mutation rate
+
+    for (let i = 0; i < 100; i++) {
+      params = alphaEvolve(params, mutationRate);
+
+      // Values should remain valid numbers
+      expect(Number.isNaN(params.analyticalDepth)).toBe(false);
+      expect(Number.isNaN(params.responsiveness)).toBe(false);
+
+      // Values should clamp at 0 and never go negative
+      expect(params.analyticalDepth).toBeGreaterThanOrEqual(0);
+      expect(params.responsiveness).toBeGreaterThanOrEqual(0);
+    }
+
+    expect(params.generation).toBe(101);
+  });
 });
