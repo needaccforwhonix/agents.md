@@ -386,4 +386,52 @@ describe('Mesh Unit Tests', () => {
     });
   });
 
+  it('should explicitly enforce the throttle limit for deeply nested recurrent message loops', async () => {
+    // Create a mesh with a very small limit
+    const limit = 5;
+    const mesh = new Mesh(limit);
+
+    // Create a brain that ALWAYS responds, creating an infinite loop
+    const infiniteBrain: Brain = {
+      decide: async (msg: Message) => {
+        return {
+          id: `reply-to-${msg.id}`,
+          senderId: "infinite-agent",
+          timestamp: Date.now(),
+          what: "reply what",
+          where: "reply where",
+          how: "reply how",
+          reasoning: "reply reasoning"
+        };
+      }
+    };
+
+    const agent = new Agent("agent-infinite", "InfiniteAgent", "Role", infiniteBrain, { responsiveness: 1.0 });
+    mesh.registerAgent(agent);
+
+    const initialMessage: Message = {
+      id: "initial-trigger",
+      senderId: "system",
+      timestamp: Date.now(),
+      what: "start",
+      where: "start",
+      how: "start",
+      reasoning: "start"
+    };
+
+    // Broadcast the initial message
+    await mesh.broadcast(initialMessage);
+
+    // The total messages processed must equal exactly the limit
+    expect(mesh.getMessages().length).toBe(limit);
+
+    // Ensure the first message is the initial trigger
+    expect(mesh.getMessages()[0].id).toBe("initial-trigger");
+    // Ensure subsequent messages are replies
+    expect(mesh.getMessages()[1].id).toBe("reply-to-initial-trigger");
+    expect(mesh.getMessages()[2].id).toBe("reply-to-reply-to-initial-trigger");
+    expect(mesh.getMessages()[3].id).toBe("reply-to-reply-to-reply-to-initial-trigger");
+    expect(mesh.getMessages()[4].id).toBe("reply-to-reply-to-reply-to-reply-to-initial-trigger");
+  });
+
 });
