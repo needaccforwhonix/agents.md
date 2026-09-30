@@ -54,9 +54,16 @@ export function analyzeCodeBlock(code: string): ASTAnalysisResultV2 {
     }
 
     // Demock validation: Ensure no hardcoded dummy data patterns exist
-    if (ts.isStringLiteral(node) || ts.isIdentifier(node) || ts.isTemplateLiteral(node)) {
+    if (
+      ts.isStringLiteral(node) ||
+      ts.isIdentifier(node) ||
+      ts.isTemplateLiteral(node) ||
+      ts.isBinaryExpression(node)
+    ) {
       const text = node.getText(sourceFile);
-      if (text.includes("d" + "ummy") || text.includes("m" + "ock_")) {
+      const textNoQuotes = text.replace(/['"+ ]/g, ''); // strip out quotes and plus signs to catch obfuscation like 'm' + 'o' + 'c' + 'k'
+
+      if (text.includes("d" + "ummy") || text.includes("m" + "ock_") || textNoQuotes.includes("m" + "ock_")) {
         errors.push(`Cleanliness Error: Dummy data or mock pattern '${text}' detected. Please use proper typing or context-driven state.`);
       }
       if (text.includes("TODO")) {

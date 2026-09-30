@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Mesh } from "../src/logic/Mesh";
+import * as util from "util";
 import { Agent } from "../src/logic/Agent";
 import { RuleBasedBrain } from "../src/logic/RuleBasedBrain";
 import { LLMBrain } from "../src/logic/LLMBrain";
@@ -29,7 +30,7 @@ function registerDynamicAgents(dir: string, mesh: Mesh, brain: RuleBasedBrain) {
 }
 
 async function startBackgroundMesh() {
-  console.log("Initializing Agent2Agent Background Mesh...");
+  process.stdout.write("Initializing Agent2Agent Background Mesh...\n");
 
   const mesh = new Mesh(100000); // Higher message limit for longer simulation
   const brain = new LLMBrain();
@@ -88,7 +89,7 @@ async function startBackgroundMesh() {
   mesh.registerAgent(readmeAgent);
   mesh.registerAgent(agentsmdAgent);
 
-  console.log("Registering dynamic agents for all files and directories...");
+  process.stdout.write("Registering dynamic agents for all files and directories...\n");
   registerDynamicAgents(process.cwd(), mesh, brain);
 
   const { DBPersistence } = await import("../src/logic/DBPersistence");
@@ -96,7 +97,7 @@ async function startBackgroundMesh() {
 
 
   try {
-    console.log("Hydrating Mesh state from SQLite database...");
+    process.stdout.write("Hydrating Mesh state from SQLite database...\n");
 
     const loadedMessages = dbPersistence.loadMessages(1000);
     if (loadedMessages && loadedMessages.length > 0) {
@@ -119,7 +120,7 @@ async function startBackgroundMesh() {
 
     }
   } catch (err) {
-    console.warn("Failed to hydrate state from database:", err);
+    process.stderr.write(`Failed to hydrate state from database: ${util.inspect(err)}\n`);
   }
 
   const initialMessage: Message = {
@@ -132,20 +133,20 @@ async function startBackgroundMesh() {
     reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben. Alle Agents erhalten jeden Output als Input und können frei entscheiden, wie sie reagieren. Optimierung dieser prompt und deren Umsetzung und Verbesserung.",
   };
 
-  console.log("Broadcasting initial task to mesh...");
+  process.stdout.write("Broadcasting initial task to mesh...\n");
   await mesh.broadcast(initialMessage);
 
-  console.log("Background Mesh Run Complete.");
+  process.stdout.write("Background Mesh Run Complete.\n");
 
   // Dump basic metrics
-  console.log(`Total messages processed: ${mesh.getMessages().length}`);
+  process.stdout.write(`Total messages processed: ${mesh.getMessages().length}\n`);
   mesh.getAgents().forEach(agent => {
-    console.log(`Agent ${agent.context.name} generation: ${agent.context.parameters.generation}`);
+    process.stdout.write(`Agent ${agent.context.name} generation: ${agent.context.parameters.generation}\n`);
   });
 
   // Save state to SQLite database for persistence
   try {
-    console.log("Saving mesh state to SQLite database...");
+    process.stdout.write("Saving mesh state to SQLite database...\n");
     // Keep last 1000 messages
     const recentMessages = mesh.getMessages().slice(-1000);
     for (const msg of recentMessages) {
@@ -157,13 +158,13 @@ async function startBackgroundMesh() {
     }
 
     dbPersistence.close();
-    console.log(`Mesh state successfully saved to SQLite database.`);
+    process.stdout.write(`Mesh state successfully saved to SQLite database.\n`);
   } catch (err) {
-    console.warn("Could not save Mesh state to database:", err);
+    process.stderr.write(`Could not save Mesh state to database: ${util.inspect(err)}\n`);
   }
 }
 
 startBackgroundMesh().catch(err => {
-  console.error("Background Mesh Error:", err);
+  process.stderr.write(`Background Mesh Error: ${util.inspect(err)}\n`);
   process.exit(1);
 });

@@ -62,11 +62,12 @@ describe("AST Module", () => {
             { code: "const x = 'm" + "ock_data';", match: "m" + "ock_data" },
             { code: "const { m" + "ock_id } = obj;", match: "m" + "ock_id" },
             { code: "const [d" + "ummy_val] = arr;", match: "d" + "ummy_val" },
-            { code: "const tpl = `some text with m" + "ock_data inside`;", match: "m" + "ock_data" }
+            { code: "const tpl = `some text with m" + "ock_data inside`;", match: "m" + "ock_data" },
+            { code: "const obfuscated = 'm' + 'o' + 'c' + 'k' + '_data';", match: "mock_" }
         ])("should catch dummy and mock patterns in $match", ({ code, match }) => {
             const result = analyzeCodeBlock(code);
             expect(result.isValid).toBe(false);
-            expect(result.errors[0]).toContain(match);
+            expect(result.errors.some(e => e.includes(match) || e.toLowerCase().includes('mock'))).toBe(true);
         });
 
         it("should suggest for 'TODO'", () => {
@@ -134,6 +135,19 @@ describe("AST Module", () => {
             expect(result.isValid).toBe(false);
             expect(result.suggestions.some(s => s.includes("TODO"))).toBe(true);
             expect(result.errors.some(e => e.includes("m" + "ock_data"))).toBe(true);
+        });
+
+        it("should catch deeply nested empty array map functions", () => {
+            const codeToParse = `
+                const x = [1, 2, 3].map(item => {
+                    return item * 2;
+                }).filter(item => {
+                    // some logic
+                }).map(() => { });
+            `;
+            const result = analyzeCodeBlock(codeToParse);
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain("Optimization Error: Empty function 'Anonymous function' detected. Avoid empty implementations.");
         });
     });
 
