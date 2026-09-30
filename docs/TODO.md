@@ -7,6 +7,7 @@
 
 ## Done
 
+- Implemented `LLMBrain` fallback to `RuleBasedBrain` when fetch fails or errors out.
 - Explore integration with actual Language Models (LLMs) utilizing generated JSON definitions.
 - Add real persistence (database) to agent states to replace in-memory maps.
 - Fine-tune AlphaEvolve hyperparameters over many concurrent test runs.

@@ -1,9 +1,11 @@
 import { Brain, Message, AgentContext } from "./Types";
+import { RuleBasedBrain } from "./RuleBasedBrain";
 
 /**
  * Strategy pattern for decision making using real Language Models (LLM).
  */
 export class LLMBrain implements Brain {
+  private fallbackBrain = new RuleBasedBrain();
   private endpointUrl: string;
   private apiKey: string | undefined;
 
@@ -73,7 +75,7 @@ Generate a JSON response conforming to the system prompt directives. Format anal
       });
 
       if (!response.ok) {
-         return null;
+         return this.fallbackBrain.decide(message, context);
       }
 
       const responseData = await response.json() as { response: string };
@@ -89,7 +91,7 @@ Generate a JSON response conforming to the system prompt directives. Format anal
         reasoning: parsed.reasoning || `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken bezüglich Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}. Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht. Optimierung dieser prompt und deren Umsetzung und Verbesserung.`,
       };
     } catch {
-      return null;
+      return this.fallbackBrain.decide(message, context);
     }
   }
 }
