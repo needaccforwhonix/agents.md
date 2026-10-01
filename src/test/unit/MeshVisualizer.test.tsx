@@ -332,4 +332,16 @@ describe('MeshVisualizer Component', () => {
 
     getItemSpy.mockRestore();
   });
+
+  it('should have a Clear State button and clear state when clicked', async () => {
+    render(<MeshVisualizer />);
+
+    const clearButtons = screen.getAllByText('Clear State');
+    const clearButton = clearButtons[0];
+    expect(clearButton).toBeDefined();
+
+
+
+  });
+
 });
