@@ -117,3 +117,5 @@ mesh_output.log
 *.sqlite
 *.sqlite3
 .agent_mesh.db
+playwright-report/
+test-results/

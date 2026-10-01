@@ -89,6 +89,20 @@ export const MeshVisualizer: React.FC = () => {
   }, [fileStructure]);
 
   // 4. Start the initial simulation asynchronously
+
+  const clearSimulationState = () => {
+    // TODO: Fulfill TODO item 'Clear Simulation State'.
+    try {
+      localStorage.removeItem('agentMeshState');
+    } catch {
+      // Silently handle clear error
+    }
+    setMessages([]);
+    if (meshRef) {
+      meshRef.setMessages([]);
+    }
+  };
+
   const startSimulation = async () => {
     /* istanbul ignore if */
     if (!meshRef) return;
@@ -133,13 +147,24 @@ export const MeshVisualizer: React.FC = () => {
     <div className="p-6 bg-slate-900 text-slate-200 min-h-screen font-sans">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-blue-400">Agent2Agent Broadcast Mesh Simulation</h1>
-        <button
-          onClick={startSimulation}
-          disabled={isSimulating || !meshRef}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 text-white font-bold rounded shadow transition-colors"
-        >
-          {isSimulating ? "Simulating..." : "Start Simulation"}
-        </button>
+
+        <div className="space-x-4">
+          <button
+            onClick={clearSimulationState}
+            disabled={isSimulating}
+            className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:bg-slate-700 text-white font-bold rounded shadow transition-colors"
+          >
+            Clear State
+          </button>
+          <button
+            onClick={startSimulation}
+            disabled={isSimulating || !meshRef}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 text-white font-bold rounded shadow transition-colors"
+          >
+            {isSimulating ? "Simulating..." : "Start Simulation"}
+          </button>
+        </div>
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

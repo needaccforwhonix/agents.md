@@ -71,3 +71,9 @@ npx tsx bin/start-mesh.ts
 * **Configurable Limits:** You can pass a max recursive message limit to the `Mesh` constructor (e.g., `new Mesh(500)`) to allow simulations to run longer. Field bounds are rigorously enforced (max ~2000 tokens per message property) to ensure agents do not bloat application memory.
 * **AST Demock Validation:** To maintain purity and real functionality, `AST.ts` parses generated agent typescript responses to reject string literals like `"dummy"`, mock identifiers, and empty function declarations (e.g. `() => {}`). This validation is embedded natively into the `Mesh` continuous broadcast logic to prevent regressions during the recursive event loop.
 * **AlphaEvolve:** Parameter mutations are serialized directly into an agent's `reasoning` trace to demonstrate continuous evolution across parallel branches.
+
+### UI Additions
+* Added a `Clear State` button to the `MeshVisualizer` to allow users to easily clear local storage context for the Agents between simulation runs without having to dig into developer tools.
+
+### Testing Strategy Updates
+* The CI pipeline has been expanded. Now, all UI integrations and the mesh simulation page are fully vetted E2E using `Playwright`.
