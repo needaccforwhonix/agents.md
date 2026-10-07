@@ -12,6 +12,12 @@ export class RuleBasedBrain implements Brain {
     if (context === null || context === undefined) {
       throw new Error("Input context cannot be null or undefined");
     }
+    if (typeof context.role !== 'string' || context.role.trim() === '') {
+      throw new Error("Input context.role must be a non-empty string");
+    }
+    if (typeof context.id !== 'string' || context.id.trim() === '') {
+      throw new Error("Input context.id must be a non-empty string");
+    }
 
     // Avoid responding to own messages
     if (message.senderId === context.id) {

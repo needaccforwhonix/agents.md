@@ -1,4 +1,5 @@
 import { Brain, Message, AgentContext } from "./Types";
+import { RuleBasedBrain } from "./RuleBasedBrain";
 
 /**
  * Strategy pattern for decision making using real Language Models (LLM).
@@ -6,10 +7,12 @@ import { Brain, Message, AgentContext } from "./Types";
 export class LLMBrain implements Brain {
   private endpointUrl: string;
   private apiKey: string | undefined;
+  private ruleBasedBrain: RuleBasedBrain;
 
   constructor(endpointUrl: string = "http://localhost:11434/api/generate", apiKey?: string) {
     this.endpointUrl = endpointUrl;
     this.apiKey = apiKey;
+    this.ruleBasedBrain = new RuleBasedBrain();
   }
 
   async decide(message: Message, context: AgentContext): Promise<Message | null> {
@@ -18,6 +21,12 @@ export class LLMBrain implements Brain {
     }
     if (context === null || context === undefined) {
       throw new Error("Input context cannot be null or undefined");
+    }
+    if (typeof context.role !== 'string' || context.role.trim() === '') {
+      throw new Error("Input context.role must be a non-empty string");
+    }
+    if (typeof context.id !== 'string' || context.id.trim() === '') {
+      throw new Error("Input context.id must be a non-empty string");
     }
 
     if (message.senderId === context.id) {
@@ -73,7 +82,7 @@ Generate a JSON response conforming to the system prompt directives. Format anal
       });
 
       if (!response.ok) {
-         return null;
+         return this.ruleBasedBrain.decide(message, context);
       }
 
       const responseData = await response.json() as { response: string };
@@ -89,7 +98,7 @@ Generate a JSON response conforming to the system prompt directives. Format anal
         reasoning: parsed.reasoning || `(WARUM) Als ${context.role} muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [${safeReasoning}]. Der Output erfüllt alle kontinuierlichen Optimierungs-Metriken bezüglich Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Evolved Parameters via AlphaEvolve: ${stringifiedParameters}. Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht. Optimierung dieser prompt und deren Umsetzung und Verbesserung.`,
       };
     } catch {
-      return null;
+      return this.ruleBasedBrain.decide(message, context);
     }
   }
 }
