@@ -28,12 +28,18 @@ export class Mesh {
   private messageLimit: number;
 
   constructor(messageLimit: number = 100) {
+    if (typeof messageLimit !== 'number' || messageLimit <= 0) {
+      throw new Error("messageLimit must be a positive number.");
+    }
     this.messageLimit = messageLimit;
   }
 
   public registerAgent(agent: Agent) {
     if (!agent || !agent.context || !agent.context.id) {
       throw new Error("Invalid Agent: Agent and Agent Context must be fully defined.");
+    }
+    if (typeof agent.context.id !== 'string' || agent.context.id.trim() === '') {
+      throw new Error("Invalid Agent: Agent context id must be a non-empty string.");
     }
     this.agents.set(agent.context.id, agent);
   }
@@ -48,16 +54,21 @@ export class Mesh {
       throw new Error("Invalid Message: Message cannot be null or undefined.");
     }
 
-    const queue: Message[] = [initialMessage];
+    const queue: (Message | null)[] = [initialMessage];
+    let queueIndex = 0;
     let processedCount = 0;
     const agentsList = Array.from(this.agents.values());
 
-    while (queue.length > 0) {
+    while (queueIndex < queue.length) {
       if (processedCount >= this.messageLimit) {
         break;
       }
 
-      const message = queue.shift();
+      const message = queue[queueIndex];
+      // explicitly nulling out processed element for GC to avoid Array.shift O(N) allocation
+      queue[queueIndex] = null;
+      queueIndex++;
+
       if (!message) continue;
 
       this.messages.push(message);

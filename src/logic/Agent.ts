@@ -11,6 +11,15 @@ export class Agent {
   private brain: Brain;
 
   constructor(id: string, name: string, role: string, brain: Brain, parameters: AgentParameters = {}) {
+    if (typeof id !== 'string' || id.trim() === '') {
+      throw new Error("Agent constructor requires a valid non-empty string id.");
+    }
+    if (typeof name !== 'string' || name.trim() === '') {
+      throw new Error("Agent constructor requires a valid non-empty string name.");
+    }
+    if (typeof role !== 'string' || role.trim() === '') {
+      throw new Error("Agent constructor requires a valid non-empty string role.");
+    }
     if (!brain) {
       throw new Error("Agent constructor requires a valid Brain instance.");
     }
