@@ -48,16 +48,21 @@ export class Mesh {
       throw new Error("Invalid Message: Message cannot be null or undefined.");
     }
 
-    const queue: Message[] = [initialMessage];
+    const queue: (Message | null)[] = [initialMessage];
+    let queueIndex = 0;
     let processedCount = 0;
     const agentsList = Array.from(this.agents.values());
 
-    while (queue.length > 0) {
+    while (queueIndex < queue.length) {
       if (processedCount >= this.messageLimit) {
         break;
       }
 
-      const message = queue.shift();
+      const message = queue[queueIndex];
+      // @ts-expect-error Zero-allocation optimization: Explicitly null out processed elements to allow GC
+      queue[queueIndex] = null;
+      queueIndex++;
+
       if (!message) continue;
 
       this.messages.push(message);
