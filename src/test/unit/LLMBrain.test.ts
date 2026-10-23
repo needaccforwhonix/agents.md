@@ -258,7 +258,7 @@ describe('LLMBrain', () => {
 
       const callArgs = vi.mocked(global.fetch).mock.calls[0];
       const requestBody = JSON.parse(callArgs[1]?.body as string);
-      expect(requestBody.prompt).toContain('Reasoning: \n');
+      expect(requestBody.prompt).toContain('Reasoning (WARUM): \n');
 
       vi.restoreAllMocks();
     });
@@ -279,10 +279,10 @@ describe('LLMBrain', () => {
 
       const result = await brain.decide(msg, context);
       expect(result).not.toBeNull();
-      expect(result?.what).toContain('(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierung an basierend auf [test-what]');
-      expect(result?.where).toContain('(WO) Context: Agent 1 verarbeitet Aufgabe basierend auf [test-where]');
-      expect(result?.how).toContain('(WIE) Reagiert auf vorherige Aktion [test-how]');
-      expect(result?.reasoning).toContain('(WARUM) Als Role muss ich sicherstellen, dass asynchrone, parallele Verbesserungen streng additiv sind (ohne Funktions-/Feature-Verlust), aufbauend auf [test-reasoning]');
+      expect(result?.what).toContain('(WAS) Analysiere, refaktorisiere und wende kontinuierliche Optimierungen an basierend auf [test-what]');
+      expect(result?.where).toContain('(WO) Kontext: Agent Agent 1 verarbeitet die Anweisung basierend auf dem Ursprungsort [test-where]');
+      expect(result?.how).toContain('(WIE) Reaktion auf die vorherige Aktion: [test-how]');
+      expect(result?.reasoning).toContain('(WARUM) In meiner Rolle als Role ist es unabdingbar sicherzustellen, dass sämtliche asynchronen und parallelen Modifikationen strikt additiv erfolgen (kein Funktions- oder Feature-Verlust), aufbauend auf der Argumentationskette: [test-reasoning]');
 
       vi.restoreAllMocks();
     });
