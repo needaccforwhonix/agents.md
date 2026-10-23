@@ -49,7 +49,7 @@ describe("RuleBasedBrain", () => {
             const msg: Message = { id: "msg", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h", reasoning: "r" };
             const resp = await brain.decide(msg, context);
             expect(resp).not.toBeNull();
-            expect(resp!.how).toContain("Reagiert auf"); // simplistic check
+            expect(resp!.how).toContain("Reaktion auf"); // simplistic check
         }
     });
 
@@ -95,7 +95,7 @@ describe("RuleBasedBrain", () => {
         const msg = { id: "m", senderId: "other", timestamp: 1, what: "w", where: "w", how: "h" } as unknown as Message; // No reasoning
         const resp = await brain.decide(msg, context);
         expect(resp).not.toBeNull();
-        expect(resp!.reasoning).toContain("aufbauend auf []"); // Should use "" when reasoning is undefined, but the implementation does (message.reasoning || "").length but later uses [${safeReasoning}] and safeReasoning becomes 'undefined' string because of template literal string conversion somewhere else? No, `(message.reasoning || "").length` gives 0. `message.reasoning.substring()` is not called. safeReasoning is just `message.reasoning` (which is undefined)
+        expect(resp!.reasoning).toContain("aufbauend auf der Argumentationskette: []");
     });
 
     it("should check default role fallback correctly", async () => {
