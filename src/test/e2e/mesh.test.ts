@@ -36,9 +36,9 @@ describe('AgentMesh E2E Simulation', () => {
     const response = messages.find(m => m.senderId === 'test-dev');
     if (response) {
       expect(response.reasoning).toBeDefined();
-      expect(response.reasoning).toContain('Evolved Parameters via AlphaEvolve:');
+      expect(response.reasoning).toContain('Entwickelte Parameter via AlphaEvolve:');
       expect(response.reasoning).toContain('generation');
-      expect(response.reasoning).toContain('Sicherheit Performance Style Dokumentation Sauberkeit Ordnung');
+      expect(response.reasoning).toContain('Sicherheit, Performance, Style, Dokumentation, Sauberkeit und Ordnung');
     }
   });
 
