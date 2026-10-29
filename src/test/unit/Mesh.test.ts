@@ -180,7 +180,7 @@ describe('Mesh Unit Tests', () => {
     expect(mesh.getMessages()[0].id).toBe(message.id);
   });
 
-  it('should continue loop gracefully if an undefined message is shifted from the queue', async () => {
+  it('should continue loop gracefully if an undefined message is accessed from the queue', async () => {
     const mesh = new Mesh(10);
 
     const initialMessage: Message = {
@@ -193,30 +193,28 @@ describe('Mesh Unit Tests', () => {
       reasoning: "reasoning"
     };
 
-    // We can spy on Array.prototype.shift to inject an undefined message into the loop
-    // just once to trigger the `if (!message) continue;` line
-    const originalShift = Array.prototype.shift;
-    let shiftCalled = 0;
-    Array.prototype.shift = function() {
-      shiftCalled++;
-      if (shiftCalled === 2) {
-        // Spy a sparse array returning undefined even if length > 0
-        return undefined;
+    // Inject a spy on Array.prototype.push to artificially insert an undefined element into the queue
+    const originalPush = Array.prototype.push;
+    let injected = false;
+    // @ts-expect-error test mock injection to intercept array operations
+    Array.prototype.push = function(...args: unknown[]) {
+      if (!injected && args.length === 1 && args[0] && (args[0] as Message).senderId === "agent-1") {
+        injected = true;
+        // Inject undefined right before the actual response
+        originalPush.call(this, undefined);
       }
-      return originalShift.apply(this);
+      // @ts-expect-error test mock injection
+      return originalPush.apply(this, args);
     };
 
     try {
-      // We need at least one valid message to enter the loop, then we inject undefined
-      // on the second iteration.
-      // To make sure there is a second iteration, we need an agent to respond to the first message.
       const brain = new RuleBasedBrain();
       const agent = new Agent("agent-1", "Test", "Role", brain, { responsiveness: 1.0 });
       mesh.registerAgent(agent);
 
       await mesh.broadcast(initialMessage);
     } finally {
-      Array.prototype.shift = originalShift;
+      Array.prototype.push = originalPush;
     }
 
     // As long as it didn't throw an error, the line was successfully triggered and passed.
