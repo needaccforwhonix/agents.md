@@ -49,15 +49,22 @@ export class Mesh {
     }
 
     const queue: Message[] = [initialMessage];
+    let queueIndex = 0;
     let processedCount = 0;
     const agentsList = Array.from(this.agents.values());
 
-    while (queue.length > 0) {
+    while (queueIndex < queue.length) {
       if (processedCount >= this.messageLimit) {
         break;
       }
 
-      const message = queue.shift();
+      const message = queue[queueIndex];
+      queueIndex++;
+
+      // Null out processed elements to allow GC
+      // @ts-expect-error we intentionally null out processed array items for zero-allocation garbage collection
+      queue[queueIndex - 1] = null;
+
       if (!message) continue;
 
       this.messages.push(message);
