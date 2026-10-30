@@ -101,10 +101,10 @@ export const MeshVisualizer: React.FC = () => {
       id: crypto.randomUUID(),
       senderId: "user-init",
       timestamp: Date.now(),
-      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Funktions-Löschungen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Dokumentationen - Todos Creation + Implementierungen + Improvements.",
+      what: "Input und Output müssen eindeutig beschreiben, was, wo und wie gewünscht ist. Dabei kann stets geholfen werden, um asynchron und parallel eine kontinuierliche Weiterentwicklung zu gewährleisten. Fokus auf Sicherheit, Performance, Style, Dokumentation, Sauberkeit und Ordnung. Die Optimierung dieses Prompts sowie dessen Umsetzung und Verbesserung sind essenziell. Starte mindestens ein vollständiges Agent2Agent-Mesh pro Jules-Session, das gerne auch länger laufen darf. Inklusive Testing, Validierung, Update aller Dateien sowie Projektordner-Cleanup, ohne Features, Ideen oder Funktionen zu löschen. Integriere Demock, Testing, ACE, eine CI/CD-Pipeline, E2E-Tests, AST-Analysen, Dokumentationen sowie die Erstellung, Implementierung und Verbesserung von TODOs.",
       where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
       how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext.",
-      reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht.",
+      reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive, parallele und asynchrone Evolution ermöglicht.",
     };
 
     await meshRef.broadcast(startMessage);
