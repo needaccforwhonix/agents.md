@@ -49,15 +49,18 @@ export class Mesh {
     }
 
     const queue: Message[] = [initialMessage];
+    let queueIndex = 0;
     let processedCount = 0;
     const agentsList = Array.from(this.agents.values());
 
-    while (queue.length > 0) {
+    while (queueIndex < queue.length) {
       if (processedCount >= this.messageLimit) {
         break;
       }
 
-      const message = queue.shift();
+      const message = queue[queueIndex++];
+      // @ts-expect-error null out to allow Garbage Collection of large objects
+      queue[queueIndex - 1] = null;
       if (!message) continue;
 
       this.messages.push(message);
