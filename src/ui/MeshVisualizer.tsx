@@ -101,10 +101,10 @@ export const MeshVisualizer: React.FC = () => {
       id: crypto.randomUUID(),
       senderId: "user-init",
       timestamp: Date.now(),
-      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Funktions-Löschungen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Dokumentationen - Todos Creation + Implementierungen + Improvements.",
-      where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
-      how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext.",
-      reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht.",
+      what: "Jeder Knotenpunkt, jedes Verzeichnis und jede Datei der Architektur wird durch einen dedizierten Agent2Agent-Agenten repräsentiert. Eingehende sowie ausgehende Nachrichten müssen explizit und unmissverständlich deklarieren, was modifiziert werden soll, wo die Änderung vorzunehmen ist und wie die technische Umsetzung erfolgt. Ziel ist die fortlaufende, asynchrone und parallele Evolution der Codebasis. Der Fokus liegt permanent auf Sicherheit, Performance, Code-Style, Dokumentation, Sauberkeit und Ordnung. Es gilt das uneingeschränkte WORM-Prinzip: Änderungen müssen streng additiv sein (keine Löschungen). Die Integration von Demock, Testing, ACE, CI/CD-Pipelines, E2E-Tests, AST-Validierungen und Dokumentationserweiterungen ist obligatorisch.",
+      where: "Die Ausführung erstreckt sich über alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten innerhalb des gesamten Projekts.",
+      how: "Sämtliche A2A-Agenten nutzen zwingend Agentic Context Engineering (ACE) für ein präzises Token-Bound-Management und den AlphaEvolve-Algorithmus zur dynamischen Parameter-Mutation unter Einbezug von Reasoning und dem vollständigen historischen Kontext.",
+      reasoning: "Diese weitreichenden Maßnahmen dienen der Etablierung und Stärkung einer hochrobusten Agent2Agent-Architektur. Diese Struktur ermöglicht eine massive, parallele und asynchrone Evolution der Codebasis, sodass das System kontinuierlich aktualisiert, tiefgreifend optimiert und extrem sauber strukturiert bleibt.",
     };
 
     await meshRef.broadcast(startMessage);
