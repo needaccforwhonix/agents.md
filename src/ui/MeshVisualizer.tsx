@@ -101,10 +101,10 @@ export const MeshVisualizer: React.FC = () => {
       id: crypto.randomUUID(),
       senderId: "user-init",
       timestamp: Date.now(),
-      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Funktions-Löschungen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Dokumentationen - Todos Creation + Implementierungen + Improvements.",
+      what: "Die Eingaben und Ausgaben müssen stets eindeutig spezifizieren, was gewollt ist, um eine reibungslose, asynchrone und parallele Weiterentwicklung zu gewährleisten. Dies beinhaltet eine vollständige Agent2Agent-Mesh-Struktur, in der jeder Agent alle Ausgaben als Eingaben empfängt. Priorisiere stets Sicherheit, Performance, Code-Style, Dokumentation, Sauberkeit und Ordnung. Sämtliche Anpassungen sind streng additiv, ohne Features zu löschen. Implementiere Testing, Demock, ACE, CI/CD-Pipelines, E2E-Tests, AST-Analysen und Dokumentations-Updates.",
       where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
-      how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext.",
-      reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht.",
+      how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext, um autonom Entscheidungen zu treffen.",
+      reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution auf Basis von WORM-Prinzipien ermöglicht.",
     };
 
     await meshRef.broadcast(startMessage);
