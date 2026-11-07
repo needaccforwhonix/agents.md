@@ -3,9 +3,10 @@
 
 - Implement distributed agent mesh across multiple servers using WebSockets or gRPC.
 - Develop custom Web Worker architecture to run simulations completely decoupled from the main thread.
-- Establish robust integration with external issue trackers using LLMBrain endpoints.
 
 ## Done
+
+- Establish robust integration with external issue trackers using LLMBrain endpoints.
 
 - Explore integration with actual Language Models (LLMs) utilizing generated JSON definitions.
 - Add real persistence (database) to agent states to replace in-memory maps.
