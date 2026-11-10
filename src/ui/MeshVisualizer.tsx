@@ -101,10 +101,10 @@ export const MeshVisualizer: React.FC = () => {
       id: crypto.randomUUID(),
       senderId: "user-init",
       timestamp: Date.now(),
-      what: "Input und Output müssen eindeutig beschreiben was wo wie gewollt ist. Dabei kann stets geholfen werden. So soll asynchron parallel alles weiter entwickelt werden und aktuell bleiben. Sicherheit Performance Style Dokumentation Sauberkeit Ordnung. Optimierung dieser prompt und deren Umsetzung und Verbesserung. Starte mindestens einen vollständigen Agent2agent Agent mesh pro Jules Sessions,gerne länger. Inklusive Testing + Validierung + Update aller Dateien inkl. Projektordner Cleanup ohne Feature, Ideen oder Funktions-Löschungen. Demock - Testing - ACE - CI/CD Pipeline - E2E - AST - Dokumentationen - Todos Creation + Implementierungen + Improvements.",
-      where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt.",
-      how: "Jeder A2A-Agent nutzt Agentic Context Engineering und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext.",
-      reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive parallele asynchrone Evolution ermöglicht.",
+      what: "Input und Output müssen eindeutig beschreiben, was, wo und wie gewollt ist. Dabei soll stets geholfen werden. Die asynchrone, parallele Weiterentwicklung stellt sicher, dass alles aktuell bleibt. Fokus auf Sicherheit, Performance, Code-Style, Dokumentation, Sauberkeit und Ordnung. Optimierung dieses Prompts, dessen Umsetzung und kontinuierliche Verbesserung. Starte mindestens eine vollständige Agent2agent Agent Mesh Simulation pro Jules-Session, gerne länger. Inklusive Testing, Validierung, Aktualisierung aller Dateien sowie Projektordner-Cleanup – strikt additiv (WORM), ohne Features, Ideen oder Funktionen zu löschen. Demock, Testing, ACE, CI/CD Pipeline, E2E, AST, Dokumentationen, TODOs Creation, Implementierungen und Improvements.",
+      where: "Alle dynamisch registrierten Dateien, Verzeichnisse und Konfigurationsknoten im gesamten Projekt. Zielorte müssen eindeutig spezifiziert werden, inklusive der Aktualisierung aller betroffenen Dateien sowie eines Projektordner-Cleanups, um Sauberkeit und Ordnung beizubehalten.",
+      how: "Jeder A2A-Agent nutzt Agentic Context Engineering (ACE) und den AlphaEvolve-Algorithmus mit Reasoning und vollständigem Kontext. Empfange jeden Output als Input und entscheide explizit, wie reagiert werden soll.",
+      reasoning: "Um eine robuste Agent2Agent-Struktur zu stärken, die eine massive, parallele, asynchrone Evolution ermöglicht, um kontinuierlich aktualisiert, optimiert und sauber organisiert zu bleiben.",
     };
 
     await meshRef.broadcast(startMessage);
